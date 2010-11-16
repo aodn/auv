@@ -1,0 +1,94 @@
+html, body {
+    
+    
+/*font-family:"Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;*/
+font:11px/15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-color: #FFFFFF;
+    font-size:0.85em;  
+    margin: 0px; 
+    color: #666;
+
+}
+
+
+table {
+ font-size: 11px;
+}
+h2 { color:#333333; font-size: 16px; font-weight: bold;}
+h3 { color:#3399CC; font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px;}
+h4 {  font-size: 12px;  margin: 3px 2px;}
+h5 { color:#333333; font-size: 11px;  margin: 0px 2px;}
+h6 { color:#333333; font-size: 11px;  margin: 0px 2px; display:inline;  }
+
+
+a {
+    color: inherit;
+    
+}
+a img{
+    border: none;
+}
+      
+
+a:hover, .a_hover{
+    color: black;
+
+}
+a[rel="external"], a.external {
+white-space: nowrap;
+padding-right: 15px;
+background: url(../img/extlink.gif) no-repeat 100% 50%;
+zoom: 1;
+}
+
+table.featureInfo, table.featureInfo td, table.featureInfo th {
+        border:1px solid #ddd;
+        border-collapse:collapse;
+        margin:0;
+        padding:0;
+        font-size: 90%;
+        padding:.2em .1em;
+    }
+    table.featureInfo th {
+        padding:.2em .2em;
+        font-weight:bold;
+        background:#eee;
+    }
+    table.featureInfo td{
+        background:#fff;
+    }
+    table.featureInfo tr.odd td{
+        background:#eee;
+    }
+    table.featureInfo caption{
+        text-align:left;
+        font-size:100%;
+        font-weight:bold;
+        text-transform:uppercase;
+        padding:.2em .2em;
+    }
+
+
+.extlink {
+    margin-left: 2px;   
+}
+.right {
+    float: right;
+}
+hr {
+    width: 80%;     
+    color:#7391ad;
+    background: #fff url(../img/borderLine.gif) no-repeat center bottom;
+    margin: 8px auto;
+    height: 1px;
+    border: 0 none; 
+}
+
+.small {
+    font-size: small;
+}
+.error {
+    
+    color: #f71bbc;
+    font-weight: bold;
+}
