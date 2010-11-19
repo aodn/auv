@@ -4,20 +4,18 @@
 <html>
     <head>
         <title>IMOS AUV viewer</title>
-        <link rel="stylesheet" type="text/css" href="css/base.css"/>
-        <link rel="stylesheet" type="text/css" href="css/map.css"/>
-        <link rel="stylesheet" type="text/css" href="css/overcast/jquery-ui-1.8.5.custom.css" />
 
         <link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'base.css')}"/>
         <link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'map.css')}"/>
+        <link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'overcast/jquery-ui-1.8.5.custom.css')}"/>
 
         <meta name="layout" content="main" />
 
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.4.2.min.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'layout1.1.5.min.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-ui-1.8.5.custom.min.js')}"></script>
-        <script type="text/javascript" src="${resource(dir:'js',file:'OpenLayers-2.9.js')}" defer="defer" ></script>
-        <script type="text/javascript" src="${resource(dir:'js',file:'auv-functions.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'js',file:'OpenLayers-2.9.js')}" ></script>
+        <script type="text/javascript" src="${resource(dir:'js',file:'auv-functions.js')}"  defer="defer"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'stepcarousel.js')}"></script>
 
 
@@ -27,7 +25,7 @@
         <script type="text/javascript">
 
 
-            var buff = 4;
+            var buff = 10;
             var server = '${server}';
             var layername_track = '${layernameTrack}';
             var layername_images = '${layernameImages}';
@@ -46,9 +44,9 @@
             var size = new OpenLayers.Size(30,24);
             var offset = new OpenLayers.Pixel(-(size.w/2)+5, -(size.h-1));
             //var offset = new OpenLayers.Pixel(-(size.w), -size.h);
-            var icon = new OpenLayers.Icon('img/auv-marker.png',size,offset);
+            var icon = new OpenLayers.Icon('images/auv-marker.png',size,offset);
             //var slider = null; // slider object
-
+            
 
             var style = 'AUV_tracks';
 
@@ -145,14 +143,14 @@
                 panelclass: 'panel', //class of panel DIVs each holding content
                 autostep: {enable:false, moveby:1, pause:3000},
                 panelbehavior: {speed:4500, stepbyspeed:400, wraparound:false, wrapbehavior:'slide', persist:false},
-                defaultbuttons: {enable: false, moveby: 1, leftnav: ['img/buttonclose.png', 10, 10], rightnav: ['img/buttonopen.png', 10, 10]},
+                defaultbuttons: {enable: false, moveby: 1, leftnav: ['images/buttonclose.png', 10, 10], rightnav: ['images/buttonopen.png', 10, 10]},
                 statusvars: ['statusA', 'statusB', 'statusC'], //register 3 variables that contain current panel (start), current panel (last), and total panels
                 contenttype: ['inline'], //content setting ['inline'] or ['ajax', 'path_to_external_file']
                 onpanelclick:function(target){
 
-
                     if (target.tagName=="IMG") { //if clicked on element is an image
-                        window.open("notes.php?src=" + target.src, "auv_image", "width=700px, height=600px")
+                      
+                        window.open("notes?src=" + target.src, "auv_image", "width=700px, height=600px")
                     }
                 },
 
@@ -212,7 +210,7 @@
         </div>
         <div id="mapcontainer">
            <DIV id="logo">
-                <a href="http://imos.org.au/auv.html"><img src="img/IMOS_AUV_logo.png" /></a>
+                <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" /></a>
 
             </div>
             <div id="mapWrapper">
@@ -225,9 +223,9 @@
                 <div id="mapcoords">location</div>
                 <div id="legendToggle">Legend</div>
                 <div id="legend" class="jqDnR jqDrag" style="display:none">
-                    <img id="legendClose" alt="Close popup" class="right" src="img/close.png" />
-                    <img src="<?=$server?>/geoserver/wms?LAYER=<?=$layername_track?>&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for <?=$layername_track?>" /><BR>
-                    <img src="<?=$server?>/geoserver/wms?LAYER=<?=$layername_images?>&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for <?=$layername_images?>" />
+                    <img id="legendClose" alt="Close popup" class="right" src="images/close.png" />
+                    <img src="${server}/geoserver/wms?LAYER=${layernameTrack}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameTrack}" /><BR>
+                    <img src="${server}/geoserver/wms?LAYER=${layernameImages}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameImages}" />
                 </div>
 		<li>
                     <a>Styles:</a>
@@ -245,7 +243,7 @@
         <div id="imagecontainer">
             <div id="helpSection" >
                 <p><span class="ol" >1</span> Click on a AUV Icon
-                    (<img src="<?=$server?>/geoserver/styles/AUV-deployment.png" style="position: relative; bottom: -12px;" />)
+                    (<img src="${server}/geoserver/styles/AUV-deployment.png" style="position: relative; bottom: -12px;" />)
                     in the map, or choose from the track list on the left.</p>
                 <p><span class="ol" >2</span> Choose a track. The map will zoom to the track if there's only one.</p>
                 <p><span class="ol" >3</span> Click on a track to view the closest images.</p>
@@ -254,7 +252,7 @@
             <div id="mygallery" class="stepcarousel">
                 <div class="belt">
                     <div class="panel">
-                        <img src="img/mapshadow.png" />
+                        <images src="images/mapshadow.png" />
                     </div>
                 </div>
             </div>
@@ -316,7 +314,7 @@
 
  </div>
  <div id="loader"  >
-        <img alt="loading..." src="img/loading.gif" >
+        <img alt="loading..." src="images/loading.gif" >
     </div>
 
 </body>

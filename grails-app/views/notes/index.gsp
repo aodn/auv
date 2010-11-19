@@ -23,9 +23,7 @@
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
         <script type="text/javascript" >
 
-            // this will be parsed in
-            var image = "http://imos2.ersa.edu.au/AUV/WA201004/r20100422_040822_rottnest_06_15m_n_out/i2jpg/PR_20100422_050712_741_LC16.jpg";
-            image = "http://localhost/S2_Hero_Code2Cloud.png";
+            var image = ${image};
 
 
             var photo; // instance of the imgAreaSelect object

@@ -6,6 +6,8 @@
             // make OL compute scale according to WMS spec
             OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 
+            
+
 
 
             var imagesForTrack = [];
@@ -27,10 +29,17 @@
 
 
                 if  (this_serverName == 'obsidian.bluenet.utas.edu.au') {  OpenLayers.ProxyHost = "http://obsidian.bluenet.utas.edu.au/webportal/RemoteRequest?url="; }
+                if  (this_serverName == 'localhost:8080') { OpenLayers.ProxyHost = "http://localhost/cgi-bin/proxy.cgi?url="; }
                 if  (this_serverName == 'localhost') { OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url="; }
                 if  (this_serverName == 'preview.emii.org.au') { OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url="; }
                 
+                if (OpenLayers.ProxyHost == "") {
+                    alert("Proxy script is required and not configured. ");
+                }
+
+
                 
+                OpenLayers.ImgPath = "theme/dark/";
 
 
                 // MAP INIT
@@ -61,9 +70,8 @@
                             separator: ' <BR><b>Lat:</b> '
                         })
                     ],
-                    maxExtent: bounds,
+                    //maxExtent: bounds,
                     numZoomLevels: 26,
-                    //maxResolution: 0.11937890625,
                     projection: "EPSG:4326",
                     units: 'degrees'
                 };
@@ -112,6 +120,7 @@
                     {   isBaseLayer: false, 
                         transitionEffect: 'resize',
                         buffer: 0,
+                        maxResolution: .000035, // important to limit geoserver stress
                         displayOutsideMaxExtent: true} 
                 );
         
@@ -119,7 +128,7 @@
     
 
                 // tracks must obscure auvimages
-                //map.addLayers([base,auvimages,tracks]);
+                //map.addLayers([base,auvtracks,markers]);
                 map.addLayers([base,auvimages,auvtracks,markers]);
                 
 
@@ -128,13 +137,14 @@
                 
                 overviewmap.maximizeControl(true);
                 
-                map.zoomToMaxExtent();
+                //map.zoomToMaxExtent();
+                map.setCenter(new OpenLayers.LonLat(135,-26), 3)
                 
                 // populate the track dropdown select and hidden track info
                 populateTracks(); 
 
-                
-                    // create a new event handler for single click query
+                map.events.register("zoomend", map, updateUserInfo);
+                // create a new event handler for single click query
                 clickEventHandler = new OpenLayers.Handler.Click({
                     'map': map
                 }, {
@@ -158,6 +168,19 @@
                 
 
             }
+
+function updateUserInfo() {
+    var msg ="";
+    if (auvimages.inRange){
+        msg = "Click on the blue AUV track to see the nearest images";
+    }
+    else{
+        msg = "Zoom in on a AUV of interest."
+    }
+        
+        jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
+
+}
 var layer = null;
 function getpointInfo(e) {
 
@@ -246,19 +269,19 @@ function getpointInfo(e) {
 
         map.zoomToMaxExtent();
         markers.clearMarkers();
-        jQuery('.auvSiteDetails, #track_html,  #sortbytrack, .trackSort, #thisTrackInfo').hide();
+        jQuery('.auvSiteDetails, #track_html,  #sortbytrack, .trackSort').hide();
         jQuery('#helpSection').show();
         jQuery('div#mygallery, div#stepcarouselcontrols').css("visibility","hidden");
         jQuery.setTemplateLayout('css/map.css?', 'jq');
     
     }
-
+var shit;
             
 
     function populateTracks() {
         // run once to get all tracks into an object
-        if (allTracksHTML == "" ) {                   
-        
+        if (allTracksHTML == "" ) {
+            
             var fields = "facility_code,campaign_code,site_code,dive_report,dive_notes,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";  
             fields_array = fields.split(",");
             var tmp = []; 
@@ -267,10 +290,10 @@ function getpointInfo(e) {
 
             // get track feature info as XML   
             
-            var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0');  
+            var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0');
             
             var x= xmlDoc.getElementsByTagName('gml:featureMember');
-            
+
             for (i=0; i<x.length; i++) {     
 
                 var myArray = [];  
@@ -279,28 +302,31 @@ function getpointInfo(e) {
                     // check for existance to be safe  
 
                     if(xmlDoc.getElementsByTagName("topp:" + fields_array[y] )[i]) {    
-                        myArray[fields_array[y]]= xmlDoc.getElementsByTagName("topp:" + fields_array[y] )[i].childNodes[0].nodeValue;
+                        myArray[fields_array[y]]= xmlDoc.getElementsByTagName("topp:" + fields_array[y] )[i].childNodes[0].nodeValue;                        
                     }
                 }
-                tmp[i] = myArray;    
+                tmp[i] = myArray;
                 
-            }                        
-                
-            
+            }
+
+           
             // simulate a getfeatureinfo request 
             for (var i=0;i<tmp.length;i++) {
 
-                
+               
                 var ids = tmp[i]["site_code"].split("_");
                 var site = ucwords(ids[2]);
+                //site =tmp[i]["site_code"];
                 var dive = ids[3];
                 var depth = ids[4];
                 var newTitle = site + " - Dive:"+dive+" Depth:"+depth;
                 var trackHTML_id = "allTracksHTML_" + i ;
                 
                 
-                time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"],false);
-                time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"],false);
+                var time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"],false);
+                //var time_coverage_start = tmp[i]["time_coverage_start"];
+                var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"],false);
+                //var time_coverage_end = tmp[i]["time_coverage_end"];
 
                 html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";                        
                 
@@ -323,28 +349,37 @@ function getpointInfo(e) {
                 html_content = html_content + "</tbody></table>\n";
                 
                 html_content = html_content + "<b>Depth:</b>" + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_min"] + "m<br>\n";
+
+
                 if (tmp[i]["dive_report"] != "" ) {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\">Dive Report</a><br>";               
                 }
                 if (tmp[i]["dive_notes"] != "" ) {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";               
                 }            jQuery('#track_html').show();
-            jQuery('#track_html h3').hide();
 
-            if (jQuery('#track_html .featurewhite').size() == 1) {
-                jQuery('.featurewhite').addClass('featurewhite_selected');
-                jQuery('.auvSiteDetails').show(1000);
-            }
+                jQuery('#track_html h3').hide();
+
+                if (jQuery('#track_html .featurewhite').size() == 1) {
+                    jQuery('.featurewhite').addClass('featurewhite_selected');
+                    jQuery('.auvSiteDetails').show(1000);
+                }
 
                 if (tmp[i]["metadata_uuid"] != "" ) {
                     html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";                       
                 }
+
+
                 html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/WA201004/r20100421_061612_rottnest_04_25m_n_in\" rel=\"external\">Link to data folder</a> <br>\n   <a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";     
                 html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";                
                 trackSelectorValues[trackHTML_id] = newTitle;
+
                 
             }
-            
+
+             
+
+
             trackSelectorValues = sortAssoc(trackSelectorValues);
             // populate coresponding drop down box 
             var output = [];                     
@@ -352,7 +387,7 @@ function getpointInfo(e) {
                 output.push('<option value="'+ key +'">'+ trackSelectorValues[key] +'</option>\n');
             }jQuery('#trackSelector').append(output.join(''));                    
             
-            allTracksHTML = html_content; 
+            allTracksHTML = html_content;
 
             
         }
@@ -391,7 +426,7 @@ function getpointInfo(e) {
         }
         else{
             jQuery('#track_html').html("<h5>No tracks found at your click point.</h5>").show();       
-            jQuery('#track_html h3, #thisTrackInfo').show();
+            jQuery('#track_html h3').show();
         }
 
         
@@ -542,11 +577,14 @@ function getpointInfo(e) {
 
                 var ids = imagesForTrack[min_i]["site_code"].split("_");
                 var site = ucwords(ids[2]);
+                //site = imagesForTrack[min_i]["site_code"]
                 var dive = ids[3];
                 var depth = ids[4];
                 
                 // TODO SORT OUT THIS FORMATING
-                time = formatISO8601Date(imagesForTrack[min_i]["time"],false);
+                var time = formatISO8601Date(imagesForTrack[min_i]["time"],false);
+                //var time = imagesForTrack[min_i]["time"];
+
                 //datetime = imagesForTrack[min_i][2];                    
                 
                 html_content = html_content + "<div class=\"panel\"  id=\"auvpanel_" + rowcounter + "\" >";
@@ -697,8 +735,8 @@ function getpointInfo(e) {
             jQuery('.featurewhite').removeClass('featurewhite_selected')
             jQuery(css_id).parent().addClass('featurewhite_selected');
             jQuery(css_id).parent().show();
-            var msg = "Click again on the track to see the nearest images";
-            jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
+            //var msg = "Click again on the track to see the nearest images";
+            //jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
         }            
         
 
@@ -790,6 +828,9 @@ function getpointInfo(e) {
     
         var a_p = "";
         var d = new Date();
+        if (dateString == undefined){
+            return;
+        }
         d.setISO8601(dateString,localtime);
     
         var curr_date = d.getDate();
@@ -841,11 +882,11 @@ function getpointInfo(e) {
         return (date + " " + time);
     
     }
-    Date.prototype.setISO8601 = function (string,localtime) {
+    Date.prototype.setISO8601 = function (str,localtime) {
         var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
         "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
-        var d = string.match(new RegExp(regexp));
+        var d = str.match(new RegExp(regexp));
     
         var offset = 0;
         var date = new Date(d[1], 0, 1);

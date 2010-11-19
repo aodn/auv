@@ -178,7 +178,7 @@ p.important {
 
 span.ol {
 
-    /*background: url('img/olbackground.png') no-repeat;*/
+    /*background: url('images/olbackground.png') no-repeat;*/
     background-color: #3c668d;
     
     -moz-border-radius: 15! important;  
@@ -246,7 +246,7 @@ float: left;
 #navtoolbar .olControlDrawFeatureItemActive {
   
     height: 22px;
-    background-image: url("../img/draw.png?");
+    background-image: url("../images/draw.png?");
     background-position:12px 1px;
     background-repeat: no-repeat;
     display: block;
@@ -301,7 +301,7 @@ float: left;
 
 {
     background-repeat: no-repeat;
-    background-image: url('../img/raa_y.gif');
+    background-image: url('../images/raa_y.gif');
     width: 23px! important;
     height: 22px! important;
     cursor: pointer;
@@ -361,13 +361,15 @@ float: left;
     left: 0px;
     z-index: 99;
     background-repeat: no-repeat;
-    background-image: url('../img/raa_y.gif');
+    background-image: url('../images/raa_y.gif');
     background-position: -2300px 0;
     width: 30px;
     height: 10px;
     margin: 17px 6px 3px 0px;
     padding: 3px;
 }
+
+
 
 #controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9:hover 
 {

@@ -2,16 +2,15 @@ package auv
 
 class NotesController {
 
-    //static defaultAction = "notes"
+    //static defaultAction = "submitNote"
 
     def index = {
 
-        flash.message = "Welcome!"
-         
-         
-         [ currentnotes : Notes.list() ]
+        def image = params.src
 
+        render(view: "notes")
 
+         [ currentnotes : Notes.list(), image: image ]
     }
     
     
@@ -20,14 +19,9 @@ class NotesController {
 
     def submitNote = {
         
-        //print "submit function\n"
-        //print params + "\n\n"
-        //print request
-
     
         def thisUsername = "test-user"
         // def user = User.get(session.user.id)
-
         
         if (request.method != "GET") {
 
@@ -41,12 +35,10 @@ class NotesController {
             aNote.imagex2= params.imageX2
             aNote.imagey1= params.imageY1
             aNote.imagey2= params.imageY2
-
             aNote.save()
-            redirect(action:index)
         }
 
-        //render(view: "notes")
+        redirect(action:index)
         
 
     }
