@@ -12,11 +12,12 @@ textarea {margin:10px 0px; padding: 3px;}
 
 
 .photoDiv, #selectionThumbnail {
-    background-color:#999999;
+    /*background-color:#999999;
     border-color:#999999;
     border-style:solid;
     border-width:5px;
     -moz-border-radius:5px 5px 5px 5px;
+    */
     margin: 10px;
     float: left;
 }
@@ -45,3 +46,8 @@ textarea {margin:10px 0px; padding: 3px;}
     margin-bottom: 10px;
     padding: 3px;
 }
+
+.photoDiv ul {position: relative; left: 0px; top: 0px; }
+.map li { margin:0; padding:0; list-style:none; }
+.map li a { position:absolute; display:block; border:1px solid white;}
+.map a:hover { border:3px solid #fff; color: white}

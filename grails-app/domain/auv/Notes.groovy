@@ -11,6 +11,8 @@ class Notes {
     String imagex2
     String imagey1
     String Imagey2
+    String width
+    String height
 
     static constraints = {
 
@@ -22,6 +24,8 @@ class Notes {
         imagex2(blank:false)
         imagey1(blank:false)
         imagey2(blank:false)
+        width(blank:false)
+        height(blank:false)
 
 
     }

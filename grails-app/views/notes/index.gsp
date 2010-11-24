@@ -46,16 +46,18 @@
                  // set the existing note bounding boxes
 
                  // when enter is pressed inside the note textarea, submit form
-                  jQuery(function() {
-                        jQuery("form #newNote").keypress(function (e) {
-                            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-                                jQuery('#newNoteSubmit').click();
-                                //return false;
-                            } else {
-                                return true;
-                            }
-                        });
-                    });
+                jQuery(function() {
+                      jQuery("form #newNote").keypress(function (e) {
+                          if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                              jQuery('#newNoteSubmit').click();
+                              //return false;
+                          } else {
+                              return true;
+                          }
+                      });
+                  });
+
+                  //populatePhotoNotes();
 
             });
 
@@ -94,12 +96,33 @@
                     jQuery('#imageX2').val(selection.x2);
                     jQuery('#imageY1').val(selection.y1);
                     jQuery('#imageY2').val(selection.y2);
+                    jQuery('#width').val(selection.width);
+                    jQuery('#height').val(selection.height);
 
                     
 
                 }
 
             };
+
+
+
+            function setNotesArea() {
+            <g:each in="${session.currentnotes}" var="tes" >
+            
+              photo${tes.id} = jQuery('img#photo').imgAreaSelect({
+                    instance: true, //
+                    handles: false,
+                    aspectRatio: '1:1',
+                    x1:  ${tes.imagex1},
+                    x2:  ${tes.imagex2} ,               
+                    y1:  ${tes.imagey1},
+                    y2:  ${tes.imagey2}
+                });
+
+              </g:each>
+
+            }
 
             
 
@@ -114,7 +137,27 @@
 <h5>Click and drag an area to annotate</h5>
 
 <div class="photoDiv">
-<img src="" alt="image to annotate" id="photo"/></div>
+<ul class="map">
+	<g:each in="${session.currentnotes}" var="tes" >
+      <style type="text/css">
+          .map a.savednote${tes.id} {  top:${tes.imagey1}px; left:${tes.imagex1}px; width:${tes.width}px; height:${tes.height}px; }
+      </style>
+       <li><a class="savednote${tes.id}"><span><b>Note ${tes.id}</b></span></a></li>
+    </g:each>
+
+
+		
+	</ul>
+    <img src="" alt="image to annotate" id="photo"  />
+
+    
+
+
+</div>
+ 
+
+
+
 
 <div style="clear:both" ></div>
 
@@ -133,6 +176,8 @@
     <input name="imageX2" id ="imageX2" type="hidden" />
     <input name="imageY1" id ="imageY1" type="hidden" />
     <input name="imageY2" id ="imageY2" type="hidden" />
+    <input name="width" id ="width" type="hidden" />
+    <input name="height" id ="height" type="hidden" />
     <input name="imageFilename" id ="imageFilename" type="hidden" />
     <BR>
     <button  type="submit" id="newNoteSubmit" >Add Note</button>
@@ -144,7 +189,7 @@
 <div style="clear:both" ></div>
 <div id="current_notes">${flash.message}
 <g:each in="${session.currentnotes}" var="tes" >
-  <div>
+  <div>Note ${tes.id} by
            <h6>${tes.username} - <g:formatDate format="yyyy-MMM-dd mm:ss z" date="${tes.datetime}"/> &nbsp;
              
              <g:if test="${tes.username == session.username}">
