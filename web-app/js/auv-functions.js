@@ -169,18 +169,27 @@
 
             }
 
-function updateUserInfo() {
+
+function updateUserInfo(tailored_msg) {
     var msg ="";
     if (auvimages.inRange){
         msg = "Click on the blue AUV track to see the nearest images";
     }
     else{
-        msg = "Zoom in on a AUV of interest."
+        if (tailored_msg != "") {
+            msg = tailored_msg;
+        }
+        else {
+            msg = "Zoom in on a AUV of interest";
+        }
     }
         
         jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
 
 }
+
+
+
 var layer = null;
 function getpointInfo(e) {
 
@@ -245,11 +254,13 @@ function getpointInfo(e) {
             if (layerName == layername_track) {  
                 OpenLayers.loadURL(url, '', this, setTrackHTML, setError);
             }
-            if (layerName == layername_images) {  
-                if (map.getZoom() > 10 ) {
+            if (layerName == layername_images) {
+
+                if (auvimages.inRange){
                     OpenLayers.loadURL(url, '', this, setImageHTML, setError);
                 }
                 else {
+                     updateUserInfo("Choose a track");
                     var response = new Object();
                     response.responseText = "";
                     setImageHTML(response);
@@ -275,7 +286,7 @@ function getpointInfo(e) {
         jQuery.setTemplateLayout('css/map.css?', 'jq');
     
     }
-var shit;
+
             
 
     function populateTracks() {
@@ -814,6 +825,19 @@ var shit;
             }
         } 
         return output;
+    }
+
+     var windowObjectReference;
+
+    function openPopup(src)   {
+        windowObjectReference = window.open("notes?src=" + src , "auv_image", "width=600px, height=600px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
+        if (windowObjectReference == null) {
+            alert("Unable to open a seperate window for image annotation");
+        }
+        else{
+            windowObjectReference.focus();
+        }
+
     }
 
 

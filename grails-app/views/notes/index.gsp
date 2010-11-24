@@ -23,7 +23,7 @@
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
         <script type="text/javascript" >
 
-            var image = ${image};
+            var image = '${session.imageUrl}';
 
 
             var photo; // instance of the imgAreaSelect object
@@ -42,6 +42,21 @@
                  jQuery('#photo').attr("src", image);
                  jQuery('#photoThumb').attr("src", image);
                  jQuery('#imageFilename').val(image);
+
+                 // set the existing note bounding boxes
+
+                 // when enter is pressed inside the note textarea, submit form
+                  jQuery(function() {
+                        jQuery("form #newNote").keypress(function (e) {
+                            if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+                                jQuery('#newNoteSubmit').click();
+                                //return false;
+                            } else {
+                                return true;
+                            }
+                        });
+                    });
+
             });
 
  
@@ -63,12 +78,16 @@
 
                 if (selection.height < 20 || selection.width < 20) {
                     photo.setOptions({hide:true});
-                    alert("Click and drag to create an area to annotate");
                     jQuery('#newNoteForm').hide();
+                    alert("Click and drag to create an area to annotate");
                 }
                 else {
+                    // set focus to the textfield
+                    //jQuery('#newNote').focus();
                     // show the form with the hidden magic
-                    jQuery('#newNoteForm').show(500);
+                    jQuery('#newNoteForm').show(500,function () {
+                        jQuery('#newNote').focus();
+                    });
                     var width = selection.width;
                     var height = selection.height;
                     jQuery('#imageX1').val(selection.x1);
@@ -76,8 +95,13 @@
                     jQuery('#imageY1').val(selection.y1);
                     jQuery('#imageY2').val(selection.y2);
 
-                };
+                    
+
+                }
+
             };
+
+            
 
            
 
@@ -102,7 +126,7 @@
     <img  src="" id="photoThumb" alt="area of the image to annotate" />
 </div>
     <label for="newNote" >Add a Note:</label>
-    <g:form  name="myForm" url="[action:'submitNote',controller:'notes']" >
+    <g:form  name="noteForm" id="noteForm" url="[action:'submitNote',controller:'notes']" >
 
     <g:textArea id="newNote" name="newNote" cols="30" rows="3" ></g:textArea>
     <input name="imageX1" id ="imageX1" type="hidden" />
@@ -111,17 +135,24 @@
     <input name="imageY2" id ="imageY2" type="hidden" />
     <input name="imageFilename" id ="imageFilename" type="hidden" />
     <BR>
-    <button  type="submit" >Add Note</button>
+    <button  type="submit" id="newNoteSubmit" >Add Note</button>
 </g:form>
 
 </div>
 
 
 <div style="clear:both" ></div>
-<div id="current_notes">${flash.message}  
-<g:each in="${currentnotes}" var="tes" >     
+<div id="current_notes">${flash.message}
+<g:each in="${session.currentnotes}" var="tes" >
   <div>
-           <h5>${tes.datetime} </h5>
+           <h6>${tes.username} - <g:formatDate format="yyyy-MMM-dd mm:ss z" date="${tes.datetime}"/> &nbsp;
+             
+             <g:if test="${tes.username == session.username}">
+                 <g:remoteLink action="delete" id="${tes.id}" before="return confirm('Are you sure?');">Delete</g:remoteLink>
+            </g:if>
+
+
+           </h6>
            <div class="notearea">${tes.note}</div>
   </div>
      

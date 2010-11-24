@@ -7,7 +7,7 @@ html, body {
 }
 h5 {   margin: 5px 0px 2px 0px;}
 label { font-weight:bold; margin:5px; }
-textarea {margin:10px 0px;}
+textarea {margin:10px 0px; padding: 3px;}
 
 
 
@@ -37,7 +37,6 @@ textarea {margin:10px 0px;}
 
 .notearea {
 
-    width: 300px;
     background-color: white;
     border-color:#999999;
     border-style:solid;

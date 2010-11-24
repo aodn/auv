@@ -150,7 +150,7 @@
 
                     if (target.tagName=="IMG") { //if clicked on element is an image
                       
-                        window.open("notes?src=" + target.src, "auv_image", "width=700px, height=600px")
+                        openPopup(target.src);
                     }
                 },
 
@@ -285,7 +285,7 @@
 
             </div>
 
-            <div class="buttons" style="width:310px" >
+            <div class="buttons"  >
                 <h3 id="thisTrackInfo"></h3>
                 <button  href="#" onclick="sortImagesAlongTrack();return false;" id="sortbytrack" style="display:none" >Sort the Images along the<span> selected</span> track</button>
                 <button onclick="resetMap()" id="resetmap" >RESET MAP</button>
