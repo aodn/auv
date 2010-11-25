@@ -23,8 +23,6 @@
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
         <script type="text/javascript" >
 
-            var image = '${session.imageUrl}';
-
 
             var photo; // instance of the imgAreaSelect object
             jQuery.noConflict();
@@ -39,9 +37,6 @@
                     onSelectChange: preview
                 });
 
-                 jQuery('#photo').attr("src", image);
-                 jQuery('#photoThumb').attr("src", image);
-                 jQuery('#imageFilename').val(image);
 
                  // set the existing note bounding boxes
 
@@ -57,7 +52,18 @@
                       });
                   });
 
-                  //populatePhotoNotes();
+                  // when hovering over the note title highlight the note area
+                  jQuery('.note').live('mouseenter', function(){
+                      var theid = jQuery(this).attr("id");
+                      jQuery('.map a#saved' + theid).addClass("hover");
+                  });
+                  jQuery('.note').live('mouseleave', function(){
+                      var theid = jQuery(this).attr("id");
+                      jQuery('.map a#saved' + theid).removeClass("hover");
+                  });
+
+                      
+
 
             });
 
@@ -105,26 +111,7 @@
 
             };
 
-
-
-            function setNotesArea() {
-            <g:each in="${session.currentnotes}" var="tes" >
-            
-              photo${tes.id} = jQuery('img#photo').imgAreaSelect({
-                    instance: true, //
-                    handles: false,
-                    aspectRatio: '1:1',
-                    x1:  ${tes.imagex1},
-                    x2:  ${tes.imagex2} ,               
-                    y1:  ${tes.imagey1},
-                    y2:  ${tes.imagey2}
-                });
-
-              </g:each>
-
-            }
-
-            
+           
 
            
 
@@ -140,15 +127,15 @@
 <ul class="map">
 	<g:each in="${session.currentnotes}" var="tes" >
       <style type="text/css">
-          .map a.savednote${tes.id} {  top:${tes.imagey1}px; left:${tes.imagex1}px; width:${tes.width}px; height:${tes.height}px; }
+          .map a#savednote${tes.id} {  top:${tes.imagey1}px; left:${tes.imagex1}px; width:${tes.width}px; height:${tes.height}px; }
       </style>
-       <li><a class="savednote${tes.id}"><span><b>Note ${tes.id}</b></span></a></li>
+       <li><a id="savednote${tes.id}"><span><b>Note ${tes.id}</b></span></a></li>
     </g:each>
 
 
 		
 	</ul>
-    <img src="" alt="image to annotate" id="photo"  />
+    <img src="${session.imageUrl}" alt="image to annotate" id="photo"  />
 
     
 
@@ -166,7 +153,7 @@
 <div id="newNoteForm" style="display:none" >
 
   <div id="selectionThumbnail" >
-    <img  src="" id="photoThumb" alt="area of the image to annotate" />
+    <img  src="${session.imageUrl}" id="photoThumb" alt="area of the image to annotate" />
 </div>
     <label for="newNote" >Add a Note:</label>
     <g:form  name="noteForm" id="noteForm" url="[action:'submitNote',controller:'notes']" >
@@ -178,7 +165,7 @@
     <input name="imageY2" id ="imageY2" type="hidden" />
     <input name="width" id ="width" type="hidden" />
     <input name="height" id ="height" type="hidden" />
-    <input name="imageFilename" id ="imageFilename" type="hidden" />
+    <input name="imageFilename" id ="imageFilename" value="${session.imageUrl}" type="hidden" />
     <BR>
     <button  type="submit" id="newNoteSubmit" >Add Note</button>
 </g:form>
@@ -187,12 +174,16 @@
 
 
 <div style="clear:both" ></div>
-<div id="current_notes">${flash.message}
+
+<h2 class="highlight">${flash.message}</h2>
+<div id="current_notes">
+
 <g:each in="${session.currentnotes}" var="tes" >
-  <div>Note ${tes.id} by
+  <div class="note" id="note${tes.id}" >Note ${tes.id} by
            <h6>${tes.username} - <g:formatDate format="yyyy-MMM-dd mm:ss z" date="${tes.datetime}"/> &nbsp;
              
              <g:if test="${tes.username == session.username}">
+                 <g:remoteLink action="getNoteToEdit" id="${tes.id}" >Edit</g:remoteLink>&nbsp;
                  <g:remoteLink action="delete" id="${tes.id}" before="return confirm('Are you sure?');">Delete</g:remoteLink>
             </g:if>
 

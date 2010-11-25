@@ -9,7 +9,9 @@ h5 {   margin: 5px 0px 2px 0px;}
 label { font-weight:bold; margin:5px; }
 textarea {margin:10px 0px; padding: 3px;}
 
-
+.edit {
+    color: #2362CF;
+}
 
 .photoDiv, #selectionThumbnail {
     /*background-color:#999999;
@@ -51,3 +53,5 @@ textarea {margin:10px 0px; padding: 3px;}
 .map li { margin:0; padding:0; list-style:none; }
 .map li a { position:absolute; display:block; border:1px solid white;}
 .map a:hover { border:3px solid #fff; color: white}
+
+.hover { border:3px solid #fff! important; color:white;}

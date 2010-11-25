@@ -14,23 +14,61 @@ class NotesController {
 
         session.username = "test-user2"
 
-        if (params.src != "") {
+        if (params.src) {
             session.imageUrl = params.src
             def file = params.src.split("/")
             session.image = file[file.size() -1]
-        }      
+        }  
+        else {
+            render("ERROR: There was no image supplied to annotate!")
+        }
+
         getNotes()         
     }
 
-    def edit =  {
+    def getNoteToEdit =  {
 
         def theNote = Notes.findWhere(id: Long.parseLong(params.id))
         if (theNote) {
             if (session.username == theNote.username) {
-                //theNote.delete(flush:true)      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  much more to do
+                print "allowed to edit \n\n"
+                
+            }
+        } 
+        print theNote.imagex1
+        print "\n\n\n\n"
+       
+        render(view: "edit", model: [theNote: theNote] )
+       
+    }
+
+
+    def editNote =  {
+
+        def theNote = Notes.findWhere(id: Long.parseLong(params.id))
+        if (theNote) {
+            if (session.username == theNote.username) {
+                
+                theNote.username =  session.username
+                theNote.image_filename= session.image
+                theNote.datetime= new Date()
+                theNote.note= params.editedNote
+                theNote.imagex1= params.imageX1
+                theNote.imagex2= params.imageX2
+                theNote.imagey1= params.imageY1
+                theNote.imagey2= params.imageY2
+                theNote.width= params.width
+                theNote.height= params.height
+                theNote.save(flush:true)  // flush:true = save immediately
+
+                flash.message = "Successful edit"
+            }
+            else {
+                flash.message = "You dont have permission to edit that note. You may only edit your own notes."
             }
         }
-        render(view: "index")
+        redirect(action:"index", params:[src: session.imageUrl ])
+
     }
     
     
