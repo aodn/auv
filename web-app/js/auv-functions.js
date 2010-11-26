@@ -6,7 +6,7 @@
             // make OL compute scale according to WMS spec
             OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 
-            
+            var test;
 
 
 
@@ -143,7 +143,10 @@
                 // populate the track dropdown select and hidden track info
                 populateTracks(); 
 
-                map.events.register("zoomend", map, updateUserInfo);
+                map.events.register("zoomend", map, function()
+                    {
+                        updateUserInfo("");
+                    });
                 // create a new event handler for single click query
                 clickEventHandler = new OpenLayers.Handler.Click({
                     'map': map
@@ -172,19 +175,21 @@
 
 function updateUserInfo(tailored_msg) {
     var msg ="";
-    if (auvimages.inRange){
-        msg = "Click on the blue AUV track to see the nearest images";
+
+    if (tailored_msg != "") {
+            msg = tailored_msg;
     }
     else{
-        if (tailored_msg != "") {
-            msg = tailored_msg;
+        if (auvimages.inRange){
+            msg = "Click on the blue AUV track to see the nearest images";
         }
         else {
-            msg = "Zoom in on a AUV of interest";
+            msg = "Zoom in on the AUV icons till their tracks appear, or choose a track from the menu.";
         }
     }
+test = msg;
         
-        jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
+   jQuery("#track_html h3, #thisTrackInfo ").text(msg).show();
 
 }
 
@@ -479,11 +484,13 @@ function getpointInfo(e) {
 
             jQuery('#helpSection, #sorted_status,  .tracksort').hide();
             jQuery('#unsorted_status,  #sortbytrack').show();
-            jQuery('div#mygallery, div#stepcarouselcontrols').css("visibility","visible").show("slow");     
-            
+            jQuery('div#mygallery, div#stepcarouselcontrols').css("visibility","visible").show("slow");
+
+            updateUserInfo("Click an image to view and create public notes about the image");
         }
         else{
-            jQuery('#track_html').html("<h5>No Images found at your click point.</h5>");
+            jQuery('#track_html').html("<h5>No tracks or images found at your click point</h5>");
+            updateUserInfo("No tracks or images found at your click point");
         }
         
                         

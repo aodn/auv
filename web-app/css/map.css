@@ -28,6 +28,8 @@
     right: 10px;
     padding: 10px;
 }
+.align-right { float:right; margin: 0 0 15px 15px; }
+
 #imagecontainer{
     -jq-position: a;
     padding: 20px;
@@ -57,8 +59,7 @@
 
 /* The map and the location bar */
 #mapWrapper {
-    background:none repeat scroll 0 0 #eee;
-float:right;
+background:none repeat scroll 0 0 #eee;
 margin:10px;
 padding:10px;
 text-align: center;
@@ -68,9 +69,10 @@ text-align: center;
     border:1px solid #CCCCCC;
 }
 
-#wrapper {
+#controlWrapper {
     height: 50px;
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-left: 20px;
 }
 #wrapper div{
     float: left;
@@ -156,7 +158,9 @@ p.important {
     float: right! important;
     margin-right: 20px;
 }
-
+#helpSection {
+    margin: 30px;
+}
 #helpSection p {
     font-size: 14px;
 }
@@ -487,7 +491,7 @@ right:2px! important;
 }
 
 #sliderContainer{
-    width: 90%;
+    width: 85%;
 }
 .trackSort, #sliderContainer {
     float:left;
@@ -522,6 +526,7 @@ padding: 4px;
 
 .stepcarousel .panel img{
 width: 100%; /*Width of each panel holding each content. If removed, widths should be individually defined on each content DIV then. */
+cursor: pointer;
 }
 
 

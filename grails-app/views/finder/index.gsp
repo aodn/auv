@@ -210,15 +210,17 @@
         </div>
         <div id="mapcontainer">
            <DIV id="logo">
-                <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" /></a>
+                <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" class="align-right" /></a>
 
             </div>
-            <div id="mapWrapper">
+          <h2 class="align-right" >Autonomous Underwater Vehicle Image Viewer &nbsp;</h2>
+            <div id="mapWrapper" class="align-right">
                 <div id="map">
                     <div id="controlPanZoom" ></div>
                 </div>
             </div>
-            <div id="wrapper">
+          <div style="clear:both" ></div>
+            <div id="controlWrapper"  >
                 <div id="mapscale"></div>
                 <div id="mapcoords">location</div>
                 <div id="legendToggle">Legend</div>
@@ -241,15 +243,20 @@
         </div>
 
         <div id="imagecontainer">
+
             <div id="helpSection" >
+              <h3>How to use this AUV image viewer</h3>
                 <p><span class="ol" >1</span> Click on a AUV Icon
-                    (<img src="${server}/geoserver/styles/AUV-deployment.png" style="position: relative; bottom: -12px;" />)
+                   
                     in the map, or choose from the track list on the left.</p>
-                <p><span class="ol" >2</span> Choose a track. The map will zoom to the track if there's only one.</p>
-                <p><span class="ol" >3</span> Click on a track to view the closest images.</p>
-                <p><span class="ol" >4</span> Optionally view images along the track of the currently selected image.</p>
+                <p><span class="ol" >2</span> Choose a track and the map will zoom to it.</p>
+                <p><span class="ol" >3</span> Click on a track to view the closest images to the click origin.</p>
+                <p><span class="ol" >4</span> Optionally sort images along the track for the currently highlighted image.</p>
+                <p><span class="ol" >5</span> Click on any image to view or add notes about the image contents.</p>
             </div>
             <div id="mygallery" class="stepcarousel">
+
+            
                 <div class="belt">
                     <div class="panel">
                         <images src="images/mapshadow.png" />
