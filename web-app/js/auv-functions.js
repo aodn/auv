@@ -28,11 +28,14 @@
             function mapinit(b,mapheight,mapwidth){
 
 
-                if  (this_serverName == 'obsidian.bluenet.utas.edu.au') {  OpenLayers.ProxyHost = "http://obsidian.bluenet.utas.edu.au/webportal/RemoteRequest?url="; }
+                /*if  (this_serverName == 'obsidian.bluenet.utas.edu.au') {  OpenLayers.ProxyHost = "http://obsidian.bluenet.utas.edu.au/webportal/RemoteRequest?url="; }
                 if  (this_serverName == 'localhost:8080') { OpenLayers.ProxyHost = "http://localhost/cgi-bin/proxy.cgi?url="; }
                 if  (this_serverName == 'localhost') { OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url="; }
                 if  (this_serverName == 'preview.emii.org.au') { OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url="; }
-                
+                */
+               OpenLayers.ProxyHost = "proxy?url="; //grails proxy
+               //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+
                 if (OpenLayers.ProxyHost == "") {
                     alert("Proxy script is required and not configured. ");
                 }
@@ -187,7 +190,6 @@ function updateUserInfo(tailored_msg) {
             msg = "Zoom in on the AUV icons till their tracks appear, or choose a track from the menu.";
         }
     }
-test = msg;
         
    jQuery("#track_html h3, #thisTrackInfo ").text(msg).show();
 
@@ -307,7 +309,8 @@ function getpointInfo(e) {
             // get track feature info as XML   
             
             var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0');
-            
+            //alert (xmlDoc);
+           
             var x= xmlDoc.getElementsByTagName('gml:featureMember');
 
             for (i=0; i<x.length; i++) {     
@@ -805,8 +808,17 @@ function getpointInfo(e) {
             request_string=request_string.replace(/\\/g,'');
             var  theurl = URLEncode(request_string);        
             xhttp.open("GET",OpenLayers.ProxyHost + theurl,false);
-            xhttp.send("");
-        return xhttp.responseXML;
+            xhttp.send(null);
+            var ret ;
+            if (xhttp.responseXML) {
+               ret  = xhttp.responseXML;
+            }
+            else {
+               ret = xhttp.responseText ;
+            }
+            test = ret;
+            return ret;
+        
     
     }
     function URLEncode (clearString) {
