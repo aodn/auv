@@ -185,9 +185,11 @@ function updateUserInfo(tailored_msg) {
     else{
         if (auvimages.inRange){
             msg = "Click on the blue AUV track to see the nearest images";
+            jQuery('#styles').css("visibility","visible").show("slow");
         }
         else {
             msg = "Zoom in on the AUV icons till their tracks appear, or choose a track from the menu.";
+            jQuery('#styles').hide();
         }
     }
         
@@ -268,9 +270,11 @@ function getpointInfo(e) {
                 }
                 else {
                      updateUserInfo("Choose a track");
-                    var response = new Object();
-                    response.responseText = "";
-                    setImageHTML(response);
+
+                    showLoader("false"); 
+                    //var response = new Object();
+                    //response.responseText = "";
+                    //setImageHTML(response);
                 }
             }
             
@@ -495,13 +499,10 @@ function getpointInfo(e) {
             jQuery('#track_html').html("<h5>No tracks or images found at your click point</h5>");
             updateUserInfo("No tracks or images found at your click point");
         }
-        
-                        
+                     
 
-        showLoader("false"); // will be the slowest to load
-        
-        
-        jQuery.setTemplateLayout('css/map.css?', 'jq');
+        showLoader("false"); // will be the slowest to load   
+       // jQuery.setTemplateLayout('css/map.css?', 'jq');
         
     };
 
@@ -684,19 +685,6 @@ function getpointInfo(e) {
         }
 
     
-    }
-
-    // shows/hide the control panel
-    function toggleControlPanel(event){
-        var toolbar = document.getElementById("toolbar");
-        if (toolbar.style.display == "none") {
-            toolbar.style.display = "block";
-        }
-        else {
-            toolbar.style.display = "none";
-        }
-        event.stopPropagation();
-        map.updateSize()
     }
 
     // sets the chosen style

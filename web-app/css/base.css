@@ -2,9 +2,8 @@ html, body {
     
     
 /*font-family:"Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;*/
-font:11px/15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+font:0.9em/15px "Helvetica Neue",Helvetica,Arial,sans-serif;
     background-color: #FFFFFF;
-    font-size:0.85em;  
     margin: 0px; 
     color: #666;
 
@@ -14,7 +13,9 @@ font:11px/15px "Helvetica Neue",Helvetica,Arial,sans-serif;
 table {
  font-size: 11px;
 }
-h2 { color:#333333; font-size: 16px; font-weight: bold;}
+
+h1{ color:#3399CC; font-size: 20px; font-weight: bold; padding-top:8px}
+h2 { color:#3399CC; font-size: 16px; font-weight: bold;}
 h3 { color:#3399CC; font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px;}
 h4 {  font-size: 12px;  margin: 3px 2px;}
 h5 { color:#333333; font-size: 11px;  margin: 0px 2px;}
@@ -39,6 +40,25 @@ white-space: nowrap;
 padding-right: 15px;
 background: url(../img/extlink.gif) no-repeat 100% 50%;
 zoom: 1;
+}
+
+input, select, textarea, button {
+    background-color: #fcfcfc;
+    border: 1px solid #ccc;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    margin: 2px 0;
+    padding: 2px 4px;
+}
+select {
+   padding: 2px 2px 2px 0;
+}
+textarea {
+	width: 340px;
+	height: 50px;
+	vertical-align: top;
+}
+input:focus, select:focus, textarea:focus {
+    border: 1px solid #b2d1ff;
 }
 
 table.featureInfo, table.featureInfo td, table.featureInfo th {
@@ -67,6 +87,7 @@ table.featureInfo, table.featureInfo td, table.featureInfo th {
         text-transform:uppercase;
         padding:.2em .2em;
     }
+
 
 
 .extlink {

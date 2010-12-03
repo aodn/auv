@@ -2,20 +2,35 @@ package auv
 
 class Login {
 
-    String userid
-    String title
-    String firstname
-    String lastname
-    String institution
+    //String title
+    //String firstname
+    //String surname
+    //String org
+    //String kind //kind of organisation
+    //String address
+    //String zip
+    //String country
     String email
-    String joindate
+    String password
+    //String joindate
 
     static constraints = {
 
-        userid(unique:true,blank:false)
-        email(email:true,blank:false)
-        firstname(blank:false)
-        title(inList:['Mr','Mrs','Ms','Dr','Professor'])
+        //title(inList:['Mr','Mrs','Ms','Dr','Professor'])
+        //kind(inList:['Government','NGO','University','Private Sector','Volunteer'])
+        email(email:true,unique:true,blank:false)
+        password(size:5..15, blank:false)
+
+       /* title(blank:true)
+        firstname(blank:true)
+        surname(blank:true)
+        org(blank:true)
+        kind(blank:true)
+        address(blank:true)
+        zip(blank:true)
+        country(blank:true)
+        joindate(blank:true)
+        */
 
     }
 

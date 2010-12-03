@@ -2,6 +2,10 @@ package auv
 
 class NotesController {
 
+    /*def beforeInterceptor = [action:this.&auth]
+    def auth() {         if(!session.user) {
+            redirect(controller:'authentication',action:'login')             return false         }     }
+            */
     //static defaultAction = "submitNote"
     def getNotes() {
         def query = "from Notes where image_filename like '" + session.image + "' order by datetime desc"
@@ -11,15 +15,18 @@ class NotesController {
 
 
     def index = {
-
-        session.username = "test-user2"
+        // flash set in logincontroller
+        if (flash.username) {
+            session.username = flash.username
+        }
+        println flash.username
 
         if (params.src) {
             session.imageUrl = params.src
             def file = params.src.split("/")
             session.image = file[file.size() -1]
         }  
-        else {
+        else if(!session.imageUrl) {
             render("ERROR: There was no image supplied to annotate!")
         }
 
@@ -31,13 +38,9 @@ class NotesController {
         def theNote = Notes.findWhere(id: Long.parseLong(params.id))
         if (theNote) {
             if (session.username == theNote.username) {
-                print "allowed to edit \n\n"
                 
             }
-        } 
-        print theNote.imagex1
-        print "\n\n\n\n"
-       
+        }        
         render(view: "edit", model: [theNote: theNote] )
        
     }
@@ -64,7 +67,7 @@ class NotesController {
                 flash.message = "Successful edit"
             }
             else {
-                flash.message = "You dont have permission to edit that note. You may only edit your own notes."
+                flash.message = "You may only edit your own notes."
             }
         }
         redirect(action:"index", params:[src: session.imageUrl ])
@@ -80,7 +83,14 @@ class NotesController {
             if (session.username == theNote.username) {
                 theNote.delete(flush:true)
             }
+            else {
+                    flash.error = "You may only delete your own notes."
+            }
         }
+        else {
+             flash.error = "The note dosen't exist"
+        }
+
 
         getNotes()
         render(view: "index" )

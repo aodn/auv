@@ -37,6 +37,11 @@
                     onSelectChange: preview
                 });
 
+                // unauthenticated unwashed cant add notes
+                 <g:if test="${session.username == null}">
+                    photo.setOptions({ disable: true });
+                 </g:if>
+
 
                  // set the existing note bounding boxes
 
@@ -111,7 +116,7 @@
 
             };
 
-           
+          
 
            
 
@@ -119,9 +124,20 @@
 
 </head>
 <body>
+  <A href="javascript: self.close ()" class="right" >Close this Window</A>
+  <h1>AUV Image Tagging</h1>
 
-<h2>Add a note to this image</h2>
-<h5>Click and drag an area to annotate</h5>
+  
+  
+  <p>  <g:if test="${session.username == null}">
+     <g:link  controller="login"  params="['src': session.imageUrl]"  >Login to add a note to this image</g:link>
+</g:if>
+<g:else>
+     You are logged in as <b>${session.username}</b>  <g:link   controller="login" action="logout"><BR>[logout]</g:link><BR>
+     <h5>Click and drag an area to annotate</h5>
+</g:else></p>
+
+
 
 <div class="photoDiv">
 <ul class="map">
@@ -131,20 +147,12 @@
       </style>
        <li><a id="savednote${tes.id}"><span><b>Note ${tes.id}</b></span></a></li>
     </g:each>
-
-
-		
+	
 	</ul>
     <img src="${session.imageUrl}" alt="image to annotate" id="photo"  />
 
-    
-
-
 </div>
  
-
-
-
 
 <div style="clear:both" ></div>
 
@@ -158,7 +166,7 @@
     <label for="newNote" >Add a Note:</label>
     <g:form  name="noteForm" id="noteForm" url="[action:'submitNote',controller:'notes']" >
 
-    <g:textArea id="newNote" name="newNote" cols="30" rows="3" ></g:textArea>
+    <g:textArea id="newNote" name="newNote" cols="50" rows="3" ></g:textArea>
     <input name="imageX1" id ="imageX1" type="hidden" />
     <input name="imageX2" id ="imageX2" type="hidden" />
     <input name="imageY1" id ="imageY1" type="hidden" />
@@ -174,8 +182,12 @@
 
 
 <div style="clear:both" ></div>
-
-<h2 class="highlight">${flash.message}</h2>
+<g:if test="${flash.message != null}">
+  <h3 class="highlight">${flash.message}</h3>
+</g:if>
+<g:if test="${flash.error != null}">
+  <h3 class="error">${flash.error}</h3>
+</g:if>
 <div id="current_notes">
 
 <g:each in="${session.currentnotes}" var="tes" >

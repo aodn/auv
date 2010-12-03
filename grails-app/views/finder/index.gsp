@@ -209,11 +209,8 @@
             <div id="track_html"></div>
         </div>
         <div id="mapcontainer">
-           <DIV id="logo">
-                <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" class="align-right" /></a>
-
-            </div>
-          <h2 class="align-right" >Autonomous Underwater Vehicle Image Viewer &nbsp;</h2>
+           
+          <h1 class="align-right" >Autonomous Underwater Vehicle Image Viewer &nbsp;</h1>
             <div id="mapWrapper" class="align-right">
                 <div id="map">
                     <div id="controlPanZoom" ></div>
@@ -229,14 +226,14 @@
                     <img src="${server}/geoserver/wms?LAYER=${layernameTrack}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameTrack}" /><BR>
                     <img src="${server}/geoserver/wms?LAYER=${layernameImages}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameImages}" />
                 </div>
-		<li>
+                <div id="styles"  style="display:none">
                     <a>Styles:</a>
                     <select id="imageFormatSelector" onchange="setStyle(value)">
                         <option value="">Default</option>
                           <option value="auv_images_temperature">Temperature</option>
                     </select>
 
-                </li>
+                </div>
 
 
             </div>
@@ -246,13 +243,16 @@
 
             <div id="helpSection" >
               <h3>How to use this AUV image viewer</h3>
-                <p><span class="ol" >1</span> Click on a AUV Icon
+                
                    
-                    in the map, or choose from the track list on the left.</p>
-                <p><span class="ol" >2</span> Choose a track and the map will zoom to it.</p>
-                <p><span class="ol" >3</span> Click on a track to view the closest images to the click origin.</p>
-                <p><span class="ol" >4</span> Optionally sort images along the track for the currently highlighted image.</p>
-                <p><span class="ol" >5</span> Click on any image to view or add notes about the image contents.</p>
+                    
+                   <ol>
+                        <li>Click on a AUV Icon, or choose from the track list on the left.
+                        <li> Choose a track and the map will zoom to it.
+                        <li> Click on a track to view the closest images to the click origin.
+                        <li> Optionally sort images along the track for the currently highlighted image.
+                        <li> Click on any image to view or add notes about the image contents.
+                    </ol>
             </div>
             <div id="mygallery" class="stepcarousel">
 
@@ -299,6 +299,10 @@
             </div>
 
             <div id="footer">
+                <DIV id="logo">
+                <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" /></a>
+
+            </div>
                 <p><a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
                 <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
                 National Collaborative Research Infrastructure Strategy</a>
