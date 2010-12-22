@@ -23,7 +23,7 @@ h6 { color:#333333; font-size: 11px;  margin: 0px 2px; display:inline;  }
 
 
 a {
-    color: inherit;
+    color: #666;
     
 }
 a img{
@@ -112,4 +112,33 @@ hr {
     
     color: #f71bbc;
     font-weight: bold;
+}
+
+
+.toplinks {
+	background-color: #3399CC;
+
+	 -moz-border-radius: 3px;
+    /* For webkit browsers (Safari, Chrome, etc) */
+    -webkit-border-radius:3px;
+
+	color: white;
+	float:right;
+	position: absolute;
+    top: 4px;
+	right: 20px;
+	padding: 10px;
+	padding-top:4px;
+	padding-bottom:6px;
+}
+.toplinks a{
+	color: white;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0px 6px;
+    text-decoration: none;
+}
+.toplinks a:hover{
+	color: white;
+    text-decoration: underline;
 }

@@ -8,8 +8,6 @@
 
             var test;
 
-
-
             var imagesForTrack = [];
             allTracksHTML = "";
 
@@ -25,7 +23,7 @@
 
 
             */ 
-            function mapinit(b,mapheight,mapwidth){
+     function mapinit(b,mapheight,mapwidth){
 
 
                 /*if  (this_serverName == 'obsidian.bluenet.utas.edu.au') {  OpenLayers.ProxyHost = "http://obsidian.bluenet.utas.edu.au/webportal/RemoteRequest?url="; }
@@ -40,7 +38,6 @@
                     alert("Proxy script is required and not configured. ");
                 }
 
-
                 
                 OpenLayers.ImgPath = "theme/dark/";
 
@@ -52,7 +49,7 @@
                         maximized: true,
                         minRatio: 4, 
                         maxRatio: 16,
-                        mapOptions:{ numZoomLevels: 5}
+                        mapOptions:{numZoomLevels: 5}
                         });
                 
                 var bounds = new OpenLayers.Bounds.fromString( b );
@@ -60,8 +57,10 @@
                 var options = {
                     controls: [
                     new OpenLayers.Control.PanZoomBar({
+                            zoomStopHeight: 5,
                             div: document.getElementById('controlPanZoom')
                         }),
+                    //new OpenLayers.Control.PanZoomBar,
                     overviewmap,
                     //new OpenLayers.Control.LayerSwitcher(),
                     new OpenLayers.Control.ScaleLine({
@@ -74,7 +73,7 @@
                         })
                     ],
                     //maxExtent: bounds,
-                    numZoomLevels: 26,
+                    numZoomLevels: 20,
                     projection: "EPSG:4326",
                     units: 'degrees'
                 };
@@ -90,10 +89,10 @@
                         format: format,
                         tiled: 'true'
                     },
-                    {   isBaseLayer: true,
+                    {isBaseLayer: true,
                         buffer: 0,
                         displayOutsideMaxExtent: true
-} 
+                    }
                 );
                 auvtracks = new OpenLayers.Layer.WMS(
                     "auv_tracks", server + '/geoserver/wms',
@@ -105,10 +104,11 @@
                         transparent: 'TRUE',
                         tiled: 'true'
                     },
-                    {   isBaseLayer: false, 
+                    {isBaseLayer: false, 
                         transitionEffect: 'resize',
                         buffer: 0,
-                        displayOutsideMaxExtent: true} 
+                        displayOutsideMaxExtent: true
+                    }
                 );
                 auvimages = new OpenLayers.Layer.WMS(
                     "auv_images_vw", server + '/geoserver/wms',
@@ -120,11 +120,12 @@
                         transparent: 'TRUE',
                         tiled: 'true'
                     },
-                    {   isBaseLayer: false, 
+                    {isBaseLayer: false, 
                         transitionEffect: 'resize',
                         buffer: 0,
                         maxResolution: .000035, // important to limit geoserver stress
-                        displayOutsideMaxExtent: true} 
+                        displayOutsideMaxExtent: true
+                    }
                 );
         
                 markers = new OpenLayers.Layer.Markers( "Markers" ); 
@@ -143,8 +144,6 @@
                 //map.zoomToMaxExtent();
                 map.setCenter(new OpenLayers.LonLat(135,-26), 3)
                 
-                // populate the track dropdown select and hidden track info
-                populateTracks(); 
 
                 map.events.register("zoomend", map, function()
                     {
@@ -171,7 +170,7 @@
                     map.div.style.cursor="pointer";
                     clickEventHandler.activate();
                 });
-                
+
 
             }
 
@@ -193,7 +192,9 @@ function updateUserInfo(tailored_msg) {
         }
     }
         
-   jQuery("#track_html h3, #thisTrackInfo ").text(msg).show();
+   //jQuery("#track_html h3, #thisTrackInfo ").text(msg).show();
+   jQuery("#thisTrackInfo").text(msg).show();
+
 
 }
 
@@ -259,7 +260,7 @@ function getpointInfo(e) {
 
         if (url) { 
 
-            
+            updateUserInfo('Searching ...');
             if (layerName == layername_track) {  
                 OpenLayers.loadURL(url, '', this, setTrackHTML, setError);
             }
@@ -269,17 +270,10 @@ function getpointInfo(e) {
                     OpenLayers.loadURL(url, '', this, setImageHTML, setError);
                 }
                 else {
-                     updateUserInfo("Choose a track");
-
+                    updateUserInfo("");
                     showLoader("false"); 
-                    //var response = new Object();
-                    //response.responseText = "";
-                    //setImageHTML(response);
                 }
             }
-            
-            // Assume failure just because
-            jQuery('#track_html').html("<h5>Searching for tracks at your click point.</h5>");
             
         } 
 
@@ -289,18 +283,60 @@ function getpointInfo(e) {
 
     function resetMap() {
 
-        map.zoomToMaxExtent();
+        map.zoomTo(3);
+        map.setCenter(new OpenLayers.LonLat(135,-26), 3)
         markers.clearMarkers();
         jQuery('.auvSiteDetails, #track_html,  #sortbytrack, .trackSort').hide();
+        jQuery('#mygallery, #stepcarouselcontrols').toggle(false);
         jQuery('#helpSection').show();
-        jQuery('div#mygallery, div#stepcarouselcontrols').css("visibility","hidden");
-        jQuery.setTemplateLayout('css/map.css?', 'jq');
+        updateUserInfo("Click on a AUV Icon, or choose from the track list.");
     
     }
+    
+    // return multidimentional array- numbered array of associative arrays
+    function  getArrayFromXML(xmlDoc,fields_array) {
+
+            var myArray = [];
+            var tmp = [];
+            var x = 0;
+             if (xmlDoc.namespaceURI !== null) {
+               x = xmlDoc.getElementsByTagName("gml:featureMember");
+             //jQuery("#tmp_html").append(x.length + " = <BR>");
+             }
+             else {
+               x = xmlDoc.getElementsByTagNameNS("http://www.opengis.net/gml","featureMember");
+             }
+
+
+             for (i=0; i<x.length; i++) {
+
+                var myArray = [];
+                for (y=0; y<fields_array.length; y++) {
+
+                     var z;
+                     if (xmlDoc.namespaceURI !== null) {
+                        try{ z = xmlDoc.getElementsByTagName("topp:" + fields_array[y])[i].childNodes[0].nodeValue }catch( e ){}
+                     }
+                     else {
+                        try{z = xmlDoc.getElementsByTagNameNS("http://www.openplans.org/topp", fields_array[y] )[i].childNodes[0].nodeValue;}catch( e ){}
+                     }
+                   // jQuery("#tmp_html").append( z + "<BR>");
+
+                    if (z != "") {
+                        myArray[fields_array[y]]= z;
+
+                    }
+                }
+                tmp[i] = myArray;
+
+            }
+            return tmp;
+        }
 
             
 
     function populateTracks() {
+        
         // run once to get all tracks into an object
         if (allTracksHTML == "" ) {
             
@@ -310,30 +346,18 @@ function getpointInfo(e) {
             var trackSelectorValues = [];
             var html_content = "<div class=\"feature\" >\n";
 
+            var request_string =  server + '/geoserver/wfs?request=GetFeature&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0';
+            
+
             // get track feature info as XML   
             
-            var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0');
-            //alert (xmlDoc);
+            var xmlDoc = getXML(request_string);
+            
+            tmp = getArrayFromXML(xmlDoc,fields_array);
            
-            var x= xmlDoc.getElementsByTagName('gml:featureMember');
 
-            for (i=0; i<x.length; i++) {     
-
-                var myArray = [];  
-                for (y=0; y<fields_array.length; y++) {     
-
-                    // check for existance to be safe  
-
-                    if(xmlDoc.getElementsByTagName("topp:" + fields_array[y] )[i]) {    
-                        myArray[fields_array[y]]= xmlDoc.getElementsByTagName("topp:" + fields_array[y] )[i].childNodes[0].nodeValue;                        
-                    }
-                }
-                tmp[i] = myArray;
-                
-            }
-
-           
-            // simulate a getfeatureinfo request 
+ 
+            // now assemble the neccessaries for the simulated getfeatureinfo request
             for (var i=0;i<tmp.length;i++) {
 
                
@@ -371,15 +395,15 @@ function getpointInfo(e) {
                 html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
                 html_content = html_content + "</tbody></table>\n";
                 
-                html_content = html_content + "<b>Depth:</b>" + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_min"] + "m<br>\n";
+                html_content = html_content + "<b>Depth:</b>" + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
 
 
-                if (tmp[i]["dive_report"] != "" ) {
+                if (tmp[i]["dive_report"] != undefined ) {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\">Dive Report</a><br>";               
                 }
-                if (tmp[i]["dive_notes"] != "" ) {
+                if (tmp[i]["dive_notes"] != undefined ) {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";               
-                }            jQuery('#track_html').show();
+                }jQuery('#track_html').show();
 
                 jQuery('#track_html h3').hide();
 
@@ -388,7 +412,7 @@ function getpointInfo(e) {
                     jQuery('.auvSiteDetails').show(1000);
                 }
 
-                if (tmp[i]["metadata_uuid"] != "" ) {
+                if (tmp[i]["metadata_uuid"] != undefined ) {
                     html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";                       
                 }
 
@@ -399,8 +423,6 @@ function getpointInfo(e) {
 
                 
             }
-
-             
 
 
             trackSelectorValues = sortAssoc(trackSelectorValues);
@@ -415,15 +437,16 @@ function getpointInfo(e) {
             
         }
         //populate but keep hidden
-        jQuery('#track_html').html(allTracksHTML).hide();                
+        jQuery('#track_html').html(allTracksHTML).hide();
         
         
         
     }
 
     // reponding to a track picked from the select dropdown
+    // all the tracks must be reload into the track_html div
     function allTracksSelector(css_id) {
-
+            populateTracks();
             resetTrackHTML();
             jQuery(css_id + ' .getfeatureTitle').trigger('click');
     }
@@ -442,14 +465,17 @@ function getpointInfo(e) {
                 html_content  = html_content[2].replace(/^\s+|\s+$/g, '');  // trim
             }
         }
-        if (html_content != "") {
+        jQuery('#track_html').html(html_content);
 
-            jQuery('#track_html').html(html_content);
+        if (html_content != "") {
+            if (!auvimages.inRange){
+                updateUserInfo("Choose a track");                
+            }
             resetTrackHTML();
+            
         }
         else{
-            jQuery('#track_html').html("<h5>No tracks found at your click point.</h5>").show();       
-            jQuery('#track_html h3').show();
+            updateUserInfo("No tracks found at your click point.");
         }
 
         
@@ -457,13 +483,15 @@ function getpointInfo(e) {
     
     function resetTrackHTML() {
 
+        //populateTracks(); //cant reset here
         jQuery('#track_html').show();
         jQuery('#track_html h3').hide();
 
         if (jQuery('#track_html .featurewhite').size() == 1) {
             jQuery('.featurewhite').addClass('featurewhite_selected');
             jQuery('.auvSiteDetails').show(1000);
-        }
+        }       
+       
 
             
     }
@@ -487,21 +515,24 @@ function getpointInfo(e) {
         if (html_content != "") {     
 
             jQuery('#mygallery').html(html_content);
+            jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
+
             loadGallery(Math.round(jQuery('#mygallery .panel').size()/2));
 
-            jQuery('#helpSection, #sorted_status,  .tracksort').hide();
             jQuery('#unsorted_status,  #sortbytrack').show();
-            jQuery('div#mygallery, div#stepcarouselcontrols').css("visibility","visible").show("slow");
-
+            jQuery('#helpSection, #sorted_status,  .tracksort').hide();
+            
+            jQuery('#mygallery').css("height","310px"); // sort out why i have to call this
+        jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
+            
             updateUserInfo("Click an image to view and create public notes about the image");
         }
         else{
-            jQuery('#track_html').html("<h5>No tracks or images found at your click point</h5>");
             updateUserInfo("No tracks or images found at your click point");
         }
                      
 
-        showLoader("false"); // will be the slowest to load   
+        showLoader("false"); // will be the slowest to load        
        // jQuery.setTemplateLayout('css/map.css?', 'jq');
         
     };
@@ -522,29 +553,31 @@ function getpointInfo(e) {
 
     function sortImagesAlongTrack(reLoad) {
 
+        var answer = confirm("There are many images to sort. This may take a while, OK?")
+        if (answer) {
+            showLoader("now");
+            // disable the slider
+            jQuery('#slider').slider( "disable" );
+            jQuery('.tracksort, #sortbytrack, #unsorted_status').hide();
+            jQuery('#sorted_status').html("<br>").show(); // tmp content to keep spacing
 
-        showLoader("now");
-        // disable the slider
-        jQuery('#slider').slider( "disable" );
-        jQuery('.tracksort, #sortbytrack, #unsorted_status').hide();
-        jQuery('#sorted_status').html("<br>").show(); // tmp content to keep spacing
-        
-        var fk_auv_tracks = jQuery('#this_fk_auv_tracks').text();
-        if (fk_auv_tracks != "") {
+            var fk_auv_tracks = jQuery('#this_fk_auv_tracks').text();
+            if (fk_auv_tracks != "") {
 
-            if (!reLoad) {
-                getImageList(fk_auv_tracks);                
-            }            
-            // write the HTML
-            trackSort(fk_auv_tracks,reLoad);               
+                if (!reLoad) {
+                    getImageList(fk_auv_tracks);
+                }
+                // write the HTML
+                trackSort(fk_auv_tracks,reLoad);
 
+            }
+            else {
+                // probably a problem with all the fields or the button was visible when it shouldnt be
+                alert("Javascript error: There is no selected image to sort around.");
+            }
+
+            showLoader("false");
         }
-        else {
-            // probably a problem with all the fields or the button was visible when it shouldnt be
-            alert("Javascript error: There is no selected image to sort around.");
-        }
-
-        showLoader("false");
 
     }
 
@@ -632,9 +665,10 @@ function getpointInfo(e) {
             var str = "<b>Viewing images for this track:</b> "  + minimum_index+ " to " + max_i+ " of " + imagesForTrack.length;                    
             jQuery('#sorted_status').html(str).show(); 
 
-            jQuery('#mygallery').html(html_content); 
- 
-            jQuery('#mygallery,  #mygallery-paginate, .tracksort').css("visibility","visible").show();
+            jQuery('#mygallery').html(html_content);
+            jQuery('#mygallery-paginate, .tracksort').css("visibility","visible").show();
+            jQuery('div#mygallery').css("height","310");
+            jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
             loadGallery(selected_image);
 
 
@@ -661,38 +695,29 @@ function getpointInfo(e) {
         imagesForTrack = []; // reset       
         fields = "image_filename,campaign_code,site_code,time,longitude,latitude,sea_water_temperature,sea_water_salinity,chlorophyll_concentration_in_sea_water";  
         fields_array = fields.split(",");
-        var myArray = []; 
 
         // get images for track
-        if (fk_auv_tracks != "") {       
-            var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks);  
-                
-            var x= xmlDoc.getElementsByTagName('gml:featureMember');
-            var i=0;
-            for (; i<x.length; i++) {  
-
-
-                myArray = [];  
-                for (y=0; y<fields_array.length; y++) {                      
-                    myArray[fields_array[y]]= xmlDoc.getElementsByTagName("topp:" + fields_array[y] )[i].childNodes[0].nodeValue;
-                }
-                imagesForTrack[i] = myArray;
-
-                
-            }
-            
-            
+        if (fk_auv_tracks != "") {
+            var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks);
+            imagesForTrack = getArrayFromXML(xmlDoc,fields_array);
         }
-
     
     }
 
     // sets the chosen style
-    function setStyle(style){        
+    function setStyle(style){
         
         auvimages.mergeNewParams({
             styles: style
         });
+        // set the getlegendGraphic image url
+        jQuery('#imagesGetLegendGraphic').attr("src",server + "/geoserver/wms?LAYER=" + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png&STYLE=" + style);
+    }
+
+    function  resetStyleSelect() {
+                 // force reset on page load of the style select in Firefox
+                var field = jQuery('#imageFormatSelector');
+                 field.val(jQuery('option:first', field).val());
     }
 
     
@@ -728,6 +753,7 @@ function getpointInfo(e) {
     
     function showHideZoom(css_id,bounds) {
 
+       
         css_id = "#" + css_id;
 
         jQuery('#track_html').show();
@@ -735,7 +761,7 @@ function getpointInfo(e) {
 
         if (jQuery(css_id).is(':visible')) {
             jQuery(css_id).hide(50);
-            map.zoomToMaxExtent();
+            map.zoomTo(3);
             jQuery('.featurewhite').addClass('featurewhite_selected');
         } else {
             jQuery(css_id).show(450);
@@ -744,7 +770,7 @@ function getpointInfo(e) {
             jQuery('.featurewhite').removeClass('featurewhite_selected')
             jQuery(css_id).parent().addClass('featurewhite_selected');
             jQuery(css_id).parent().show();
-            //var msg = "Click again on the track to see the nearest images";
+            updateUserInfo("Click again on the track, (or zoom further) to see the nearest images");
             //jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
         }            
         
@@ -786,29 +812,19 @@ function getpointInfo(e) {
     };
 
     function getXML(request_string) {
-    
-            if (window.XMLHttpRequest)  {
-                xhttp=new XMLHttpRequest();
+
+            if (window.XMLHttpRequest)    {
+              xhttp=new XMLHttpRequest();
             }
-            else {// Internet Explorer 5/6
-                xhttp=new ActiveXObject("Microsoft.XMLHTTP");
-            }     
-            request_string=request_string.replace(/\\/g,'');
-            var  theurl = URLEncode(request_string);        
+            else  {
+              xhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            var  theurl = URLEncode(request_string);
             xhttp.open("GET",OpenLayers.ProxyHost + theurl,false);
-            xhttp.send(null);
-            var ret ;
-            if (xhttp.responseXML) {
-               ret  = xhttp.responseXML;
-            }
-            else {
-               ret = xhttp.responseText ;
-            }
-            test = ret;
-            return ret;
-        
-    
+            xhttp.send();
+            return xhttp.responseXML;
     }
+
     function URLEncode (clearString) {
         var output = '';
         var x = 0;
@@ -957,6 +973,16 @@ function getpointInfo(e) {
         return (str+'').replace(/^(.)|\s(.)/g, function ( $1 ) {
             return $1.toUpperCase ( );
         } );
+    }
+
+    function in_fieldsArray(string, array)  {
+        
+       for (i = 0; i < array.length; i++)   {          
+          if("topp:" + array[i] == string)    {
+             return array[i];
+          }
+       }
+    return false;
     }
 
     // sort associative array keys by value

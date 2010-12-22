@@ -14,25 +14,26 @@ environments {
     development {
         dataSource {
             dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:postgresql://localhost:5432/auv"
-            username = "grails"
-            password = "grails"
+            url = "jdbc:postgresql://localhost:5432/auvusers"
+            username = "auv"
+            password = "heyuv8"
         }
     }
     test {
         dataSource {
             dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:postgresql://localhost:5432/auv"
-            username = "grails"
-            password = "grails"
+            jndiName = "java:comp/env/jdbc/auvusers"
+            //url = "jdbc:postgresql://dbfarm0.emii.org.au:5432/auvusers"
+            username = "auv"
+            password = "heyuv8"
         }
     }
    production {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            url = "jdbc:postgresql://localhost:5432/auv"
-            username = "grails"
-            password = "grails"
+            dbCreate = "update" // one of 'create', 'create-drop','update'
+            jndiName = "java:comp/env/jdbc/auvusers"
+            username = "auv"
+            password = "heyuv8"
         }
     }
 

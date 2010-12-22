@@ -1,91 +1,95 @@
+body {
+     padding-top: 10px;
+     padding-left:10px;
+     min-width:		950px;
+		min-height:		600px;
+
+}
+
 
 
 #footer {
-    -jq-position: g;
     font-size: 10px;
     font-family:Arial,Helvetica,sans-serif;
-    padding-top: 20px;
+    margin:10px 10px 10px 0px;
+    width: 430px;
 
 }
 
 #mainbody {
-    width:100%;
-    -jq-display: "cba."
-                 "...."
+   /* margin: 20px;*/
+    height: 100%;
+    overflow: auto!  important;
 
-     270px 560px  minmax(350px,100%) * ;
-    clear: both;
-    margin: 20px;
 
 }
 #helpSection {
-    position: absolute;
 }
-#logo {
-    -jq-position: f;
+#logo img {
     /*position: absolute;*/
-    bottom: 10px;
-    right: 10px;
-    padding: 10px;
+    margin-right: 60px;
+}
+
+#logo h1 {
+    display: inline
 }
 .align-right { float:right; margin: 0 0 15px 15px; }
 
 #imagecontainer{
-    -jq-position: a;
     padding: 20px;
     padding-top: 0px;
     margin: 5px;
     margin-left: 0px;
 
 }
-#imagecontainer #mygallery,#imagecontainer #stepcarouselcontrols{
-    visibility: hidden;
-}
-#mygallery {
-    -moz-border-radius: 5px;
-}
+
 #mapcontainer {
-    -jq-position: b;
-    padding: 5px;
+    padding: 0px! important;
+  
+
 
 
 }
 #trackcontainer {
     padding-right: 5px;
-    -jq-position: c;
     padding: 5px;
     margin: 5px;
 }
 
-/* The map and the location bar */
-#mapWrapper {
-background:none repeat scroll 0 0 #eee;
-margin:10px;
-padding:10px;
-text-align: center;
+#track_html {
+    overflow: auto;
+    height: 250px;
 }
+
+
 #map {
-    margin-left: auto; margin-right: auto;
-    border:1px solid #CCCCCC;
+    margin-left: auto;
+    margin-right: auto;
+    /*border:1px solid #CCCCCC;*/
 }
 
 #controlWrapper {
     height: 50px;
     margin-top: 5px;
-    margin-left: 20px;
+    margin-left: 10px;
+}
+#controlWrapper, #legendToggle, #mapcoords, #mapscale {
+    font-size: 10px;
 }
 #wrapper div{
     float: left;
     padding: 6px;
+}
+#styles {
+    float: left;
 }
 #image_html {
     clear:both;
 }
 
 #mapscale {
-	width: 130px;
+	width: 80px;
     float: left;
-    font-size: small;
     padding: 3px;
 }
 #mapscale div{
@@ -97,7 +101,6 @@ text-align: center;
     position: relative;
     float: right! important;
     background: inherit;
-    font-size: small;
     padding: 3px;
 }
 
@@ -112,11 +115,12 @@ text-align: center;
 	background-color: #fafafa;
 }
 .featurewhite {
-    padding: 5px;
+    padding-top: 5px;
 }
 .featurewhite_selected {
     background-color: white;
     padding: 15px;
+    padding-top: 0px;
 
 }
 
@@ -161,10 +165,10 @@ p.important {
 #legendToggle {
     float: right! important;
     margin-right: 20px;
+    padding: 3px;
 }
 #helpSection {
     margin: 30px;
-    margin-top: 0px;
 }
 #helpSection p {
     font-size: 14px;
@@ -268,6 +272,8 @@ float: left;
     margin-right: 7px;
 }
 
+
+
 .olControlZoomBoxItemActive {
 	background-position: -600px 0pt;
 }
@@ -292,8 +298,6 @@ float: left;
 
 #controlPanZoom {
 	position: relative;
-	/*margin-left: 15px;
-    margin-top: 20px;*/
 	width: 42px;
 	z-index: 1000;
 }
@@ -342,7 +346,7 @@ float: left;
 
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout
 {
-    top: 360px! important;
+    top: 230px! important;
     left: 11px! important;
     background-position: -2100px 0;
 }
@@ -358,7 +362,7 @@ float: left;
 
 #controlPanZoom #OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\002E Map_9
 {
-    height:278px !important;
+    height:150px !important;
     left:13px !important;
     top:85px !important;
 }
@@ -514,6 +518,12 @@ height: 310px; /*Height should enough to fit largest content's height*/
 background-color: #999;
 }
 
+#myGallery {
+    height: 310px; /*Height should enough to fit largest content's height*/
+    -moz-border-radius: 5px;
+}
+
+
 .stepcarousel .belt{
 position: absolute; /*leave this value alone*/
 left: 0;
@@ -541,7 +551,7 @@ cursor: pointer;
     clear:both;
 }
 .buttons a, .buttons button, select{
-    display:block;
+    /*display:block;*/
 
     text-decoration:none;
     color:#565656;
@@ -554,7 +564,7 @@ cursor: pointer;
     border-style:solid;
     border-width:1px;
     color:#666;
-    margin:0 8px 20px 0;
+    margin:12px 8px ;
     outline:medium none;
     font-family:Helvetica,Arial,sans-serif;
     font-weight: bold;
@@ -562,6 +572,10 @@ cursor: pointer;
     text-align:center;
     vertical-align:middle;
     white-space:nowrap;
+}
+
+select#trackSelector {
+    display: inline;
 }
 .buttons button.hover, select.hover{
     background-color:#cccccc;

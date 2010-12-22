@@ -286,7 +286,7 @@ var stepcarousel={
         var config=stepcarousel.configholder[galleryid]
         //config.contenttype=['ajax', url]
         stepcarousel.stopautostep(config)
-        stepcarousel.resetsettings($, config)
+        stepcarousel.resetsettings(jQuery, config)
         stepcarousel.init(jQuery, config)
 
     },
@@ -312,6 +312,9 @@ var stepcarousel={
 			stepcarousel.getremotepanels($, config)
 		else
 			stepcarousel.alignpanels($, config) //align panels and initialize gallery
+        // hide the gallery. needs to exist for step carousel
+        jQuery('#mygallery, #stepcarouselcontrols').toggle(false);
+
 	},
 
 	resetsettings:function($, config){
