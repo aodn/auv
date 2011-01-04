@@ -334,7 +334,7 @@
             
                 <div class="belt">
                     <div class="panel">
-                        <images src="images/mapshadow.png" />
+                        <img src="images/mapshadow.png" />
                     </div>
                 </div>
             </div>

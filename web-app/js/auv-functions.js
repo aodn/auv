@@ -579,7 +579,7 @@ function getpointInfo(e) {
     function sortImagesAlongTrack(reLoad) {
 
         var answer = false;
-        
+        showLoader(true);
 
         if (reLoad != undefined) {
             answer =true;
@@ -589,7 +589,6 @@ function getpointInfo(e) {
 
         }
         if (answer) {
-            showLoader(true);
             updateUserInfo("Sorting images for the track of the selected image. Please be patient...");
             // disable the slider
             jQuery('#slider').slider( "disable" );
