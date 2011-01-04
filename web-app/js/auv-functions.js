@@ -585,7 +585,11 @@ function getpointInfo(e) {
             answer =true;
         }
         else {
-            answer = confirm("There are many images to sort. This may take a while, OK?")
+            answer = confirm("There are many images to sort. This may take a while, OK?");
+            if (!answer) {
+                showLoader();
+            }
+
 
         }
         if (answer) {
@@ -1016,45 +1020,3 @@ function getpointInfo(e) {
     return aOutput;
     }
 
-    /*
-    * jqDnR - Minimalistic Drag'n'Resize for jQuery.
-    *
-    * Copyright (c) 2007 Brice Burgess <bhb@iceburg.net>, http://www.iceburg.net
-    * Licensed under the MIT License:
-    * http://www.opensource.org/licenses/mit-license.php
-    * 
-    * $Version: 2007.08.19 +r2
-    */
-    
-    (function($){
-    $.fn.jqDrag=function(h){return i(this,h,'d');};
-    $.fn.jqResize=function(h){return i(this,h,'r');};
-    $.jqDnR={dnr:{},e:0,
-    drag:function(v){
-    if(M.k == 'd')E.css({left:M.X+v.pageX-M.pX,top:M.Y+v.pageY-M.pY});
-    else E.css({width:Math.max(v.pageX-M.pX+M.W,0),height:Math.max(v.pageY-M.pY+M.H,0)});
-    return false;},
-    stop:function(){E.css('opacity',M.o);$().unbind('mousemove',J.drag).unbind('mouseup',J.stop);}
-    };
-    var J=$.jqDnR,M=J.dnr,E=J.e,
-    i=function(e,h,k){return e.each(function(){h=(h)?$(h,e):e;
-    h.bind('mousedown',{e:e,k:k},function(v){var d=v.data,p={};E=d.e;
-    // attempt utilization of dimensions plugin to fix IE issues
-    if(E.css('position') != 'relative'){try{E.position(p);}catch(e){}}
-    M={X:p.left||f('left')||0,Y:p.top||f('top')||0,W:f('width')||E[0].scrollWidth||0,H:f('height')||E[0].scrollHeight||0,pX:v.pageX,pY:v.pageY,k:d.k,o:E.css('opacity')};
-    E.css({opacity:0.8});$().mousemove($.jqDnR.drag).mouseup($.jqDnR.stop);
-    return false;
-    });
-    });},
-    f=function(k){return parseInt(E.css(k))||false;};
-    })(jQuery);
-
-/*
- * jQuery doTimeout: Like setTimeout, but better! - v1.0 - 3/3/2010
- * http://benalman.com/projects/jquery-dotimeout-plugin/
- * 
- * Copyright (c) 2010 "Cowboy" Ben Alman
- * Dual licensed under the MIT and GPL licenses.
- * http://benalman.com/about/license/
- */
-(function($){var a={},c="doTimeout",d=Array.prototype.slice;$[c]=function(){return b.apply(window,[0].concat(d.call(arguments)))};$.fn[c]=function(){var f=d.call(arguments),e=b.apply(this,[c+f[0]].concat(f));return typeof f[0]==="number"||typeof f[1]==="number"?this:e};function b(l){var m=this,h,k={},g=l?$.fn:$,n=arguments,i=4,f=n[1],j=n[2],p=n[3];if(typeof f!=="string"){i--;f=l=0;j=n[1];p=n[2]}if(l){h=m.eq(0);h.data(l,k=h.data(l)||{})}else{if(f){k=a[f]||(a[f]={})}}k.id&&clearTimeout(k.id);delete k.id;function e(){if(l){h.removeData(l)}else{if(f){delete a[f]}}}function o(){k.id=setTimeout(function(){k.fn()},j)}if(p){k.fn=function(q){if(typeof p==="string"){p=g[p]}p.apply(m,d.call(n,i))===true&&!q?o():e()};o()}else{if(k.fn){j===undefined?e():k.fn(j===false);return true}else{e()}}}})(jQuery);

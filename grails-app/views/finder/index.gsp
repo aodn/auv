@@ -13,6 +13,7 @@
 
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.4.2.min.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery.layout1.3.0.js')}"></script>
+        <script type="text/javascript" src="${resource(dir:'js',file:'jqDnR.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-ui-1.8.5.custom.min.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'OpenLayers-2.9.js')}" ></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'auv-functions.js')}"  defer="defer"></script>
@@ -78,7 +79,7 @@
                 jQuery("#legendClose").click(function() {
                     jQuery('div#legend').hide();
                 });
-                //jQuery('#legend').jqDrag(); // draggable
+                jQuery('#legend').jqDrag(); // draggable
 
                 jQuery('button').mouseover(function() {
                     jQuery(this).addClass('hover');
