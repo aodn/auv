@@ -14,6 +14,7 @@
             var timeoutID = "";
             var markers = ""; // Openlayers marker layer
             var imageBuffer = 20; // amount of images to retreive either side of current image
+            var layersLoading = 0; // 
 
 
 
@@ -127,6 +128,12 @@
                         displayOutsideMaxExtent: true
                     }
                 );
+
+                //map.events.register("loadEnd", this, alert("yep"));
+                registerLayer(auvtracks);
+                registerLayer(auvimages);
+
+
         
                 markers = new OpenLayers.Layer.Markers( "Markers" ); 
     
@@ -173,7 +180,25 @@
 
 
             }
+function registerLayer(layer) {
+    layer.events.register('loadstart', this, loadStart);
+    layer.events.register('loadend', this, loadEnd);
+}
 
+
+function loadStart() {
+    if (layersLoading == 0) {
+       showLoader("true");
+    }
+    layersLoading++;
+}
+
+function loadEnd() {
+    layersLoading--;
+    if (layersLoading == 0) {
+        showLoader();
+    }
+}
 
 function updateUserInfo(tailored_msg) {
     var msg ="";
@@ -271,7 +296,7 @@ function getpointInfo(e) {
                 }
                 else {
                     updateUserInfo("");
-                    showLoader("false"); 
+                    showLoader(); 
                 }
             }
             
@@ -286,8 +311,8 @@ function getpointInfo(e) {
         map.zoomTo(3);
         map.setCenter(new OpenLayers.LonLat(135,-26), 3)
         markers.clearMarkers();
-        jQuery('.auvSiteDetails, #track_html,  #sortbytrack, .trackSort').hide();
-        jQuery('#mygallery, #stepcarouselcontrols').toggle(false);
+        jQuery('.auvSiteDetails, #track_html,  #sortbytrack' ).hide();
+        jQuery('#mygallery, #stepcarouselcontrols, .trackSort').hide();
         jQuery('#helpSection').show();
         updateUserInfo("Click on a AUV Icon, or choose from the track list.");
     
@@ -518,12 +543,12 @@ function getpointInfo(e) {
             jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
 
             loadGallery(Math.round(jQuery('#mygallery .panel').size()/2));
-
+            jQuery('.tracksort').hide();
             jQuery('#unsorted_status,  #sortbytrack').show();
-            jQuery('#helpSection, #sorted_status,  .tracksort').hide();
+            jQuery('#helpSection, #sorted_status').toggle(false);
             
             jQuery('#mygallery').css("height","310px"); // sort out why i have to call this
-        jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
+            jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
             
             updateUserInfo("Click an image to view and create public notes about the image");
         }
@@ -532,7 +557,7 @@ function getpointInfo(e) {
         }
                      
 
-        showLoader("false"); // will be the slowest to load        
+        showLoader(); // will be the slowest to load
        // jQuery.setTemplateLayout('css/map.css?', 'jq');
         
     };
@@ -553,18 +578,28 @@ function getpointInfo(e) {
 
     function sortImagesAlongTrack(reLoad) {
 
-        var answer = confirm("There are many images to sort. This may take a while, OK?")
+        var answer = false;
+        
+
+        if (reLoad != undefined) {
+            answer =true;
+        }
+        else {
+            answer = confirm("There are many images to sort. This may take a while, OK?")
+
+        }
         if (answer) {
-            showLoader("now");
+            showLoader(true);
+            updateUserInfo("Sorting images for the track of the selected image. Please be patient...");
             // disable the slider
             jQuery('#slider').slider( "disable" );
-            jQuery('.tracksort, #sortbytrack, #unsorted_status').hide();
+            jQuery('.tracksort, #sortbytrack, #unsorted_status').toggle(false);
             jQuery('#sorted_status').html("<br>").show(); // tmp content to keep spacing
 
             var fk_auv_tracks = jQuery('#this_fk_auv_tracks').text();
             if (fk_auv_tracks != "") {
 
-                if (!reLoad) {
+                if (reLoad == undefined) {
                     getImageList(fk_auv_tracks);
                 }
                 // write the HTML
@@ -576,7 +611,9 @@ function getpointInfo(e) {
                 alert("Javascript error: There is no selected image to sort around.");
             }
 
-            showLoader("false");
+            updateUserInfo("Done. You can add a note to any image of interest...");
+
+            showLoader();
         }
 
     }
@@ -666,14 +703,12 @@ function getpointInfo(e) {
             jQuery('#sorted_status').html(str).show(); 
 
             jQuery('#mygallery').html(html_content);
-            jQuery('#mygallery-paginate, .tracksort').css("visibility","visible").show();
             jQuery('div#mygallery').css("height","310");
-            jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
+
+            jQuery( '.tracksort').show();
+            jQuery('#mygallery, #stepcarouselcontrols', '#mygallery-paginate').toggle(true);
+            
             loadGallery(selected_image);
-
-
-            
-            
 
         }
         else {
@@ -725,29 +760,11 @@ function getpointInfo(e) {
 
 
     function showLoader(vis) {
-
-        // uses jQuery doTimeout
-        if (vis == "now") {
-            // 
-            //jQuery.doTimeout( 'timeoutid', 100, function(){
-                jQuery('#loader').css("opacity",0.8).show();
-                //jQuery('#loader_thing').text("the loader is on 'now'");
-            //});
-        }
-        else if (vis == "true") {
-            // 
-            //jQuery.doTimeout( 'timeoutid', 100, function(){
-                jQuery('#loader').css("opacity",0.8).show();
-                //jQuery('#loader_thing').text("the loader is on 'true'");
-            //});
-        }
-        
-        else  {
-            //jQuery.doTimeout( 'timeoutid' );
+     
+       jQuery('#loader').css("opacity",0.8).show();
+       if (!(vis == "true" || vis == true)) {
             jQuery('#loader').hide();
-            //jQuery('#loader_thing').text("the loader is off");  
-
-        }   
+        }       
     }
 
     

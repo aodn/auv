@@ -126,10 +126,12 @@
 
                 });
 
+
+
                 resetStyleSelect(); // reset the style selector to default
 
 
-                jQuery('#loader').hide(3000);
+               // showLoader(false);
                 //jQuery('#mainbody').css('visibility','visible').delay(8000).fadeIn(400);;
                 mapinit(bounds,mapheight,mapwidth);
 
@@ -165,6 +167,12 @@
                        minSize: 250
                      }
                  });
+
+                 
+                // hide the gallery. needs to exist for step carousel
+                jQuery('#mygallery, #stepcarouselcontrols, .tracksort').toggle(false);
+                // hide the cover over the ugly load
+                jQuery('#loading_cover').hide();
 
 
                  
@@ -236,6 +244,7 @@
     <body>
 
 
+                      <div id="loading_cover"></div>
                       <div id="tmp_html"></div>
              
 <div id="legend" class="jqDnR jqDrag" style="display:none">
@@ -262,20 +271,7 @@
 <h1>Autonomous Underwater Vehicle Images Viewer</h1>
                 </div>
 
-        <div  class="ui-layout-south">
 
-              <div id="footer" ><a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
-              <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
-              National Collaborative Research Infrastructure Strategy</a>
-              and the Super Science Initiative.
-              You accept all risks and responsibility for losses, damages, costs and other consequences resulting directly or indirectly from
-              using this site and any information or material available from it. Please read our policy regarding the
-              'Acknowledgement of Use of IMOS Data' at <a href="http://imos.org.au/emii_data.html" target="_blank">http://imos.org.au/emii_data.html</a>
-              <a href="http://imos.org.au/emii.html" title="eMarine Information Infrastructure">Created by eMII</a> &nbsp;
-              <a href="http://www.imos.org.au" title="Integrated Marine Observing System">&copy; IMOS Australia</a>  &nbsp;
-              Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a></div>
-
-          </div>
 
         <div id="mapcontainer" class="ui-layout-west">
           
@@ -305,6 +301,20 @@
 
           
         </div>
+              <div  class="ui-layout-south">
+
+              <div id="footer" ><a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
+              <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
+              National Collaborative Research Infrastructure Strategy</a>
+              and the Super Science Initiative.
+              You accept all risks and responsibility for losses, damages, costs and other consequences resulting directly or indirectly from
+              using this site and any information or material available from it. Please read our policy regarding the
+              'Acknowledgement of Use of IMOS Data' at <a href="http://imos.org.au/emii_data.html" target="_blank">http://imos.org.au/emii_data.html</a>
+              <a href="http://imos.org.au/emii.html" title="eMarine Information Infrastructure">Created by eMII</a> &nbsp;
+              <a href="http://www.imos.org.au" title="Integrated Marine Observing System">&copy; IMOS Australia</a>  &nbsp;
+              Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a></div>
+
+          </div>
 
         <div id="imagecontainer" class="ui-layout-center" >
 
@@ -335,6 +345,10 @@
                         <option id="default" value="default" >... Choose a AUV Track... </option>
                     </select>
                       <button onclick="resetMap()" id="resetmap" >RESET MAP</button>
+
+                     <div id="loader"  > Loading...
+                            <img alt="loading..." src="images/loading.gif" >
+                        </div>
                       <h3 id="thisTrackInfo">&nbsp;</h3>
              
                 </div>
@@ -350,12 +364,12 @@
                         <p id="sorted_status"></p>
 
 
-                        <div class="trackSort"  style="display:none"><a href="javascript:sortImagesAlongTrack('left')">Older</a></div>
+                        <div class="trackSort"  ><a href="javascript:sortImagesAlongTrack('left')">Older</a></div>
                         &nbsp;
                         <div id="sliderContainer" >
                             <div id="slider"></div>
                         </div>
-                        <div class="trackSort" style="display:none">&nbsp;<a href="javascript:sortImagesAlongTrack('right')">Later</a></div>
+                        <div class="trackSort" >&nbsp;<a href="javascript:sortImagesAlongTrack('right')">Later</a></div>
 
 
 
@@ -389,9 +403,6 @@
 
 
  </div>
- <div id="loader"  >
-        <img alt="loading..." src="images/loading.gif" >
-    </div>
 
 </body>
 
