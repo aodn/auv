@@ -10,37 +10,27 @@ package auv
 class ProxyController {
 
     def index = {
+
+        if (params.url) {
         
-        // TODO exclude use to certain hosts
-        
-         def thetext = params.url.toURL()
-         render(text: thetext.text ,contentType:"text/xml",encoding:"UTF-8")
+           //exclude use to certain hosts
+           def hostList = ['localhost:8080','preview.emii.org.au','imos1.ersa.edu.au']
+           def host = request.getHeader('host')
 
-        /*
-         // create a new builder
-        def http = new HTTPBuilder( params.url )
-
-        // get as text than render back out as XML
-        http.request(GET, TEXT ) { req ->
-                 // Switch to Java to set socket timeout
-                 req.getParams().setParameter("http.socket.timeout", new Integer(5000))
-                
-                 response.success = { resp, text ->
-                     println "Server Response: ${resp.statusLine}"
-                     println "Server Type: ${resp.getFirstHeader('Server')}"
-                     println "Content-Type: ${resp.headers.'Content-Type'}"
-                     render(text: text.text ,contentType:"text/xml",encoding:"UTF-8")
-
-                 }
-                 response.failure = { resp ->
-                    println resp.statusLine
-                 }
+           if  (hostList.any { host }) {
+             def thetext = params.url.toURL()
+             render(text: thetext.text ,contentType:"text/xml",encoding:"UTF-8")
+           }
+           else {
+               render(text: "Host not allowed",contentType:"text/html",encoding:"UTF-8")
+           }
 
         }
-        */
+        else {
+             render(text: "No URL supplied",contentType:"text/html",encoding:"UTF-8")
+        }
 
-
-        
+    
         
         
     }
