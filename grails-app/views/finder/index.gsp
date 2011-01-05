@@ -265,7 +265,7 @@
             <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png"  height="70" width="403" alt="IMOS Logo"/></a>
 <div class="toplinks">
                                 <a href="" style="display: none;" class="leftmenu_ahref ">Logout</a>
-                                <a  href title="Login and view your stored searches and maps" class="leftmenu_ahref " >Login</a>
+                                <a  href="login" title="Login and view your stored searches and maps" class="leftmenu_ahref " >Login</a>
                             <a target="_blank" href="http://www.emii.org.au"  title="e-Marine Information Infrastructure" class="leftmenu_ahref " >eMII Home</a>
                             <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System" class="leftmenu_ahref " >IMOS Home</a>
 </div>

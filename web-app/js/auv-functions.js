@@ -338,7 +338,7 @@ function getpointInfo(e) {
                 var myArray = [];
                 for (y=0; y<fields_array.length; y++) {
 
-                     var z;
+                     var z = "";
                      if (xmlDoc.namespaceURI !== null) {
                         try{ z = xmlDoc.getElementsByTagName("topp:" + fields_array[y])[i].childNodes[0].nodeValue }catch( e ){}
                      }
@@ -428,9 +428,11 @@ function getpointInfo(e) {
                 }
                 if (tmp[i]["dive_notes"] != undefined ) {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";               
-                }jQuery('#track_html').show();
-
-                jQuery('#track_html h3').hide();
+                }
+                
+                //jQuery('#track_html').show();
+                //jQuery('#track_html h3').hide();
+                
 
                 if (jQuery('#track_html .featurewhite').size() == 1) {
                     jQuery('.featurewhite').addClass('featurewhite_selected');
@@ -442,20 +444,23 @@ function getpointInfo(e) {
                 }
 
 
-                html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/WA201004/r20100421_061612_rottnest_04_25m_n_in\" rel=\"external\">Link to data folder</a> <br>\n   <a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";     
-                html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";                
+                html_content = html_content + "<a alt=\"Download \" class=\"h3\" target=\"_blank\" href=\"https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "\" rel=\"external\">Link to data folder</a> <br>";
+                html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"" +tmp[i]["kml"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";
+                html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";   
+                
                 trackSelectorValues[trackHTML_id] = newTitle;
 
                 
             }
 
-
-            trackSelectorValues = sortAssoc(trackSelectorValues);
             // populate coresponding drop down box 
+            trackSelectorValues = sortAssoc(trackSelectorValues);
+            
             var output = [];                     
             for(key in trackSelectorValues){
                 output.push('<option value="'+ key +'">'+ trackSelectorValues[key] +'</option>\n');
-            }jQuery('#trackSelector').append(output.join(''));                    
+            }
+            jQuery('#trackSelector').append(output.join(''));                    
             
             allTracksHTML = html_content;
 
