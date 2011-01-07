@@ -110,7 +110,6 @@
 
                     var code = jQuery(this).siblings('.getfeatureCode').text();
                     var extent = jQuery(this).siblings('.getfeatureExtent').text();
-            //alert("code:" + code + "extent:" + extent);
                     showHideZoom(code,extent);
                 });
 
@@ -173,7 +172,7 @@
                 // hide the gallery. needs to exist for step carousel
                 jQuery('#mygallery, #stepcarouselcontrols, .tracksort').toggle(false);
                 // hide the cover over the ugly load
-                jQuery('#loading_cover').hide();
+                jQuery('#loading_cover').fadeOut();
 
 
                  
@@ -181,8 +180,7 @@
 
             });
 
-
-            stepcarousel.setup({
+           stepcarousel.setup({
                 galleryid: 'mygallery', //id of carousel DIV
                 beltclass: 'belt', //class of inner "belt" DIV containing all the panel DIVs
                 panelclass: 'panel', //class of panel DIVs each holding content
@@ -193,10 +191,10 @@
                 contenttype: ['inline'], //content setting ['inline'] or ['ajax', 'path_to_external_file']
                 onpanelclick:function(target){
 
-                    if (target.tagName=="IMG") { //if clicked on element is an image
+                    //if (target.tagName=="IMG") { //if clicked on element is an image
                       
-                        openPopup(target.src);
-                    }
+                       // openPopup(target.src,siteCode);
+                    //}
                 },
 
                 onslide:function(){
@@ -245,8 +243,8 @@
     <body>
 
 
-                      <div id="loading_cover"></div>
-                      <div id="tmp_html"></div>
+      <div id="loading_cover"></div>
+      <div id="tmp_html"></div>
              
 <div id="legend" class="jqDnR jqDrag" style="display:none">
                     <img id="legendClose" alt="Close popup" class="right" src="images/close.png" />
@@ -264,8 +262,14 @@
           <div id="logo" class="ui-layout-north">
             <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png"  height="70" width="403" alt="IMOS Logo"/></a>
 <div class="toplinks">
-                                <a href="" style="display: none;" class="leftmenu_ahref ">Logout</a>
-                                <a  href="login" title="Login and view your stored searches and maps" class="leftmenu_ahref " >Login</a>
+                                <g:if test="${session.username}">
+                                       <g:link   controller="login" action="logout">logout</g:link> ${session.username}
+                                  </g:if>
+                                   <g:else>
+                                        <a  href="login" title="Login and view your stored searches and maps" class="leftmenu_ahref " >Login</a>
+                                   </g:else>
+                                  
+
                             <a target="_blank" href="http://www.emii.org.au"  title="e-Marine Information Infrastructure" class="leftmenu_ahref " >eMII Home</a>
                             <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System" class="leftmenu_ahref " >IMOS Home</a>
 </div>
@@ -289,7 +293,8 @@
                 <div id="styles"  style="display:none">
                     <select id="imageFormatSelector" onchange="setStyle(value)">
                         <option value="" selected="selected" >Default Style</option>
-                          <option value="auv_images_temperature" >Temperature Style</option>
+                          <option value="auv_images_bathy" >Bathymetry</option>
+                          <option value="auv_images_temperature" >Temperature</option>
                     </select>
 
                 </div>

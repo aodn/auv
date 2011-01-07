@@ -127,15 +127,17 @@
   <A href="javascript: self.close ()" class="right" >Close this Window</A>
   <h1>AUV Image Tagging</h1>
 
+
   
-  
-  <p>  <g:if test="${session.username == null}">
-     <g:link  controller="login"  params="['src': session.imageUrl]"  >Login to add a note to this image</g:link>
+  <p>  <g:if test="${!session.username}">
+     Login to add a note to this image!
 </g:if>
 <g:else>
-     You are logged in as <b>${session.username}</b>  <g:link   controller="login" action="logout"><BR>[logout]</g:link><BR>
+     You are logged in as <b>${session.username}</b>  <BR>
      <h5>Click and drag an area to annotate</h5>
 </g:else></p>
+
+<a href="${session.tiffImageUrl}.tif" >Download the full size TIFF image</a>
 
 
 

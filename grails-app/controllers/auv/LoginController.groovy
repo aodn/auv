@@ -16,12 +16,11 @@ class LoginController {
 		log.info "User agent: " + request.getHeader("User-Agent")
         def img = session.imageUrl
 		session.invalidate()
-		redirect(controller:'notes', params:["src": img ])
+		redirect(controller:'finder')
 	}
     
 	def entry = {
-
-        // could possibley supply uername and password
+        // could possibley supply username and password
          [login:params]
     }
 
@@ -44,8 +43,17 @@ class LoginController {
         def login = new Login(params)
 
         if(login.validate()) {
-            flash.username = params.email
-            redirect(controller:'notes', params:["src": session.imageUrl])
+
+            session.username = params.email
+            // if this login came from the notes window
+            // if (session.imageUrl) {
+            //    redirect(controller:'notes', params:["src": session.imageUrl])
+            // }
+             // login came through home page link
+            // else {
+                 redirect(controller:'finder')
+            // }
+
         }
         else {
             flash.message = "Please enter your email address and password"

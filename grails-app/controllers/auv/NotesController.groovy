@@ -15,14 +15,13 @@ class NotesController {
 
 
     def index = {
-        // flash set in logincontroller
-        if (flash.username) {
-            session.username = flash.username
-        }
-        println flash.username
+        
 
         if (params.src) {
+            
             session.imageUrl = params.src
+            session.tiffImageUrl = params.tiff
+
             def file = params.src.split("/")
             session.image = file[file.size() -1]
         }  

@@ -16,10 +16,19 @@ class ProxyController {
            //exclude use to certain hosts
            def hostList = ['localhost:8080','preview.emii.org.au','imos1.ersa.edu.au']
            def host = request.getHeader('host')
+           def format
 
            if  (hostList.any { host }) {
+
              def thetext = params.url.toURL()
-             render(text: thetext.text ,contentType:"text/xml",encoding:"UTF-8")
+             if (params.format == "xml") {
+                 format = "text/xml"
+             }
+             else {
+                 format = "text/html"
+             }
+             render(text: thetext.text ,contentType:format,encoding:"UTF-8")
+
            }
            else {
                render(text: "Host not allowed",contentType:"text/html",encoding:"UTF-8")
