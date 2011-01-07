@@ -720,7 +720,11 @@ function getpointInfo(e) {
 
                 var imageURL = "http://imos2.ersa.edu.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
 
-                html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  imagesForTrack[min_i]["image_folder"] + "');return false;\" >\n";
+                var tiffImageURL = "https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + "asdasd.tif";
+                
+
+
+                html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  tiffImageURL + "');return false;\" >\n";
                 html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
                 html_content = html_content + "</a>\n";
 
@@ -921,7 +925,8 @@ function getpointInfo(e) {
      var windowObjectReference;
 
     function openPopup(src,tiffFolder)   {
-        windowObjectReference = window.open("notes?src=" + src + "&tiff=" + tiffFolder , "auv_image", "width=600px, height=600px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
+
+        windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=600px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
         if (windowObjectReference == null) {
             alert("Unable to open a seperate window for image annotation");
         }

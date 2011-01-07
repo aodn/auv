@@ -137,7 +137,7 @@
      <h5>Click and drag an area to annotate</h5>
 </g:else></p>
 
-<a href="${session.tiffImageUrl}.tif" >Download the full size TIFF image</a>
+<a href="${session.tiffImageUrl}" >Download the full size TIFF image</a>
 
 
 
