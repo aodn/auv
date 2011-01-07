@@ -720,7 +720,7 @@ function getpointInfo(e) {
 
                 var imageURL = "http://imos2.ersa.edu.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
 
-                var tiffImageURL = "https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + "asdasd.tif";
+                var tiffImageURL = "https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + ".tif";
                 
 
 
