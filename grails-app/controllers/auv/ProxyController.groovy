@@ -1,11 +1,6 @@
 package auv
 
 
-//mport groovyx.net.http.HttpClient
-//import groovyx.net.http.HTTPBuilder
-//import groovyx.net.http.HttpResponseException
-//import static groovyx.net.http.Method.GET
-//import static groovyx.net.http.ContentType.TEXT
 
 class ProxyController {
 
@@ -14,33 +9,34 @@ class ProxyController {
         if (params.url) {
         
            //exclude use to certain hosts
-           def hostList = ['localhost:8080','preview.emii.org.au','imos1.ersa.edu.au']
-           def host = request.getHeader('host')
+           def hostList = ['geoserver.emii.org.au','geoserverdev.emii.org.au']
            def format
 
-           if  (hostList.any { host }) {
+           // get the doamin name from the supplied uri
+           def hostName =  params.url.toURL().getHost()
 
-             def thetext = params.url.toURL()
-             if (params.format == "xml") {
-                 format = "text/xml"
-             }
-             else {
-                 format = "text/html"
-             }
-             render(text: thetext.text ,contentType:format,encoding:"UTF-8")
+            if (hostList.contains(hostName)) {
+
+                 def thetext = params.url.toURL()
+                 if (params.format == "xml") {
+                     format = "text/xml"
+                 }
+                 else {
+                     format = "text/html"
+                 }
+                 render(text: thetext.text ,contentType:format,encoding:"UTF-8")
 
            }
            else {
                render(text: "Host not allowed",contentType:"text/html",encoding:"UTF-8")
            }
 
+
         }
         else {
              render(text: "No URL supplied",contentType:"text/html",encoding:"UTF-8")
         }
 
-    
-        
-        
     }
+    
 }

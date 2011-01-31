@@ -2,8 +2,8 @@ html, body {
     
     
 /*font-family:"Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;*/
-font:0.9em/15px "Helvetica Neue",Helvetica,Arial,sans-serif;
-    background-color: #FFFFFF;
+font:12px "Helvetica Neue",Helvetica,Arial,sans-serif;
+   
     margin: 0px; 
     color: #666;
 
@@ -14,9 +14,9 @@ table {
  font-size: 11px;
 }
 
-h1{ color:#3399CC; font-size: 20px; font-weight: bold; padding-top:8px}
-h2 { color:#3399CC; font-size: 16px; font-weight: bold;}
-h3 { color:#3399CC; font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px;}
+h1{ color:#3399CC; font-size: 20px; font-weight: bold; padding-top:8px; white-space:nowrap; clear: both}
+h2 { color:#3399CC; font-size: 16px; font-weight: bold; white-space:nowrap; clear: both}
+h3 { color:#3399CC; font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px; white-space:nowrap; clear: both}
 h4 {  font-size: 12px;  margin: 3px 2px;}
 h5 { color:#333333; font-size: 11px;  margin: 0px 2px;}
 h6 { color:#333333; font-size: 11px;  margin: 0px 2px; display:inline;  }
@@ -48,6 +48,10 @@ input, select, textarea, button {
     font: 11px verdana, arial, helvetica, sans-serif;
     margin: 2px 0;
     padding: 2px 4px;
+}
+
+.readonly {
+    border: 0;
 }
 select {
    padding: 2px 2px 2px 0;
@@ -95,6 +99,7 @@ table.featureInfo, table.featureInfo td, table.featureInfo th {
 }
 .right {
     float: right;
+    clear:both;
 }
 hr {
     width: 80%;     

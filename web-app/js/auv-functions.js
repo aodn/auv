@@ -14,7 +14,9 @@
             var timeoutID = "";
             var markers = ""; // Openlayers marker layer
             var imageBuffer = 20; // amount of images to retreive either side of current image
-            var layersLoading = 0; // 
+            var layersLoading = 0; //
+
+            var currentStyle = "default"; // keep the last style for the images layer
 
 
 
@@ -139,7 +141,7 @@
     
 
                 // tracks must obscure auvimages
-                //map.addLayers([base,auvtracks,markers]);
+               // map.addLayers([base,auvimages]);
                 map.addLayers([base,auvimages,auvtracks,markers]);
                 
 
@@ -312,7 +314,8 @@ function getpointInfo(e) {
         map.setCenter(new OpenLayers.LonLat(135,-26), 3)
         markers.clearMarkers();
         jQuery('.auvSiteDetails, #track_html,  #sortbytrack' ).hide();
-        jQuery('#mygallery, #stepcarouselcontrols, .trackSort').hide();
+        jQuery('#mygallery, #stepcarouselcontrols').hide();
+         jQuery('.trackSort').hide();
         jQuery('#helpSection').show();
         updateUserInfo("Click on a AUV Icon, or choose from the track list.");
     
@@ -583,7 +586,7 @@ function getpointInfo(e) {
             jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
 
             loadGallery(Math.round(jQuery('#mygallery .panel').size()/2));
-            jQuery('.tracksort').hide();
+            jQuery('.trackSort').hide();
             jQuery('#unsorted_status,  #sortbytrack').show();
             jQuery('#helpSection, #sorted_status').toggle(false);
             
@@ -636,7 +639,8 @@ function getpointInfo(e) {
             updateUserInfo("Sorting images for the track of the selected image. Please be patient...");
             // disable the slider
             jQuery('#slider').slider( "disable" );
-            jQuery('.tracksort, #sortbytrack, #unsorted_status').toggle(false);
+            jQuery('#sortbytrack, #unsorted_status').toggle(false);
+             jQuery('.trackSort').hide();
             jQuery('#sorted_status').html("<br>").show(); // tmp content to keep spacing
 
             var fk_auv_tracks = jQuery('#this_fk_auv_tracks').text();
@@ -752,8 +756,12 @@ function getpointInfo(e) {
             jQuery('#mygallery').html(html_content);
             jQuery('div#mygallery').css("height","310");
 
-            jQuery( '.tracksort').show();
             jQuery('#mygallery, #stepcarouselcontrols', '#mygallery-paginate').toggle(true);
+
+
+            jQuery( '.trackSort').show(); // older - later links
+
+  
             
             loadGallery(selected_image);
 
@@ -786,27 +794,7 @@ function getpointInfo(e) {
     
     }
 
-    // sets the chosen style
-    function setStyle(style){
-        
-        auvimages.mergeNewParams({
-            styles: style
-        });
-        // set the getlegendGraphic image url
-        jQuery('#imagesGetLegendGraphic').attr("src",server + "/geoserver/wms?LAYER=" + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png&STYLE=" + style);
-    }
-
-    function  resetStyleSelect() {
-                 // force reset on page load of the style select in Firefox
-                var field = jQuery('#imageFormatSelector');
-                 field.val(jQuery('option:first', field).val());
-    }
-
-    
-
-
-
-    function showLoader(vis) {
+function showLoader(vis) {
      
        jQuery('#loader').css("opacity",0.8).show();
        if (!(vis == "true" || vis == true)) {
@@ -841,15 +829,149 @@ function getpointInfo(e) {
         
 
     }
+
+
+    function openStyleSlider(param) {
+        var minVal = 0;
+        var maxVal = 500;
+
+        if (param == "default") {
+            getImageStyle(param); //set it straight away as there are no options
+            jQuery('#styleSliderContainer').hide(); // close the style options
+        }
+        else {
+
+            if (param == "bathy") {
+                // get the min and max depth in this bounding box
+                var bbox = map.getExtent().toBBOX();
+                //alert(bbox);
+                maxVal = 200;
+                jQuery('#styleReloadLink').text("Set Bathymetry Style");
+            }
+            if (param == "temperature") {
+                maxVal = 35;
+                jQuery('#styleReloadLink').text("Set Temperature Style");
+            }
+
+            // create slider to change values for styles pallette
+            jQuery('#styleSlider').slider({
+                animate: 'normal',
+                min: minVal,
+                max: maxVal,
+                //step: 20,
+                values: [minVal,maxVal],
+                range: 'min',
+                change: function(event, ui) {
+                  setStyleSlider();
+                  event.stopPropagation();
+                },
+                slide: function(event, ui) {
+                    event.stopPropagation(); //stop jquery drag
+                },
+                start: function(event, ui) {
+                    event.stopPropagation(); //stop jquery drag
+                }
+
+            });
+
+
+            jQuery('#minStyleVal').val(minVal);
+            jQuery('#maxStyleVal').val(maxVal);
+            jQuery('#styleSliderContainer').show(500);
+            jQuery('#sliderVariable').val(param);
+        }
+
+        
+    }
+
+    // sets the chosen style for the image layer
+    function getImageStyle(x){
+        
+        var extras = "";
+        var parameters = "";
+        var valMin = jQuery('#styleSlider').slider( "values", 0 );
+        var valMax = jQuery('#styleSlider').slider( "values", 1 );
+        var variable = jQuery('#sliderVariable').val();
+        var sld = "";
+
+        // lets us back out of the intended style change
+        if (x == "close") {
+            // jQuery(".defaultLabel").show(":contains('Image layer Style')");
+            jQuery('#styleSliderContainer').hide();
+            // change the style selection back to the last values
+            jQuery('#imageFormatSelector').val(currentStyle);
+        }
+        else {
+
+            if (x == "default") {
+                // calling the generator script with no parameters gives us a valid but empty sld
+                sld = "http://imos2.ersa.edu.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
+                //jQuery('#styleReloadLink').text("Set Style");
+                jQuery('#styleSliderContainer').hide();
+                //resetStyleSelect(); // set the style chooser to  default
+                currentStyle = x;
+
+            }
+            else {
+                parameters = "max=" + valMax + "&min=" + valMin + "&variable=" + variable;
+                sld = "http://imos2.ersa.edu.au/AUV/SLDgenerator/auv_images-sld-generator.php?" + parameters;
+                // the named layer 'default' must exist in the external sld'
+                extras = "&STYLE=default&SLD=" + URLEncode(sld);
+            }
+
+            auvimages.mergeNewParams({  sld:  sld  });
+            // set the getlegendGraphic image url
+            jQuery('#imagesGetLegendGraphic').attr("src",server + "/geoserver/wms?LAYER=" + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras);
+            currentStyle = variable;
+        }
+
+        //alert ("currentcurrentStyle + " " + variable);
+
+        
+    }
+
+    function setStyleSlider() {
+        var valMin = jQuery('#styleSlider').slider( "values", 0 );
+        var valMax = jQuery('#styleSlider').slider( "values", 1 );
+        if (valMin < valMax) {
+          jQuery('#minStyleVal').val(valMin);
+          jQuery('#maxStyleVal').val(valMax);
+        }
+        else {
+          alert("min value must be less than max!");
+          jQuery('#styleSlider').slider(  "values", 0, 0 );
+          jQuery('#styleSlider').slider(  "values", 1, 200 );
+          jQuery('#minStyleVal').val(0);
+          jQuery('#maxStyleVal').val(200);
+        }
+
+    }
+
+    // remove the default option for the image style selector
+    function removeDefaultOption() {
+        jQuery(".defaultLabel").hide(":contains('Image layer Style')");
+
+    }
+
+
+    function  resetStyleSelect() {
+
+        // force reset on page load of the style select in Firefox
+        var field = jQuery('#imageFormatSelector');
+         field.val(jQuery('option:first', field).val());
+
+    }
+
     
     function show(css_id) {
         jQuery(css_id).show(450);
     }
     
-    function mergeNewParams(params){
+    /*function mergeNewParams(params){
         auvimages.mergeNewParams(params);
         //untiled.mergeNewParams(params);
     }
+    */
 
     function zoomTo(bounds) {         
         map.zoomToExtent(new OpenLayers.Bounds.fromString(bounds));
@@ -926,7 +1048,7 @@ function getpointInfo(e) {
 
     function openPopup(src,tiffFolder)   {
 
-        windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=600px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
+        windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
         if (windowObjectReference == null) {
             alert("Unable to open a seperate window for image annotation");
         }

@@ -1,8 +1,9 @@
 body {
-     padding-top: 10px;
-     padding-left:10px;
+
      min-width:		950px;
 		min-height:		600px;
+
+    overflow: hidden! important;
 
 }
 
@@ -11,23 +12,32 @@ body {
 #footer {
     font-size: 10px;
     font-family:Arial,Helvetica,sans-serif;
-    margin:10px 10px 10px 0px;
-    width: 430px;
+    padding:10px 10px 10px 0px;
+    /*width: 430px;*/
 
 }
 
-#mainbody {
-   /* margin: 20px;*/
-    height: 100%;
+#mainbodyPadding {
+     margin: 15px;
+     height: 100% ;
+ }
+ #mainbody {
+    height: 100% ;
     overflow: auto!  important;
-
-
+padding: 15px;
+   
 }
+
+
 #helpSection {
 }
 #logo img {
     /*position: absolute;*/
-    margin-right: 60px;
+    margin-right: 30px;
+}
+#logo {
+    padding-bottom: 20px;
+    overflow: hidden! important;
 }
 
 #logo h1 {
@@ -36,7 +46,7 @@ body {
 .align-right { float:right; margin: 0 0 15px 15px; }
 
 #imagecontainer{
-    padding: 20px;
+   padding: 20px;
     padding-top: 0px;
     margin: 5px;
     margin-left: 0px;
@@ -64,8 +74,11 @@ body {
 
 #map {
     margin-left: auto;
-    margin-right: auto;
-    /*border:1px solid #CCCCCC;*/
+    margin-right: auto;    
+    border:1px solid #999999;
+    border-top:1px solid #cccccc;
+    border-left:1px solid #999999;
+    -moz-box-shadow:5px 5px 5px #ccc;
 }
 
 #controlWrapper {
@@ -94,9 +107,10 @@ body {
 }
 #mapscale div{
     padding: 0px;
+    font-size: 9px;
 }
 #mapcoords {
-    width: 120px;
+    width: 100px;
     z-index: 4;
     position: relative;
     float: right! important;
@@ -119,8 +133,6 @@ body {
 }
 .featurewhite_selected {
     background-color: white;
-    padding: 15px;
-    padding-top: 0px;
 
 }
 
@@ -146,17 +158,22 @@ p.important {
 	font-weight: bold;
 }
 
-
-#legend {
+/* legend and style changers */
+.jqDrag {
     position: absolute;
     z-index: 9999999;
-    background-color: white;
-
+    background-color: #fafafa;
+    cursor: move;
     border: solid 8px #999999;
-    padding: 3px;
+    padding: 10px;
     margin: 6px;
+    margin-left: 625px;
+    margin-top: 400px;
     -moz-border-radius: 10px;
     -moz-box-shadow:5px 5px 5px #aaa;
+}
+#legend {
+    width: 350px;
 }
 #legendToggle, .getfeatureTitle {
     text-decoration: underline;
@@ -167,12 +184,15 @@ p.important {
     margin-right: 20px;
     padding: 3px;
 }
-#helpSection {
-    margin: 30px;
+
+#styleSliderContainer {
+    width: 350px;
 }
-#helpSection p {
-    font-size: 14px;
-    margin-left: 20px;
+
+
+
+.closeIcon {
+    cursor: default;
 }
 
 #sortbytrack {
@@ -450,7 +470,7 @@ float: left;
     _bottom: -1px! important;
     _right: -1px! important;
     background: #999! important;
-    opacity: 0.6;
+    opacity: 0.9;
 }
 .olControlOverviewMapElement {
     -moz-border-radius:0! important;
@@ -459,7 +479,7 @@ float: left;
 }
 .olControlOverviewMapExtentRectangle
 {
-    border: 1px solid #333! important;
+    border: 2px dotted #333333 !important;
     margin: 0! important;
     padding: 0! important;
 }
@@ -493,8 +513,7 @@ right:2px! important;
     opacity: 1;
     background: white;
     position: absolute;
-    padding: 80px;
-    top: 0px;
+    top: 95px;
     left: 0;/**/
     z-index: 99999999;
 }
@@ -514,10 +533,10 @@ right:2px! important;
     height: 25px;
 }
 
-#sliderContainer{
+#sliderContainer, #styleSlider{
     width: 85%;
 }
-.trackSort, #sliderContainer {
+.trackSort, #sliderContainer, #styleSlider{
     float:left;
     margin: 3px;
     margin-right: 10px;
@@ -573,7 +592,8 @@ cursor: pointer;
     color:#565656;
     cursor:pointer;
     -moz-border-radius:3px 3px 3px 3px;
-    background:-moz-linear-gradient(center top , #ffffff, #f3f3f3) repeat scroll 0 0 transparent;
+    background-color: white;
+    /*background:-moz-linear-gradient(center top , #ffffff, #f3f3f3) repeat scroll 0 0 inherit;*/
     border-color:#CCCCCC #BBBBBB #A0A0A0;
     border-left:1px solid #BBBBBB;
     border-right:1px solid #BBBBBB;
@@ -598,7 +618,7 @@ select#trackSelector {
     display: inline;
 }
 .buttons button.hover, select.hover{
-    background-color:#cccccc;
+    background-color:#eeeeee;
 }
 .buttons button, select{
     width:auto;

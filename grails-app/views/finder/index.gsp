@@ -34,7 +34,7 @@
               // get the server name to choose proxy latter
              var this_serverName = '${serverName}';
 
-            // get the bounds from geoserver
+            // **********************************************************************************  get the bounds from geoserver
             var bounds = "" + (112.947 -buff) +","+ (-33.00 -buff)+","+(116.46 + buff)+","+ (0.874 + buff) ;
 
 
@@ -79,7 +79,13 @@
                 jQuery("#legendClose").click(function() {
                     jQuery('div#legend').hide();
                 });
-                jQuery('#legend').jqDrag(); // draggable
+                jQuery('#legend').jqDrag(); // draggable popup like thingy. Nice
+                
+                
+                jQuery('#styleSliderContainer').jqDrag(); // draggable popup like thingy. Nicer
+
+
+
 
                 jQuery('button').mouseover(function() {
                     jQuery(this).addClass('hover');
@@ -113,6 +119,7 @@
                     showHideZoom(code,extent);
                 });
 
+                // slider to change images
                 jQuery('#slider').slider({
                     animate: 'normal',
                     min: 1,
@@ -124,6 +131,24 @@
 
                     }
 
+                });
+                // Allow left and right keys to control slider
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NOT WORKING YET
+                jQuery(document.documentElement).keypress(function(e) {
+                    var code = (e.keyCode ? e.keyCode : e.which);
+                    var direction = null;
+
+                    // handle cursor keys
+                    if (code == 37) { // left key
+                        direction = 'prev';
+                    }
+                    else if (code == 39) { // right key
+                        direction = 'next';
+                    }
+
+                    if (direction != null && keyPressCheck() ) {
+                        jQuery('#slider')[direction]().click();
+                    }
                 });
 
 
@@ -141,36 +166,33 @@
 
                 // then set layout with the map initialised
                 jQuery('#mainbody').layout({
-                  applyDefaultStyles: true,
-                  resizable: false,
-                  /*,
-                  defaults: {
+                  //applyDefaultStyles: true,
+                  resizable: true,
+                  
+                  /*defaults: {
                      center__minWidth:		400,
                      initClosed:            false
                   },*/
                   west: {
-                    applyDefaultStyles: true,
+                    //applyDefaultStyles: true,
                     minSize: 410,
                     closable:  false
-
-
-                   }/*,
-                   south: {
-                     resizable: false,
-                     
-                   }*/
+                   }
                  });
 
                  jQuery('#galleryControls').layout({
+                     applyDefaultStyles: true,
                      west: {
-                       //applyDefaultStyles: true,
                        minSize: 250
                      }
                  });
 
-                 
+             
+                jQuery('.trackSort').hide();
+ 
                 // hide the gallery. needs to exist for step carousel
-                jQuery('#mygallery, #stepcarouselcontrols, .tracksort').toggle(false);
+                jQuery('#mygallery, #stepcarouselcontrols').toggle(false);
+
                 // hide the cover over the ugly load
                 jQuery('#loading_cover').fadeOut();
 
@@ -178,7 +200,20 @@
                  
 
 
-            });
+            }); // end jQuery(document).ready(function()
+
+            // timer for jquery slider finction
+            var checkTime = 0;
+            function keyPressCheck(){
+                var currentTime = new Date()
+                if((currentTime.getTime() - checkTime) > 1000){
+                    checkTime =currentTime.getTime();
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
 
            stepcarousel.setup({
                 galleryid: 'mygallery', //id of carousel DIV
@@ -243,38 +278,37 @@
     <body>
 
 
-      <div id="loading_cover"></div>
-      <div id="tmp_html"></div>
-             
-<div id="legend" class="jqDnR jqDrag" style="display:none">
-                    <img id="legendClose" alt="Close popup" class="right" src="images/close.png" />
-                    <p>Track:</p>
-                    <img src="${server}/geoserver/wms?LAYER=${layernameTrack}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameTrack}" />
-                    <p>Images:<p>
-                    <img id="imagesGetLegendGraphic"src="${server}/geoserver/wms?LAYER=${layernameImages}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameImages}" />
-                </div>
+       <div id="loading_cover"></div>
 
 
 
-    <div id="mainbody"  >
+
+      <!--div id="mainbodyPadding" -->
+        
+
+        <div id="mainbody"  >
     
-             
-          <div id="logo" class="ui-layout-north">
-            <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png"  height="70" width="403" alt="IMOS Logo"/></a>
-<div class="toplinks">
-                                <g:if test="${session.username}">
-                                       <g:link   controller="login" action="logout">logout</g:link> ${session.username}
-                                  </g:if>
-                                   <g:else>
-                                        <a  href="login" title="Login and view your stored searches and maps" class="leftmenu_ahref " >Login</a>
-                                   </g:else>
-                                  
+             <div id="logo"   class="ui-layout-north" >
+            <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png"  height="70" width="403" alt="IMOS Logo" /></a>
+            <div class="toplinks">
+                    <g:if test="${session.username}">
+                           <g:link   controller="login" action="logout">logout</g:link> ${session.username}
+                    </g:if>
+                     <g:else>
+                          <a  href="login" title="Login and view your stored searches and maps" class="leftmenu_ahref " >Login</a>
+                     </g:else>
 
-                            <a target="_blank" href="http://www.emii.org.au"  title="e-Marine Information Infrastructure" class="leftmenu_ahref " >eMII Home</a>
-                            <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System" class="leftmenu_ahref " >IMOS Home</a>
-</div>
-<h1>Autonomous Underwater Vehicle Images Viewer</h1>
-                </div>
+
+                    <a target="_blank" href="http://www.emii.org.au"  title="e-Marine Information Infrastructure" class="leftmenu_ahref " >eMII Home</a>
+                    <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System" class="leftmenu_ahref " >IMOS Home</a>
+            </div>
+            <h1>Autonomous Underwater Vehicle Images Viewer</h1>
+
+
+
+
+   </div>
+          
 
 
 
@@ -289,13 +323,15 @@
             </div>
             <div id="controlWrapper"  >
                 <div id="mapscale"></div>
-                <div id="mapcoords">location</div>
+                <div id="mapcoords"></div>
                 <div id="styles"  style="display:none">
-                    <select id="imageFormatSelector" onchange="setStyle(value)">
-                        <option value="" selected="selected" >Default Style</option>
-                          <option value="auv_images_bathy" >Bathymetry</option>
-                          <option value="auv_images_temperature" >Temperature</option>
+                    <select id="imageFormatSelector" onchange="openStyleSlider(value)" onFocus="removeDefaultOption()">
+                      <option class="defaultLabel" selected="selected">Image layer Style</option>
+                        <option value="default"  >Default</option>
+                          <option value="bathy" >Bathymetry</option>
+                          <option value="temperature" >Temperature</option>
                     </select>
+                   
 
                 </div>
                 <div id="legendToggle">Legend</div>
@@ -305,11 +341,10 @@
 
             </div>
 
-          
-        </div>
-              <div  class="ui-layout-south">
+             
 
-              <div id="footer" ><a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
+              <div id="footer" >
+              <a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
               <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
               National Collaborative Research Infrastructure Strategy</a>
               and the Super Science Initiative.
@@ -318,9 +353,14 @@
               'Acknowledgement of Use of IMOS Data' at <a href="http://imos.org.au/emii_data.html" target="_blank">http://imos.org.au/emii_data.html</a>
               <a href="http://imos.org.au/emii.html" title="eMarine Information Infrastructure">Created by eMII</a> &nbsp;
               <a href="http://www.imos.org.au" title="Integrated Marine Observing System">&copy; IMOS Australia</a>  &nbsp;
-              Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a></div>
-
+              Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a>
           </div>
+
+          
+
+          
+        </div>
+
 
         <div id="imagecontainer" class="ui-layout-center" >
 
@@ -370,12 +410,12 @@
                         <p id="sorted_status"></p>
 
 
-                        <div class="trackSort"  ><a href="javascript:sortImagesAlongTrack('left')">Older</a></div>
-                        &nbsp;
+                        <div class="trackSort"  ><a href="javascript:sortImagesAlongTrack('left')">Older&nbsp;</a></div>
+                        
                         <div id="sliderContainer" >
                             <div id="slider"></div>
                         </div>
-                        <div class="trackSort" >&nbsp;<a href="javascript:sortImagesAlongTrack('right')">Later</a></div>
+                        <div class="trackSort"  ><a href="javascript:sortImagesAlongTrack('right')">&nbsp;Later</a></div>
 
 
 
@@ -401,14 +441,34 @@
 
         </div>
 
+
         
 
+                  <div id="legend" class="jqDnR jqDrag" style="display:none" >
+                      <img id="legendClose" alt="Close popup" class="right closeIcon" src="images/close.png" />
+                      <h3>Track:</h3>
+                      <img src="${server}/geoserver/wms?LAYER=${layernameTrack}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameTrack}" />
+                      <h3>Images:</h3>
+                      <img id="imagesGetLegendGraphic" src="${server}/geoserver/wms?LAYER=${layernameImages}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameImages}" />
+                  </div>
+
+                   <div id="styleSliderContainer" class="jqDnR jqDrag" style="display:none" >
+                     <div ><img src="images/close.png" class="right closeIcon" alt="Close popup" onclick="getImageStyle('close')" ></div>
+                     <h3>Image Layer Styling options</h3>
+                            <div id="styleSlider"></div>
+                            <div style="float:left;width:100%">min:<input id=minStyleVal size=2 class="readonly" readonly />
+                            max:<input id=maxStyleVal size=2 class="readonly" readonly/></div>
+                            <input id="sliderVariable" type="hidden"  />
+                         <div class="buttons"  >
+                           <button id="styleReloadLink" onclick="getImageStyle()" >SET STYLE</button>
+                         </div>
+                    </div>
 
 
 
+</div>
 
-
- </div>
+ <!--/div-->
 
 </body>
 

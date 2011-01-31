@@ -1,4 +1,7 @@
 package auv
+//@Grab(group=3D'org.codehaus.groovy.modules.http-builder', module=3D'http-builder', version=3D'0.5.0-SNAPSHOT')
+import groovyx.net.http.*
+import static groovyx.net.http.ContentType.XML
 
 class LoginController {
 
@@ -27,6 +30,18 @@ class LoginController {
     def create = {
 
          [details:params]
+         //def user = Login.findWhere(email:params['email'],  password:params['password'])
+         def http = new HTTPBuilder("http://localhost:8080/geonetwork/srv/en/xml.user.login")
+
+        def postBody = [username:'admin',password:'password'] // will be url-encoded
+
+        http.request(Method.POST, XML) {
+            url.path = '/book/list'
+            response.success = {resp, json -> json.books.each { book -> println book.title } }
+        }
+
+        flash.message = loginStr.toURL()
+        
          render(view: "newUser")
     }
     def save = {
@@ -36,7 +51,7 @@ class LoginController {
     }
 
     def doLogin = {
-        //def user = Login.findWhere(email:params['email'],  password:params['password'])
+        
 
         // email is the username
         // validate the supplied email
