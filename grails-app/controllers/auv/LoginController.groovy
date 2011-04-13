@@ -1,12 +1,22 @@
 package auv
-//@Grab(group=3D'org.codehaus.groovy.modules.http-builder', module=3D'http-builder', version=3D'0.5.0-SNAPSHOT')
-import groovyx.net.http.*
-import static groovyx.net.http.ContentType.XML
+
+
+//import groovyx.net.http.*
+//import static groovyx.net.http.ContentType.XML
+//import groovy.xml.MarkupBuilder
+//@Grab(group='org.codehaus.groovy.modules.http-builder', module='http-builder', version='0.5.0')
+
+
+
+
+
+
 
 class LoginController {
 
-    //def index = { redirect(action:login,params:params) }
-
+    def index = { redirect(index:Finder,params:params) }
+    
+  /*
     
     static defaultAction = "entry"
     def Scaffold = Login
@@ -23,6 +33,21 @@ class LoginController {
 	}
     
 	def entry = {
+
+        def username = "pmbohm" // hard coded
+
+        def writer = new StringWriter()
+        def xml = new MarkupBuilder(writer)
+        //def http = new HTTPBuilder("http://localhost:8080/geonetwork/srv/en/xml.user.login")
+
+        xml.request() {
+            // delegate to get a tag username while using the value 'username'
+            delegate.username username
+        }
+
+        def  response = xml.toURL()
+
+        println response
         // could possibley supply username and password
          [login:params]
     }
@@ -31,16 +56,12 @@ class LoginController {
 
          [details:params]
          //def user = Login.findWhere(email:params['email'],  password:params['password'])
-         def http = new HTTPBuilder("http://localhost:8080/geonetwork/srv/en/xml.user.login")
+        // def http = new HTTPBuilder("http://localhost:8080/geonetwork/srv/en/xml.user.login")
 
-        def postBody = [username:'admin',password:'password'] // will be url-encoded
+        //def postBody = [username:'admin',password:'password'] // will be url-encoded
 
-        http.request(Method.POST, XML) {
-            url.path = '/book/list'
-            response.success = {resp, json -> json.books.each { book -> println book.title } }
-        }
 
-        flash.message = loginStr.toURL()
+        //flash.message = loginStr.toURL()
         
          render(view: "newUser")
     }
@@ -84,6 +105,7 @@ class LoginController {
          [login:params]
     }
 
+    */
 
 
 

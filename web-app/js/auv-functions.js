@@ -19,7 +19,6 @@
             var currentStyle = "default"; // keep the last style for the images layer
 
 
-
             /*
                 pass in: bounding box
                 referer: (prod or dev geoserver)
@@ -321,8 +320,36 @@ function getpointInfo(e) {
     
     }
     
+    //find out the min and max values of depth,temperature within the current map boundary
+    function setValuesForBBox(bbox,variable){
+
+        var bb = bbox.split(',');
+        bbox = bb[0]+"," + bb[1] + "%20" + bb[2] + "," + bb[3];
+        
+        var datasetParent = "auv_images_vw";
+        var filter =  "<ogc:Filter xmlns:ogc=\"http://ogc.org\" xmlns:gml=\"http://www.opengis.net/gml\"><ogc:BBOX>"
+            + "<ogc:PropertyName>geom</ogc:PropertyName>"
+            + "<gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml\">"
+            + "<gml:coordinates>"
+            +  bbox
+            + "</gml:coordinates>"
+            + "</gml:Box></ogc:BBOX></ogc:Filter>";
+
+        var url = server + "/geoserver/wfs?request=GetFeature&typeName=topp:auv_images_vw&propertyName="+  variable
+            + "&filter=" + filter
+            + "&version=1.0.0&maxfeatures=1&sortby="+  variable  + "+a";
+        //aler);
+
+        var xmlDoc = getXML(url);
+        return getArrayFromXML(xmlDoc , [variable], datasetParent);
+        
+        
+    }
+
+ 
+    
     // return multidimentional array- numbered array of associative arrays
-    function  getArrayFromXML(xmlDoc,fields_array, parent) {
+    function  getArrayFromXML(xmlDoc ,fields_array, parent) {
 
             //alert(" in get array from XML" + parent);
             var parentCriteria;
@@ -337,7 +364,6 @@ function getpointInfo(e) {
                 return null;
                // parentCriteria = {"ie":"gml:featureMember","schema": "http://www.opengis.net/gml","tag":"featureMember"};
             }
-
 
             var tmp = [];
             var x = 0;
@@ -374,7 +400,7 @@ function getpointInfo(e) {
         }
 
             
-
+var x;
     function populateTracks() {
         
         // run once to get all tracks into an object
@@ -392,6 +418,7 @@ function getpointInfo(e) {
             // get track feature info as XML   
             
             var xmlDoc = getXML(request_string);
+            x = xmlDoc
             
             tmp = getArrayFromXML(xmlDoc,fields_array,"auv_tracks");
            
@@ -437,7 +464,7 @@ function getpointInfo(e) {
                 html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
                 html_content = html_content + "</tbody></table>\n";
 
-                html_content = html_content + "<b>Depth:</b>" + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
+                html_content = html_content + "<b>Depth:</b> " + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
                 if (tmp[i]["distance"] != undefined ) {
                     html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
                 }
@@ -461,7 +488,7 @@ function getpointInfo(e) {
                 }
 
                 if (tmp[i]["metadata_uuid"] != undefined ) {
-                    html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";                       
+                    html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
                 }
 
                 html_content = html_content + "<a alt=\"Download from opendap \" class=\"h3\" target=\"_blank\" href=\"http://opendap-tpac.arcs.org.au/thredds/catalog/IMOS/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "/hydro_netcdf/catalog.html\">Data on opendap</a> <br>";
@@ -593,7 +620,7 @@ function getpointInfo(e) {
             jQuery('#mygallery').css("height","310px"); // sort out why i have to call this
             jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
             
-            updateUserInfo("Click an image to view and create public notes about the image");
+           // updateUserInfo("Click an image to view and create public notes about the image");
         }
         else{
             updateUserInfo("No tracks or images found at your click point");
@@ -707,7 +734,7 @@ function getpointInfo(e) {
             }
 
 
-
+            //alert(imagesForTrack[0]["dive_code_name"]);
             var rowcounter = 0;
             var minimum_index = min_i;
 
@@ -722,17 +749,17 @@ function getpointInfo(e) {
 
                 html_content = html_content + "<div class=\"panel\"  id=\"auvpanel_" + rowcounter + "\" >";
 
-                var imageURL = "http://imos2.ersa.edu.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
+                var imageURL = "http://auv.emii.org.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
 
                 var tiffImageURL = "https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + ".tif";
                 
 
 
-                html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  tiffImageURL + "');return false;\" >\n";
+                //html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  tiffImageURL + "');return false;\" >\n";
                 html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
-                html_content = html_content + "</a>\n";
+                //html_content = html_content + "</a>\n";
 
-                html_content = html_content + "<div class=\"panelinfo\">" +  imagesForTrack[min_i]["site_code_name"] +  " " + time + " &nbsp; Depth:" +  imagesForTrack[min_i]["depth"]  + "<br>";
+                html_content = html_content + "<div class=\"panelinfo\">" +  ucwords(imagesForTrack[min_i]["dive_code_name"]) +  " " + time + " &nbsp; Depth:" +  imagesForTrack[min_i]["depth"]  + "<br>";
                 html_content = html_content +  "Temperature:" + imagesForTrack[min_i]["sea_water_temperature"] + "&deg;c / Salinity:" + imagesForTrack[min_i]["sea_water_salinity"] + " / Chlorophyll:"  + imagesForTrack[min_i]["chlorophyll_concentration_in_sea_water"]+ "</div>\n";
                 html_content = html_content + " <div id=\"auvpanelinf_" + rowcounter + "\" style=\"display:none\" >\n";
                 html_content = html_content + "   <div class=\"campaign_code\">" + imagesForTrack[min_i]["campaign_code"] + "</div>\n";
@@ -783,7 +810,7 @@ function getpointInfo(e) {
     function getImageList(fk_auv_tracks) {  
 
         imagesForTrack = []; // reset       
-        fields = "image_filename,campaign_code,site_code,time,depth,image_folder,longitude,latitude,sea_water_temperature,sea_water_salinity,chlorophyll_concentration_in_sea_water";
+        fields = "image_filename,campaign_code,site_code,dive_code_name,time,depth,image_folder,longitude,latitude,sea_water_temperature,sea_water_salinity,chlorophyll_concentration_in_sea_water";
         fields_array = fields.split(",");
 
         // get images for track
@@ -834,17 +861,21 @@ function showLoader(vis) {
     function openStyleSlider(param) {
         var minVal = 0;
         var maxVal = 500;
+        removeDefaultOption();
 
         if (param == "default") {
             getImageStyle(param); //set it straight away as there are no options
-            jQuery('#styleSliderContainer').hide(); // close the style options
+           // jQuery('#styleSliderContainer').hide(); // close the style options
         }
         else {
-
+            
+            
+            var bbox = map.getExtent().toBBOX();
+            
             if (param == "bathy") {
-                // get the min and max depth in this bounding box
-                var bbox = map.getExtent().toBBOX();
-                //alert(bbox);
+                // get the min and max depth            
+                var res = setValuesForBBox(bbox,param);
+                //alert(res);
                 maxVal = 200;
                 jQuery('#styleReloadLink').text("Set Bathymetry Style");
             }
@@ -905,7 +936,7 @@ function showLoader(vis) {
 
             if (x == "default") {
                 // calling the generator script with no parameters gives us a valid but empty sld
-                sld = "http://imos2.ersa.edu.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
+                sld = "http://auv.emii.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
                 //jQuery('#styleReloadLink').text("Set Style");
                 jQuery('#styleSliderContainer').hide();
                 //resetStyleSelect(); // set the style chooser to  default
@@ -914,7 +945,7 @@ function showLoader(vis) {
             }
             else {
                 parameters = "max=" + valMax + "&min=" + valMin + "&variable=" + variable;
-                sld = "http://imos2.ersa.edu.au/AUV/SLDgenerator/auv_images-sld-generator.php?" + parameters;
+                sld = "http://auv.emii.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?" + parameters;
                 // the named layer 'default' must exist in the external sld'
                 extras = "&STYLE=default&SLD=" + URLEncode(sld);
             }
@@ -931,6 +962,7 @@ function showLoader(vis) {
     }
 
     function setStyleSlider() {
+
         var valMin = jQuery('#styleSlider').slider( "values", 0 );
         var valMax = jQuery('#styleSlider').slider( "values", 1 );
         if (valMin < valMax) {
@@ -949,7 +981,8 @@ function showLoader(vis) {
 
     // remove the default option for the image style selector
     function removeDefaultOption() {
-        jQuery(".defaultLabel").hide(":contains('Image layer Style')");
+        //jQuery(".defaultLabel").hide(":contains('Image layer Style')");
+        jQuery(".defaultLabel").hide();
 
     }
 
@@ -973,7 +1006,7 @@ function showLoader(vis) {
     }
     */
 
-    function zoomTo(bounds) {         
+   function zoomTo(bounds) {
         map.zoomToExtent(new OpenLayers.Bounds.fromString(bounds));
 
         var zoomLevel = map.getZoomForExtent(new OpenLayers.Bounds.fromString(bounds));

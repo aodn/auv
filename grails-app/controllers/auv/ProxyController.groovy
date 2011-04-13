@@ -18,6 +18,7 @@ class ProxyController {
             if (hostList.contains(hostName)) {
 
                  def thetext = params.url.toURL()
+                 log.info("Proxy: The url to be requested " + thetext)
                  if (params.format == "xml") {
                      format = "text/xml"
                  }
@@ -28,6 +29,7 @@ class ProxyController {
 
            }
            else {
+               log.error("Proxy: The url " + thetext.text + "was not allowed")
                render(text: "Host not allowed",contentType:"text/html",encoding:"UTF-8")
            }
 

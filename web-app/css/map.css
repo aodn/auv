@@ -576,7 +576,7 @@ padding: 4px;
 
 .stepcarousel .panel img{
 width: 100%; /*Width of each panel holding each content. If removed, widths should be individually defined on each content DIV then. */
-cursor: pointer;
+/*cursor: pointer;*/
 }
 
 

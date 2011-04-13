@@ -7,6 +7,10 @@ class NotesController {
             redirect(controller:'authentication',action:'login')             return false         }     }
             */
     //static defaultAction = "submitNote"
+    
+     def index = { redirect(index:Finder,params:params) }
+
+    /*
     def getNotes() {
         def query = "from Notes where image_filename like '" + session.image + "' order by datetime desc"
         //session.currentnotes = Notes.findAllWhere(image_filename: session.image)
@@ -136,6 +140,7 @@ class NotesController {
         render(view: "index" )
 
     }
+    */
 
     
 }
