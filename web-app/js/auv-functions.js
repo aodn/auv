@@ -755,9 +755,9 @@ var x;
                 
 
 
-                //html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  tiffImageURL + "');return false;\" >\n";
+                html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  tiffImageURL + "');return false;\" >\n";
                 html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
-                //html_content = html_content + "</a>\n";
+                html_content = html_content + "</a>\n";
 
                 html_content = html_content + "<div class=\"panelinfo\">" +  ucwords(imagesForTrack[min_i]["dive_code_name"]) +  " " + time + " &nbsp; Depth:" +  imagesForTrack[min_i]["depth"]  + "<br>";
                 html_content = html_content +  "Temperature:" + imagesForTrack[min_i]["sea_water_temperature"] + "&deg;c / Salinity:" + imagesForTrack[min_i]["sea_water_salinity"] + " / Chlorophyll:"  + imagesForTrack[min_i]["chlorophyll_concentration_in_sea_water"]+ "</div>\n";
@@ -1079,9 +1079,11 @@ function showLoader(vis) {
 
      var windowObjectReference;
 
+ 
     function openPopup(src,tiffFolder)   {
 
-        windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
+        //windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
+        windowObjectReference = window.open(tiffFolder , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
         if (windowObjectReference == null) {
             alert("Unable to open a seperate window for image annotation");
         }
