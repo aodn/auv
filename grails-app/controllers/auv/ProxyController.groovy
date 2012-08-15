@@ -9,7 +9,7 @@ class ProxyController {
         if (params.url) {
         
            //exclude use to certain hosts
-           def hostList = ['geoserver.emii.org.au','geoserverdev.emii.org.au']
+           def hostList = ['geoserver.imos.org.au']
            def format
 
            // get the doamin name from the supplied uri

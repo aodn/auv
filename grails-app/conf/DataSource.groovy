@@ -13,10 +13,10 @@ environments {
 
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+            //dbCreate = "create-drop" // one of 'create', 'create-drop','update'
             url = "jdbc:postgresql://localhost:5432/auvusers"
-            //username = "auv"
-            //password = "heyuv8"
+            username = "auv"
+            password = "auv"
         }
     }
     test {

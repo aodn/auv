@@ -28,11 +28,6 @@
      function mapinit(b,mapheight,mapwidth){
 
 
-                /*if  (this_serverName == 'obsidian.bluenet.utas.edu.au') {  OpenLayers.ProxyHost = "http://obsidian.bluenet.utas.edu.au/webportal/RemoteRequest?url="; }
-                if  (this_serverName == 'localhost:8080') { OpenLayers.ProxyHost = "http://localhost/cgi-bin/proxy.cgi?url="; }
-                if  (this_serverName == 'localhost') { OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url="; }
-                if  (this_serverName == 'preview.emii.org.au') { OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url="; }
-                */
                OpenLayers.ProxyHost = "proxy?url="; //grails proxy
                //OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
 
@@ -85,7 +80,7 @@
                 base = new OpenLayers.Layer.WMS(
                     "simple", server + '/geoserver/wms',
                     {
-                        layers: 'topp:aus_coast',
+                        layers: 'helpers:cstauscd_r',
                         styles: '',
                         srs: 'EPSG:4326',
                         format: format,
@@ -97,7 +92,7 @@
                     }
                 );
                 auvtracks = new OpenLayers.Layer.WMS(
-                    "auv_tracks", server + '/geoserver/wms',
+                    "helpers:auv_tracks", server + '/geoserver/wms',
                     {
                         layers: layername_track,
                         styles: '',
@@ -113,7 +108,7 @@
                     }
                 );
                 auvimages = new OpenLayers.Layer.WMS(
-                    "auv_images_vw", server + '/geoserver/wms',
+                    "helpers:auv_images_vw", server + '/geoserver/wms',
                     {
                         layers: layername_images,
                         styles: '',
@@ -335,7 +330,7 @@ function getpointInfo(e) {
             + "</gml:coordinates>"
             + "</gml:Box></ogc:BBOX></ogc:Filter>";
 
-        var url = server + "/geoserver/wfs?request=GetFeature&typeName=topp:auv_images_vw&propertyName="+  variable
+        var url = server + "/geoserver/wfs?request=GetFeature&typeName=helpers:auv_images_vw&propertyName="+  variable
             + "&filter=" + filter
             + "&version=1.0.0&maxfeatures=1&sortby="+  variable  + "+a";
         //aler);
@@ -351,20 +346,19 @@ function getpointInfo(e) {
     // return multidimentional array- numbered array of associative arrays
     function  getArrayFromXML(xmlDoc ,fields_array, parent) {
 
-            //alert(" in get array from XML" + parent);
+            
             var parentCriteria;
 
             if (parent == "auv_tracks") {
-                parentCriteria = {"ie":"topp:auv_tracks","schema": "http://www.openplans.org/topp","tag":"auv_tracks"};
+                parentCriteria = {"ie":"helpers:auv_tracks","schema": "helpers","tag":"auv_tracks"};
             }
             else if (parent == "auv_images_vw") {
-                parentCriteria = {"ie":"topp:auv_images_vw","schema": "http://www.openplans.org/topp","tag":"auv_images_vw"};
+                parentCriteria = {"ie":"helpers:auv_images_vw","schema": "helpers","tag":"auv_images_vw"};
             }
             else {
                 return null;
                // parentCriteria = {"ie":"gml:featureMember","schema": "http://www.opengis.net/gml","tag":"featureMember"};
             }
-
             var tmp = [];
             var x = 0;
              if (xmlDoc.namespaceURI !== null) {
@@ -373,9 +367,7 @@ function getpointInfo(e) {
              }
              else {
                x = xmlDoc.getElementsByTagNameNS( parentCriteria.schema , parentCriteria.tag );
-             }
-             //alert(x.length);
-
+             }             
              // x is the total amount of tracks
              for (var i=0; i<x.length; i++) {
 
@@ -386,7 +378,7 @@ function getpointInfo(e) {
                     // IE doent like empty values
                     if (x[i].childNodes[y].childNodes[0] ) {
 
-                        var name = x[i].childNodes[y].nodeName.replace("topp:","");
+                        var name = x[i].childNodes[y].nodeName.replace("helpers:","");
                         var val =x[i].childNodes[y].childNodes[0].nodeValue;
                         myArray[name]= val;
 
