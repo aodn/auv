@@ -8,7 +8,7 @@
               // get the server name to choose proxy latter
              var this_serverName = '${serverName}';
 
-            // **********************************************************************************  get the bounds from geoserver
+            // *****  TODO get the bounds from geoserver
             var bounds = "" + (112.947 -buff) +","+ (-33.00 -buff)+","+(116.46 + buff)+","+ (0.874 + buff) ;
 
 
@@ -107,7 +107,7 @@
 
                 });
                 // Allow left and right keys to control slider
-                /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NOT WORKING YET
+                /* !!!!!!!!!!!!!!!!!! TODO
                 jQuery(document.documentElement).keypress(function(e) {
                     var code = (e.keyCode ? e.keyCode : e.which);
                     var direction = null;
@@ -171,7 +171,6 @@
 
                 jQuery('.trackSort').hide();
 
-                //////////////////////////////////////////////////////////////// TESTing
                 //var bbox = map.getExtent().toBBOX();
                 //var res = setValuesForBBox(bbox,"depth");
                 //alert(res);
