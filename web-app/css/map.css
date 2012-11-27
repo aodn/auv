@@ -1,26 +1,28 @@
 /*************************************************
-//  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under 
-//  the terms of the GNU General Public License
-//*************************************************/
+/  Copyright 2010 IMOS
+/ The IMOS AUV Viewer is distributed under 
+/  the terms of the GNU General Public License
+*************************************************/
 
 body {
 
-     min-width:		950px;
-		min-height:		600px;
-
+    min-width:		950px;
+	min-height:		600px;
     overflow: hidden! important;
-
 }
 
 
 
 #footer {
-    font-size: 10px;
+    font-size: 11px;
     font-family:Arial,Helvetica,sans-serif;
-    padding:10px 10px 10px 0px;
+    padding:10px 10px 25px 0px;
     /*width: 430px;*/
 
+}
+
+#footer .left {
+	margin-right: 20px;
 }
 
 #mainbodyPadding {
@@ -168,7 +170,7 @@ p.important {
 .jqDrag {
     position: absolute;
     z-index: 9999999;
-    background-color: #fafafa;
+    background-color: #EFEFEF;
     cursor: move;
     border: solid 8px #999999;
     padding: 10px;

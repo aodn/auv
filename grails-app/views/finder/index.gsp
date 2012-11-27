@@ -1,26 +1,24 @@
-//*************************************************//
-//  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under 
-//  the terms of the GNU General Public License
-//*************************************************//
+<!--*************************************************
+  Copyright 2010 IMOS
+  The IMOS AUV Viewer is distributed under 
+  the terms of the GNU General Public License
+*************************************************-->
 
 
 <html>
     <head>
         <title>IMOS AUV Images Viewer</title>
-
-        <link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'base.css')}"/>
         <link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'map.css')}"/>
         <link rel="stylesheet" type="text/css" href="${resource(dir:'css',file:'overcast/jquery-ui-1.8.5.custom.css')}"/>
 
         <meta name="layout" content="main" />
 
+        <script type="text/javascript" src="${resource(dir:'js',file:'OpenLayers-2.9.js')}" ></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-1.4.2.min.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery.layout1.3.0.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jqDnR.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-ui-1.8.5.custom.min.js')}"></script>
-        <script type="text/javascript" src="${resource(dir:'js',file:'OpenLayers-2.9.js')}" ></script>
-        <script type="text/javascript" src="${resource(dir:'js',file:'auv-functions.js')}"  defer="defer"></script>
+        <script type="text/javascript" src="${resource(dir:'js',file:'auv-functions.js')}" defer="defer"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'stepcarousel.js')}"></script>
 
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
@@ -35,7 +33,25 @@
        <div id="loading_cover"></div>
 
 
+		<div id="legend" class="jqDnR jqDrag" style="display:none" >
+			<img id="legendClose" alt="Close popup" class="right closeIcon" src="images/close.png" />
+			<h3>Track:</h3>
+			<img src="${server}/geoserver/wms?LAYER=${layernameTrack}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameTrack}" />
+			<h3>Images:</h3>
+			<img id="imagesGetLegendGraphic" src="${server}/geoserver/wms?LAYER=${layernameImages}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameImages}" />
+		</div>
 
+		 <div id="styleSliderContainer" class="jqDnR jqDrag" style="display:none" >
+		   <div ><img src="images/close.png" class="right closeIcon" alt="Close popup" onclick="getImageStyle('close')" ></div>
+		   <h3>Image Layer Styling options</h3>
+				  <div id="styleSlider"></div>
+				  <div style="float:left;width:100%">min:<input id=minStyleVal size=2 class="readonly" readonly />
+				  max:<input id=maxStyleVal size=2 class="readonly" readonly/></div>
+				  <input id="sliderVariable" type="hidden"  />
+			   <div class="buttons"  >
+				 <button id="styleReloadLink" onclick="getImageStyle()" >SET STYLE</button>
+			   </div>
+		  </div>
 
       <!--div id="mainbodyPadding" -->
         
@@ -95,23 +111,7 @@
 
             </div>
 
-             
-
-              <div id="footer" >
-              <a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
-              <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
-              National Collaborative Research Infrastructure Strategy</a>
-              and the Super Science Initiative.
-              You accept all risks and responsibility for losses, damages, costs and other consequences resulting directly or indirectly from
-              using this site and any information or material available from it. Please read our policy regarding the
-              'Acknowledgement of Use of IMOS Data' at <a href="http://imos.org.au/emii_data.html" target="_blank">http://imos.org.au/emii_data.html</a>
-              <a href="http://imos.org.au/emii.html" title="eMarine Information Infrastructure">Created by eMII</a> &nbsp;
-              <a href="http://www.imos.org.au" title="Integrated Marine Observing System">&copy; IMOS Australia</a>  &nbsp;
-              Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a>
-          </div>
-
-          
-
+     
           
         </div>
 
@@ -192,37 +192,38 @@
             </div>
 
             
+          
 
         </div>
 
 
         
 
-                  <div id="legend" class="jqDnR jqDrag" style="display:none" >
-                      <img id="legendClose" alt="Close popup" class="right closeIcon" src="images/close.png" />
-                      <h3>Track:</h3>
-                      <img src="${server}/geoserver/wms?LAYER=${layernameTrack}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameTrack}" />
-                      <h3>Images:</h3>
-                      <img id="imagesGetLegendGraphic" src="${server}/geoserver/wms?LAYER=${layernameImages}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${layernameImages}" />
-                  </div>
 
-                   <div id="styleSliderContainer" class="jqDnR jqDrag" style="display:none" >
-                     <div ><img src="images/close.png" class="right closeIcon" alt="Close popup" onclick="getImageStyle('close')" ></div>
-                     <h3>Image Layer Styling options</h3>
-                            <div id="styleSlider"></div>
-                            <div style="float:left;width:100%">min:<input id=minStyleVal size=2 class="readonly" readonly />
-                            max:<input id=maxStyleVal size=2 class="readonly" readonly/></div>
-                            <input id="sliderVariable" type="hidden"  />
-                         <div class="buttons"  >
-                           <button id="styleReloadLink" onclick="getImageStyle()" >SET STYLE</button>
-                         </div>
-                    </div>
+<div id="footer"  class="ui-layout-south">
 
+	  <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
+<img alt="Close popup" class="left" src="images/DIISRTE-stacked-2012.png" /></a>
+	  <a href="http://www.utas.edu.au/"><img alt="Close popup" class="left" src="images/Utas_vert.png" /></a>
+	  
+		<a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is supported by the Australian Government through the
+		<a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
+		National Collaborative Research Infrastructure Strategy</a>
+		and the Super Science Initiative.  It is led by the <a href="http://www.utas.edu.au/">University of Tasmania</a> on behalf of the Australian marine and climate science community.<BR/>You accept all risks and responsibility for losses, damages, costs and other consequences resulting directly or indirectly from using this site and any information or material available from it.<BR/>If you have any concerns about the veracity of the data, please make enquiries via <a href="mailto:info@imos.org.au">info@imos.org.au</a> to be directed to the data custodian.<br/>IMOS data is made freely available under the <a href="http://imos.org.au/fileadmin/user_upload/shared/IMOS%20General/documents/internal/IMOS_Policy_documents/Policy-Acknowledgement_of_use_of_IMOS_data_11Jun09.pdf" title="conditions of use">Conditions of Use.</a><br/>
+	Created by <a href="http://imos.org.au/emii.html" title="eMarine Information Infrastructure">eMII</a> &nbsp;
+		<a href="http://www.imos.org.au" title="Integrated Marine Observing System">&copy; IMOS Australia</a>  &nbsp;
+		Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a>
+	
+</div>    
 
 
 </div>
+	 
+
 
  <!--/div-->
+
+       
 
 </body>
 

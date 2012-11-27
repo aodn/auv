@@ -1,11 +1,11 @@
-<!--*************************************************//
-//  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under 
-//  the terms of the GNU General Public License
-//*************************************************//-->
+<!--*************************************************
+  Copyright 2010 IMOS
+  The IMOS AUV Viewer is distributed under 
+  the terms of the GNU General Public License
+*************************************************-->
 
 
-<!DOCTYPE html>
+
 <html>
     <head>
         <title><g:layoutTitle default="AUV" /></title>

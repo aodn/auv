@@ -1,8 +1,8 @@
 /*************************************************
-//  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under 
-//  the terms of the GNU General Public License
-//*************************************************/
+/  Copyright 2010 IMOS
+/ The IMOS AUV Viewer is distributed under 
+/  the terms of the GNU General Public License
+*************************************************/
 
 
 
@@ -22,9 +22,9 @@ table {
  font-size: 11px;
 }
 
-h1{ color:#3399CC; font-size: 20px; font-weight: bold; padding-top:8px; white-space:nowrap; clear: both}
-h2 { color:#3399CC; font-size: 16px; font-weight: bold; white-space:nowrap; clear: both}
-h3 { color:#3399CC; font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px; white-space:nowrap; clear: both}
+h1{  font-size: 20px; font-weight: bold; padding-top:8px; white-space:nowrap; clear: both}
+h2 {  font-size: 16px; font-weight: bold; white-space:nowrap; clear: both}
+h3 {  font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px; white-space:nowrap; clear: both}
 h4 {  font-size: 12px;  margin: 3px 2px;}
 h5 { color:#333333; font-size: 11px;  margin: 0px 2px;}
 h6 { color:#333333; font-size: 11px;  margin: 0px 2px; display:inline;  }
@@ -61,6 +61,14 @@ input, select, textarea, button {
 .readonly {
     border: 0;
 }
+.clear {
+    clear: both;
+    height: 1px;
+}
+.spacer {
+    margin: 25px 0;
+}
+
 select {
    padding: 2px 2px 2px 0;
 }
@@ -105,6 +113,9 @@ table.featureInfo, table.featureInfo td, table.featureInfo th {
 .extlink {
     margin-left: 2px;   
 }
+.left {
+    float: left;
+}
 .right {
     float: right;
     clear:both;
@@ -131,18 +142,19 @@ hr {
 .toplinks {
 	background-color: #3399CC;
 
-	 -moz-border-radius: 3px;
-    /* For webkit browsers (Safari, Chrome, etc) */
-    -webkit-border-radius:3px;
 
 	color: white;
 	float:right;
 	position: absolute;
     top: 4px;
 	right: 20px;
-	padding: 10px;
-	padding-top:4px;
-	padding-bottom:6px;
+	padding: 10px 25px;
+	border-radius: 12px; 
+	-moz-border-radius: 12px; 
+	-webkit-border-radius: 12px; 
+-webkit-box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
+-moz-box-shadow:    3px 3px 5px rgba(50, 50, 50, 0.3);
+box-shadow:         3px 3px 5px rgba(50, 50, 50, 0.3);
 }
 .toplinks a{
 	color: white;
