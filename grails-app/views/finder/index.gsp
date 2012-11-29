@@ -201,7 +201,11 @@
 
 
 <div id="footer"  class="ui-layout-south">
+ 
 
+		This site is licensed under a <a title="Createive Commons License" href="http://creativecommons.org/licenses/by/3.0/au/" target="_blank"><nobr>Creative Commons Attribution 3.0 Australia License</nobr></a> &nbsp;
+		  <a class="external" title="Creative Commons License" href="http://creativecommons.org/licenses/by/3.0/au/" target="_blank"><img src="images/by.png" width="80"></a>
+	  <BR/>
 	  <a href="http://www.innovation.gov.au/Section/AboutDIISR/FactSheets/Pages/NationalCollaborativeResearchInfrastructureStrategy%28NCRIS%29FactSheet.aspx">
 <img alt="Close popup" class="left" src="images/DIISRTE-stacked-2012.png" /></a>
 	  <a href="http://www.utas.edu.au/"><img alt="Close popup" class="left" src="images/Utas_vert.png" /></a>
