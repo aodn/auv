@@ -7,8 +7,6 @@
 
 dataSource {
     pooled = true
-    driverClassName = "org.postgresql.Driver"
-    dialect = org.hibernate.dialect.PostgreSQLDialect
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -21,6 +19,8 @@ environments {
     development {
         dataSource {
             //dbCreate = "create-drop" // one of 'create', 'create-drop','update'
+	        driverClassName = "org.postgresql.Driver"
+	        dialect = org.hibernate.dialect.PostgreSQLDialect
             url = "jdbc:postgresql://localhost:5432/auvusers"
             username = "auv"
             password = "auv"
@@ -28,8 +28,8 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop','update'
-            jndiName = "java:comp/env/jdbc/auvusers"
+	        dbCreate = "create-drop"
+	        url = "jdbc:hsqldb:mem:testDb"
         }
     }
    production {
