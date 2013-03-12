@@ -71,6 +71,16 @@ log4j = {
     //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
     //}
 
+	appender new de.viaboxx.nagios.NagiosAppender(
+		name: 'nagiosAppender',
+		nagiosHost: 'status.emii.org.au',
+		nagiosPort: 5667,
+		nagiosEncryption: "TRIPLE_DES",
+		nagiosPassword: "broken cat batteries",
+		monitoredServiceName: "AUV_Log4J_Appender",
+		monitoredHostName: "imos-3.emii.org.au"
+	)
+
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
            'org.codehaus.groovy.grails.web.sitemesh', //  layouts
