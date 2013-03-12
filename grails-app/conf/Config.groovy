@@ -78,7 +78,7 @@ log4j = {
 		nagiosEncryption: "TRIPLE_DES",
 		nagiosPassword: "broken cat batteries",
 		monitoredServiceName: "AUV_Log4J_Appender",
-		monitoredHostName: "imos-3.emii.org.au"
+		monitoredHostName: "imos-1.emii.org.au"
 	)
 
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
