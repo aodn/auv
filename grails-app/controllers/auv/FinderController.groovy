@@ -11,7 +11,7 @@ package auv
 class FinderController {
 
 
-    def server = "http://geoserver.imos.org.au"
+    def server = "http://imos2.ersa.edu.au"
     def layernameTrack = "helpers:auv_tracks"
     def layernameImages = "helpers:auv_images_vw"
     // get the server name to choose proxy latter
