@@ -16,7 +16,7 @@ class ProxyController {
         if (params.url) {
         
            //exclude use to certain hosts
-           def hostList = ['geoserver.imos.org.au']
+           def hostList = ['imos2.ersa.edu.au']
            def format
 
            // get the doamin name from the supplied uri
