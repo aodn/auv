@@ -766,7 +766,7 @@ function trackSort(fk_auv_tracks,reLoad) {
 
 			html_content = html_content + "<div class=\"panel\"  id=\"auvpanel_" + rowcounter + "\" >";
 
-			var imageURL = "http://auv.emii.org.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
+			var imageURL = "http://auv.aodn.org.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
 
 			var tiffImageURL = "https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + ".tif";
                 
@@ -953,7 +953,7 @@ function getImageStyle(x){
 
 		if (x == "default") {
 			// calling the generator script with no parameters gives us a valid but empty sld
-			sld = "http://auv.emii.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
+			sld = "http://auv.aodn.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
 			//jQuery('#styleReloadLink').text("Set Style");
 			jQuery('#styleSliderContainer').hide();
 			//resetStyleSelect(); // set the style chooser to  default
@@ -962,7 +962,7 @@ function getImageStyle(x){
 		}
 		else {
 			parameters = "max=" + valMax + "&min=" + valMin + "&variable=" + variable;
-			sld = "http://auv.emii.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?" + parameters;
+			sld = "http://auv.aodn.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?" + parameters;
 			// the named layer 'default' must exist in the external sld'
 			extras = "&STYLE=default&SLD=" + URLEncode(sld);
 		}
