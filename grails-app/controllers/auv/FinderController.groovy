@@ -11,11 +11,11 @@ package auv
 class FinderController {
 
 
-    def server = "http://imos2.ersa.edu.au"
+    def server = "http://geoserver.imos.org.au"
+    def serverContext = "geoserver"
     def layernameTrack = "helpers:auv_tracks"
     def layernameImages = "helpers:auv_images_vw"
-    // get the server name to choose proxy latter
-    def serverName =  request.getHeader("Host")
+
 
     // Display the AUV main map
     def index = {
@@ -26,9 +26,9 @@ class FinderController {
                 flash.lon= params.lon
             }
          [  server: server,
+            serverContext: serverContext,
             layernameTrack: layernameTrack,
-            layernameImages: layernameImages ,
-            serverName: serverName
+            layernameImages: layernameImages
          ] 
     }
 }

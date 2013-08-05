@@ -84,11 +84,13 @@ function mapinit(b,mapheight,mapwidth){
 		projection: "EPSG:4326",
 		units: 'degrees'
 	};
+
 	map = new OpenLayers.Map('map', options);
+    var serverWmsUrl = [server,serverContext,'wms'].join('/');
 
                 
 	base = new OpenLayers.Layer.WMS(
-		"simple", server + '/geoserver/wms',
+		"simple", serverWmsUrl,
 		{
 			layers: 'helpers:cstauscd_r',
 			styles: '',
@@ -103,7 +105,7 @@ function mapinit(b,mapheight,mapwidth){
 		}
 		);
 	auvtracks = new OpenLayers.Layer.WMS(
-		"helpers:auv_tracks", server + '/geoserver/wms',
+		"helpers:auv_tracks",  serverWmsUrl,
 		{
 			layers: layername_track,
 			styles: '',
@@ -120,7 +122,7 @@ function mapinit(b,mapheight,mapwidth){
 		}
 		);
 	auvimages = new OpenLayers.Layer.WMS(
-		"helpers:auv_images_vw", server + '/geoserver/wms',
+		"helpers:auv_images_vw",  serverWmsUrl,
 		{
 			layers: layername_images,
 			styles: '',
@@ -276,7 +278,6 @@ function getpointInfo(e) {
 		}
 		else if (layer.params.VERSION == "1.3.0") {
 			url = layer.getFullRequestString({
-				//////////////////////////////////////////////////////////// TO DO change this to getfeature request
 				REQUEST: "GetFeatureInfo",
 				EXCEPTIONS: "application/vnd.ogc.se_xml",
 				BBOX: layer.getExtent().toBBOX(),
@@ -335,33 +336,30 @@ function setValuesForBBox(bbox,variable){
 	bbox = bb[0]+"," + bb[1] + "%20" + bb[2] + "," + bb[3];
         
 	var datasetParent = "auv_images_vw";
-	var filter =  "<ogc:Filter xmlns:ogc=\"http://ogc.org\" xmlns:gml=\"http://www.opengis.net/gml\"><ogc:BBOX>"
+	var filter =  encodeURIComponent("<ogc:Filter xmlns:ogc=\"http://ogc.org\" xmlns:gml=\"http://www.opengis.net/gml\"><ogc:BBOX>"
 	+ "<ogc:PropertyName>geom</ogc:PropertyName>"
 	+ "<gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml\">"
-	+ "<gml:coordinates>"
+	+ "<gml:coordinates>")
 	+  bbox
-	+ "</gml:coordinates>"
-	+ "</gml:Box></ogc:BBOX></ogc:Filter>";
+	+ encodeURIComponent("</gml:coordinates>"
+	+ "</gml:Box></ogc:BBOX></ogc:Filter>");
 
-	var url = server + "/geoserver/wfs?request=GetFeature&typeName=helpers:auv_images_vw&propertyName="+  variable
-	+ "&filter=" + filter
+	var url = server + "/" + serverContext + "/wfs?request=GetFeature&service=WFS&typeName=helpers:auv_images_vw&propertyName="+ variable
+	+ "&filter=" +  filter
 	+ "&version=1.0.0&maxfeatures=1&sortby="+  variable  + "+a";
-	//aler);
+
 
 	var xmlDoc = getXML(url);
-	return getArrayFromXML(xmlDoc , [variable], datasetParent);
-        
+    //console.log()
+	//return array of min and max //getArrayFromXML(xmlDoc , [variable], datasetParent);
         
 }
-
- 
     
 // return multidimentional array- numbered array of associative arrays
 function  getArrayFromXML(xmlDoc ,fields_array, parent) {
 
             
 	var parentCriteria;
-
 	if (parent == "auv_tracks") {
 		parentCriteria = {
 			"ie":"helpers:auv_tracks",
@@ -403,13 +401,16 @@ function  getArrayFromXML(xmlDoc ,fields_array, parent) {
 				var val =x[i].childNodes[y].childNodes[0].nodeValue;
 				myArray[name]= val;
 
-			}                        
+			}
 		//  jQuery("#tmp_html").append(name + "  <BR>");
 		}
 		tmp[i] = myArray;
 
 	}
-	return tmp;
+    if (tmp.length > 0 ) {
+        return tmp;
+    }
+
 }
 
             
@@ -421,130 +422,135 @@ function populateTracks() {
            
 		var fields = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";
 		fields_array = fields.split(",");
-		var tmp = []; 
+
 		var trackSelectorValues = [];
 		var html_content = "<div class=\"feature\" >\n";
 
-		var request_string =  server + '/geoserver/wfs?request=GetFeature&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0';
+		var request_string =  server + '/' + serverContext + '/wfs?request=GetFeature&service=WFS&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0';
             
 
 		// get track feature info as XML   
             
 		var xmlDoc = getXML(request_string);
-		x = xmlDoc
-            
-		tmp = getArrayFromXML(xmlDoc,fields_array,"auv_tracks");
-           
 
- 
-		// now assemble the neccessaries for the simulated getfeatureinfo request
-		for (var i=0;i<tmp.length;i++) {
-
-               
-			/*var ids = tmp[i]["site_code"].split("_");
-                var site = ucwords(ids[2]);
-                //site =tmp[i]["site_code"];
-                var dive = ids[3];
-                var depth = ids[4];
-                 = site + " - Dive:"+dive+" Depth:"+depth;*/
-			var newTitle = ucwords(tmp[i]["dive_code_name"]);
-                
-			var trackHTML_id = "allTracksHTML_" + i ;
-                
-                
-			var time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"],false);
-			//var time_coverage_start = tmp[i]["time_coverage_start"];
-			var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"],false);
-			//var time_coverage_end = tmp[i]["time_coverage_end"];
-
-			html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";                        
-                
-			html_content = html_content + "<h4 class=\"getfeatureTitle\">" + newTitle + "</h4>\n";
-			html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureCode\">" +tmp[i]["site_code"] + "</p>\n";
-			html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureExtent\">" + tmp[i]["geospatial_lon_min"] + "," + tmp[i]["geospatial_lat_min"] + "," + tmp[i]["geospatial_lon_max"] + "," +  tmp[i]["geospatial_lat_max"] + "</p>\n";                                               
-			html_content = html_content + "<h5>Start: " + time_coverage_start + "</h5>\n";
-			html_content = html_content + "<div style=\"display: none;\" class=\"auvSiteDetails\" id=\"" +tmp[i]["site_code"] + "\">\n";
-                
-			html_content = html_content + "<!-- hidden for use in AUV page -->\n";                        
-                
-			html_content = html_content + "<h5>End: " + time_coverage_end + "</h5><br>\n";
-                
-                
-			html_content = html_content + "<table cellspacing=\"0\" cellpadding=\"0\">\n";
-			html_content = html_content + "<tbody>";
-			html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_max"] + "<b>N</b></td><td></td></tr>\n";
-			html_content = html_content + "<tr><td>" + tmp[i]["geospatial_lon_min"] + "<b>W</b></td><td></td><td>" + tmp[i]["geospatial_lon_max"] + "<b>E</b></td></tr>\n";
-			html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
-			html_content = html_content + "</tbody></table>\n";
-
-			html_content = html_content + "<b>Depth:</b> " + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
-			if (tmp[i]["distance"] != undefined ) {
-				html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
-			}
-			//document.write(newTitle  + "  " + tmp[i]["distance"] + "<BR>");
+        x = xmlDoc;
+        var tmp = getArrayFromXML(xmlDoc,fields_array,"auv_tracks");
 
 
-			if (tmp[i]["dive_report"] != undefined ) {
-				html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\">Dive Report</a><br>";               
-			}
-			if (tmp[i]["dive_notes"] != undefined ) {
-				html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";               
-			}
-                
-			//jQuery('#track_html').show();
-			//jQuery('#track_html h3').hide();
-                
+        if (tmp) {
 
-			if (jQuery('#track_html .featurewhite').size() == 1) {
-				jQuery('.featurewhite').addClass('featurewhite_selected');
-				jQuery('.auvSiteDetails').show(1000);
-			}
+            // now assemble the neccessaries for the simulated getfeatureinfo request
+            for (var i=0;i<tmp.length;i++) {
 
-			if (tmp[i]["metadata_uuid"] != undefined ) {
-				html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
-			}
 
-			html_content = html_content + "<a alt=\"Download from opendap \" class=\"h3\" target=\"_blank\" href=\"http://opendap-tpac.arcs.org.au/thredds/catalog/IMOS/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "/hydro_netcdf/catalog.html\">Data on opendap</a> <br>";
-			html_content = html_content + "<a alt=\"Download from the datafabric\" class=\"h3\" target=\"_blank\" href=\"https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "\" rel=\"external\">Link to data folder</a> <br>";
-			html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"" +tmp[i]["kml"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";
-			html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";
+                /*var ids = tmp[i]["site_code"].split("_");
+                    var site = ucwords(ids[2]);
+                    //site =tmp[i]["site_code"];
+                    var dive = ids[3];
+                    var depth = ids[4];
+                     = site + " - Dive:"+dive+" Depth:"+depth;*/
+                var newTitle = ucwords(tmp[i]["dive_code_name"]);
 
-                
-			trackSelectorValues.push( {
-				"trackId": trackHTML_id , 
-				"trackLabel": newTitle, 
-				"campaignCode": tmp[i]["campaign_code"]
-			});
+                var trackHTML_id = "allTracksHTML_" + i ;
 
-		//jQuery("#tmp_html").append(i + " " + newTitle + " " + " <BR>");
 
-                
-		}
+                var time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"],false);
+                //var time_coverage_start = tmp[i]["time_coverage_start"];
+                var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"],false);
+                //var time_coverage_end = tmp[i]["time_coverage_end"];
 
-		// populate coresponding drop down box 
-		trackSelectorValues = sortTrackArray(trackSelectorValues);
-		//trackSelectorValues = trackSelectorValues.sort();
-		var output = [];
-		var campaign = "";
+                html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";
 
-		for (var i=0; i < trackSelectorValues.length; i++) {
-                 
-			// write options grouped by campaign code
-			var x = trackSelectorValues[i].campaignCode;
-			if (campaign != x) {
-				if (i != 0 ) {
-					// close last option
-					output.push('</optgroup>\n');
-				}
-				output.push('<optgroup label=\"' + x + '\">\n');
-				campaign = x;
-			}
-			output.push('<option value="'+ trackSelectorValues[i].trackId  +'">'+ trackSelectorValues[i].trackLabel +'</option>\n');
-		}
-		output.push('</optgroup>\n');
-		jQuery('#trackSelector').append(output.join(''));                    
-            
-		allTracksHTML = html_content;
+                html_content = html_content + "<h4 class=\"getfeatureTitle\">" + newTitle + "</h4>\n";
+                html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureCode\">" +tmp[i]["site_code"] + "</p>\n";
+                html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureExtent\">" + tmp[i]["geospatial_lon_min"] + "," + tmp[i]["geospatial_lat_min"] + "," + tmp[i]["geospatial_lon_max"] + "," +  tmp[i]["geospatial_lat_max"] + "</p>\n";
+                html_content = html_content + "<h5>Start: " + time_coverage_start + "</h5>\n";
+                html_content = html_content + "<div style=\"display: none;\" class=\"auvSiteDetails\" id=\"" +tmp[i]["site_code"] + "\">\n";
+
+                html_content = html_content + "<!-- hidden for use in AUV page -->\n";
+
+                html_content = html_content + "<h5>End: " + time_coverage_end + "</h5><br>\n";
+
+
+                html_content = html_content + "<table cellspacing=\"0\" cellpadding=\"0\">\n";
+                html_content = html_content + "<tbody>";
+                html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_max"] + "<b>N</b></td><td></td></tr>\n";
+                html_content = html_content + "<tr><td>" + tmp[i]["geospatial_lon_min"] + "<b>W</b></td><td></td><td>" + tmp[i]["geospatial_lon_max"] + "<b>E</b></td></tr>\n";
+                html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
+                html_content = html_content + "</tbody></table>\n";
+
+                html_content = html_content + "<b>Depth:</b> " + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
+                if (tmp[i]["distance"] != undefined ) {
+                    html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
+                }
+                //document.write(newTitle  + "  " + tmp[i]["distance"] + "<BR>");
+
+
+                if (tmp[i]["dive_report"] != undefined ) {
+                    html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\">Dive Report</a><br>";
+                }
+                if (tmp[i]["dive_notes"] != undefined ) {
+                    html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";
+                }
+
+                //jQuery('#track_html').show();
+                //jQuery('#track_html h3').hide();
+
+
+                if (jQuery('#track_html .featurewhite').size() == 1) {
+                    jQuery('.featurewhite').addClass('featurewhite_selected');
+                    jQuery('.auvSiteDetails').show(1000);
+                }
+
+                if (tmp[i]["metadata_uuid"] != undefined ) {
+                    html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
+                }
+
+                html_content = html_content + "<a alt=\"Download from opendap \" class=\"h3\" target=\"_blank\" href=\"http://thredds.aodn.org.au/thredds/catalog/IMOS/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "/hydro_netcdf/catalog.html\">Data on opendap</a> <br>";
+                html_content = html_content + "<a alt=\"Download from the datafabric\" class=\"h3\" target=\"_blank\" href=\"http://data.aodn.org.au/IMOS/public/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "\" rel=\"external\">Link to data folder</a> <br>";
+                html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"" +tmp[i]["kml"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";
+                html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";
+
+
+                trackSelectorValues.push( {
+                    "trackId": trackHTML_id ,
+                    "trackLabel": newTitle,
+                    "campaignCode": tmp[i]["campaign_code"]
+                });
+
+            //jQuery("#tmp_html").append(i + " " + newTitle + " " + " <BR>");
+
+
+            }
+
+            // populate coresponding drop down box
+            trackSelectorValues = sortTrackArray(trackSelectorValues);
+            //trackSelectorValues = trackSelectorValues.sort();
+            var output = [];
+            var campaign = "";
+
+            for (var i=0; i < trackSelectorValues.length; i++) {
+
+                // write options grouped by campaign code
+                var x = trackSelectorValues[i].campaignCode;
+                if (campaign != x) {
+                    if (i != 0 ) {
+                        // close last option
+                        output.push('</optgroup>\n');
+                    }
+                    output.push('<optgroup label=\"' + x + '\">\n');
+                    campaign = x;
+                }
+                output.push('<option value="'+ trackSelectorValues[i].trackId  +'">'+ trackSelectorValues[i].trackLabel +'</option>\n');
+            }
+            output.push('</optgroup>\n');
+            jQuery('#trackSelector').append(output.join(''));
+
+            allTracksHTML = html_content;
+        }
+        else {
+            setError("There is a problem with the WMS server");
+        }
 
             
 	}
@@ -768,11 +774,11 @@ function trackSort(fk_auv_tracks,reLoad) {
 
 			var imageURL = "http://auv.aodn.org.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
 
-			var tiffImageURL = "https://df.arcs.org.au/ARCS/projects/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + ".tif";
+			var tiffImageURL = "https://data.aodn.org.au/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + ".tif";
                 
+console.log(tiffImageURL);
 
-
-			html_content = html_content + "<a href=\"#\" onclick=\"openPopup('" + imageURL + "','" +  tiffImageURL + "');return false;\" >\n";
+			html_content = html_content + "<a href=\"#\" onclick=\"openPopup(\'" +  tiffImageURL + "\');return false;\" >\n";
 			html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
 			html_content = html_content + "</a>\n";
 
@@ -832,7 +838,7 @@ function getImageList(fk_auv_tracks) {
 
 	// get images for track
 	if (fk_auv_tracks != "") {
-		var xmlDoc = getXML(server + '/geoserver/wfs?request=GetFeature&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks );
+		var xmlDoc = getXML(server + '/' + serverContext + '/wfs?request=GetFeature&service=WFS&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks );
 		imagesForTrack = getArrayFromXML(xmlDoc,fields_array,"auv_images_vw");
 	}
     
@@ -888,15 +894,16 @@ function openStyleSlider(param) {
             
             
 		var bbox = map.getExtent().toBBOX();
-            
-		if (param == "bathy") {
+		if (param == "depth") {
 			// get the min and max depth            
 			var res = setValuesForBBox(bbox,param);
-			//alert(res);
+			console.log(res);
 			maxVal = 200;
 			jQuery('#styleReloadLink').text("Set Bathymetry Style");
 		}
-		if (param == "temperature") {
+		if (param == "sea_water_temperature") {
+
+            console.log(res);
 			maxVal = 35;
 			jQuery('#styleReloadLink').text("Set Temperature Style");
 		}
@@ -971,11 +978,10 @@ function getImageStyle(x){
 			sld:  sld
 		});
 		// set the getlegendGraphic image url
-		jQuery('#imagesGetLegendGraphic').attr("src",server + "/geoserver/wms?LAYER=" + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras);
+		jQuery('#imagesGetLegendGraphic').attr("src",server + '/' + serverContext + '/wms?LAYER=' + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras);
 		currentStyle = variable;
 	}
 
-//alert ("currentcurrentStyle + " " + variable);
 
         
 }
@@ -1055,7 +1061,7 @@ function findIndexByCol(val){
 	}        
 	return false;
 
-};
+}
 
 function getXML(request_string) {
 
@@ -1065,10 +1071,15 @@ function getXML(request_string) {
 	else  {
 		xhttp=new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	var  theurl = URLEncode(request_string);
-	xhttp.open("GET",OpenLayers.ProxyHost + theurl + "&format=xml",false);
-	xhttp.send();
-	return xhttp.responseXML;
+    try {
+        var  theurl = URLEncode(request_string);
+        xhttp.open("GET",OpenLayers.ProxyHost + theurl + "&format=xml",false);
+        xhttp.send();
+        return xhttp.responseXML;
+    }
+    catch (e) {
+        return false;
+    }
 }
 
 function URLEncode (clearString) {
@@ -1099,7 +1110,7 @@ function URLEncode (clearString) {
 var windowObjectReference;
 
  
-function openPopup(src,tiffFolder)   {
+function openPopup(tiffFolder)   {
 
 	//windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
 	windowObjectReference = window.open(tiffFolder , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
@@ -1214,7 +1225,7 @@ Date.prototype.setISO8601 = function (str,localtime) {
 	}
 	time = (Number(date) + (offset * 60 * 1000));
 	this.setTime(Number(time));
-}
+};
     
 
 function ucwords( str ) {

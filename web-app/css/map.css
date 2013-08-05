@@ -6,55 +6,63 @@
 
 body {
 
-    min-width:		950px;
-	min-height:		600px;
-    overflow: hidden! important;
+    min-width: 950px;
+    min-height: 600px;
+    overflow: hidden ! important;
 }
-
-
 
 #footer {
     font-size: 11px;
-    font-family:Arial,Helvetica,sans-serif;
-    padding:10px 10px 25px 0px;
-    /*width: 430px;*/
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 10px 25px 0px;
+    color: #999999;
+    background-color: #eeeeee;
+    padding: 16px;
+    margin-right: 6px;
 
+}
+
+#footer a {
+    color: #999999;
 }
 
 #footer .left {
-	margin-right: 20px;
+    margin-right: 20px;
 }
 
 #mainbodyPadding {
-     margin: 15px;
-     height: 100% ;
- }
- #mainbody {
-    height: 100% ;
-    overflow: auto!  important;
-padding: 15px;
-   
+    margin: 15px;
+    height: 100%;
 }
 
+#mainbody {
+    height: 100%;
+    overflow: auto !  important;
+    padding: 15px;
 
-#helpSection {
 }
+
 #logo img {
     /*position: absolute;*/
     margin-right: 30px;
 }
+
 #logo {
     padding-bottom: 20px;
-    overflow: hidden! important;
+    overflow: hidden ! important;
 }
 
 #logo h1 {
     display: inline
 }
-.align-right { float:right; margin: 0 0 15px 15px; }
 
-#imagecontainer{
-   padding: 20px;
+.align-right {
+    float: right;
+    margin: 0 0 15px 15px;
+}
+
+#imagecontainer {
+    padding: 20px;
     padding-top: 0px;
     margin: 5px;
     margin-left: 0px;
@@ -62,12 +70,10 @@ padding: 15px;
 }
 
 #mapcontainer {
-    padding: 0px! important;
-  
-
-
+    padding: 0px ! important;
 
 }
+
 #trackcontainer {
     padding-right: 5px;
     padding: 5px;
@@ -79,14 +85,13 @@ padding: 15px;
     height: 250px;
 }
 
-
 #map {
     margin-left: auto;
-    margin-right: auto;    
-    border:1px solid #999999;
-    border-top:1px solid #cccccc;
-    border-left:1px solid #999999;
-    -moz-box-shadow:5px 5px 5px #ccc;
+    margin-right: auto;
+    border: 1px solid #999999;
+    border-top: 1px solid #cccccc;
+    border-left: 1px solid #999999;
+    -moz-box-shadow: 5px 5px 5px #ccc;
 }
 
 #controlWrapper {
@@ -94,51 +99,59 @@ padding: 15px;
     margin-top: 5px;
     margin-left: 10px;
 }
+
 #controlWrapper, #legendToggle, #mapcoords, #mapscale {
     font-size: 10px;
 }
-#wrapper div{
+
+#wrapper div {
     float: left;
     padding: 6px;
 }
+
 #styles {
     float: left;
 }
+
 #image_html {
-    clear:both;
+    clear: both;
 }
 
 #mapscale {
-	width: 80px;
+    width: 80px;
     float: left;
     padding: 3px;
 }
-#mapscale div{
+
+#mapscale div {
     padding: 0px;
     font-size: 9px;
 }
+
 #mapcoords {
     width: 100px;
     z-index: 4;
     position: relative;
-    float: right! important;
+    float: right ! important;
     background: inherit;
     padding: 3px;
 }
 
-#mapcoords b{
-	background: none;
+#mapcoords b {
+    background: none;
 }
 
 .nofeature {
-	margin: 2px 0px 5px 0px;
-	padding: 5px;
-	width:100%;
-	background-color: #fafafa;
+    margin: 2px 0px 5px 0px;
+    padding: 5px;
+    width: 100%;
+    background-color: #fafafa;
 }
+
 .featurewhite {
     padding-top: 5px;
 }
+
 .featurewhite_selected {
     background-color: white;
 
@@ -148,22 +161,20 @@ padding: 15px;
     font-size: 11px;
 }
 
-
-.feature ul li{
-	margin-left: 1em;
+.feature ul li {
+    margin-left: 1em;
 }
 
-
 .block h3 {
-	border: solid 1px #cccccc;
-	background-color: #efefef;
-	padding-left: 3px;
-	width: 100%;
+    border: solid 1px #cccccc;
+    background-color: #efefef;
+    padding-left: 3px;
+    width: 100%;
 }
 
 p.important {
-	color:#3c668d;
-	font-weight: bold;
+    color: #3c668d;
+    font-weight: bold;
 }
 
 /* legend and style changers */
@@ -178,17 +189,20 @@ p.important {
     margin-left: 625px;
     margin-top: 400px;
     -moz-border-radius: 10px;
-    -moz-box-shadow:5px 5px 5px #aaa;
+    -moz-box-shadow: 5px 5px 5px #aaa;
 }
+
 #legend {
     width: 350px;
 }
+
 #legendToggle, .getfeatureTitle {
     text-decoration: underline;
-    cursor:pointer;
+    cursor: pointer;
 }
+
 #legendToggle {
-    float: right! important;
+    float: right ! important;
     margin-right: 20px;
     padding: 3px;
 }
@@ -196,8 +210,6 @@ p.important {
 #styleSliderContainer {
     width: 350px;
 }
-
-
 
 .closeIcon {
     cursor: default;
@@ -207,11 +219,13 @@ p.important {
 
     text-decoration: none;
 }
+
 #sortbytrack h3 {
     background-color: #3399CC;
     padding: 3px;
     color: white;
 }
+
 #sortbytrack:hover h3 {
     background-color: #ccc;
     padding: 3px;
@@ -222,7 +236,7 @@ span.ol {
 
     /*background: url('images/olbackground.png') no-repeat;*/
     background-color: #3c668d;
-    -moz-border-radius: 15! important;
+    -moz-border-radius: 15 ! important;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -231,120 +245,77 @@ span.ol {
 
 }
 
-
-
 /* Overview Map wigit */
 .olControlOverviewMapElement {
-	background-color: #3c668d;
+    background-color: #3c668d;
 }
 
-.ygtvlabel, .ygtvlabel:link, .ygtvlabel:visited, .ygtvlabel:hover, .ygtvfocus{
-	background-color: transparent;
+.ygtvlabel, .ygtvlabel:link, .ygtvlabel:visited, .ygtvlabel:hover, .ygtvfocus {
+    background-color: transparent;
 }
+
 a.ygtvlabel:hover {
-	text-decoration:underline;
+    text-decoration: underline;
 }
-
 
 div.olControlScaleLineBottom {
-	margin-top: -1;
-}
-div.olControlScaleLineTop, div.olControlScaleLineBottom {
-	border-color: #cccccc;
+    margin-top: -1;
 }
 
+div.olControlScaleLineTop, div.olControlScaleLineBottom {
+    border-color: #cccccc;
+}
 
 .olControlEditingToolbar, .olControlEditingToolbarItemInactive {
-width: 50px;
+    width: 50px;
 }
+
 .olControlEditingToolbar div {
-float: left;
-}
-
-
-#navtoolbar {
-    position: absolute;
     float: left;
-    width: 42px;
-    z-index: 1001;
-    margin-top: 250px;
-    margin-left: 9px;
-
-}
-#navtoolbar .olControlNavigationItemActive,
-#navtoolbar .olControlNavigationItemInactive,
-#navtoolbar .olControlZoomBoxItemActive,
-#navtoolbar .olControlZoomBoxItemInactive,
-
-#navtoolbar .olControlEditingToolbar,
-#navtoolbar .olControlEditingToolbarItemInactive
-
-{
-    display: block;
-    background-image: url('../img/raa_y.gif');
-    height: 25px;
-}
-#navtoolbar .olControlDrawFeatureItemActive {
-
-    height: 22px;
-    background-image: url("../images/draw.png?");
-    background-position:12px 1px;
-    background-repeat: no-repeat;
-    display: block;
-}
-#navtoolbar .olControlDrawFeatureItemInactive {
-  display: none;
-}
-.olPopupCloseBox {
-    background:transparent url(../img/close.png?) no-repeat scroll 0 0 !important;
-    margin-right: 7px;
 }
 
 
 
 .olControlZoomBoxItemActive {
-	background-position: -600px 0pt;
+    background-position: -600px 0pt;
 }
+
 .olControlZoomBoxItemInactive {
-	background-position: -500px 0pt;
+    background-position: -500px 0pt;
 }
+
 .olControlZoomBoxItemInactive:hover {
-	background-position: -600px 0pt;
+    background-position: -600px 0pt;
 }
 
 .olControlNavigationItemActive {
-	background-position: -800px 0pt;
+    background-position: -800px 0pt;
 }
+
 .olControlNavigationItemInactive {
-	background-position: -700px 0pt;
+    background-position: -700px 0pt;
 }
+
 .olControlNavigationItemInactive:hover {
-	background-position: -800px 0pt;
+    background-position: -800px 0pt;
 }
-
-
 
 #controlPanZoom {
-	position: relative;
-	width: 42px;
-	z-index: 1000;
+    position: relative;
+    width: 42px;
+    z-index: 1000;
 }
-
-
-
 
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panup,
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panright,
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_pandown,
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panleft,
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomin,
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout
-
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout {
     background-repeat: no-repeat;
     background-image: url('../images/raa_y.gif');
-    width: 23px! important;
-    height: 22px! important;
+    width: 23px ! important;
+    height: 22px ! important;
     cursor: pointer;
 }
 
@@ -354,51 +325,42 @@ float: left;
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panright img,
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomin img,
 #controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout img,
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_Map_9 img
-{
-   display: none;
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_Map_9 img {
+    display: none;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomin
-{
-    top: 68px! important;
-    left: 11px! important;
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomin {
+    top: 68px ! important;
+    left: 11px ! important;
     background-position: -1900px 0;
     z-index: 1;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomin:hover
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomin:hover {
     background-position: -2000px 0;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout
-{
-    top: 230px! important;
-    left: 11px! important;
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout {
+    top: 230px ! important;
+    left: 11px ! important;
     background-position: -2100px 0;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout:hover
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_zoomout:hover {
     background-position: -2200px 0;
 }
-#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 img
-{
+
+#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 img {
     display: none;
 }
 
-#controlPanZoom #OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\002E Map_9
-{
-    height:150px !important;
-    left:13px !important;
-    top:85px !important;
+#controlPanZoom #OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\002E Map_9 {
+    height: 150px !important;
+    left: 13px !important;
+    top: 85px !important;
 }
 
-
-
-#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9
-{
+#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 {
     left: 0px;
     z-index: 99;
     background-repeat: no-repeat;
@@ -410,96 +372,86 @@ float: left;
     padding: 3px;
 }
 
-
-
-#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9:hover
-{
+#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9:hover {
     background-position: -2400px 0;
 }
 
-
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panup
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panup {
     background-position: -1100px 0;
     z-index: 110;
-    top: 7px! important;
-    left: 11px! important;
+    top: 7px ! important;
+    left: 11px ! important;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panup:hover
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panup:hover {
     background-position: -1200px 0;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_pandown
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_pandown {
     background-position: -1300px 0;
     z-index: 110;
-    top: 47px! important;
-    left: 11px! important;
+    top: 47px ! important;
+    left: 11px ! important;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_pandown:hover
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_pandown:hover {
     background-position: -1400px 0;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panleft
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panleft {
     background-position: -1500px 0;
     z-index: 100;
-    top: 27px! important;
-    left: 0! important;
+    top: 27px ! important;
+    left: 0 ! important;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panleft:hover
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panleft:hover {
     background-position: -1600px 0;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panright
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panright {
     background-position: -1700px 0;
     z-index: 100;
-    top: 27px! important;
-    left: 22px! important;
+    top: 27px ! important;
+    left: 22px ! important;
 }
 
-#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panright:hover
-{
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_panright:hover {
     background-position: -1800px 0;
 }
 
-.olControlOverviewMapElement
-{
-    position: absolute! important;
-    bottom: 0px! important;
-    right: 0px! important;
-    _bottom: -1px! important;
-    _right: -1px! important;
-    background: #999! important;
+.olControlOverviewMapElement {
+    position: absolute ! important;
+    bottom: 0px ! important;
+    right: 0px ! important;
+    _bottom: -1px ! important;
+    _right: -1px ! important;
+    background: #999 ! important;
     opacity: 0.9;
 }
+
 .olControlOverviewMapElement {
-    -moz-border-radius:0! important;
-    background-color:#eee! important;
-    padding:6px! important;
+    -moz-border-radius: 0 ! important;
+    background-color: #eee ! important;
+    padding: 6px ! important;
 }
-.olControlOverviewMapExtentRectangle
-{
+
+.olControlOverviewMapExtentRectangle {
     border: 2px dotted #333333 !important;
-    margin: 0! important;
-    padding: 0! important;
+    margin: 0 ! important;
+    padding: 0 ! important;
 }
+
 .olControlOverviewMapMinimizeButton, .olControlOverviewMapMaximizeButton {
-bottom:70px! important;
-right:2px! important;
+    bottom: 70px ! important;
+    right: 2px ! important;
 }
 
 #layerswitch {
-	position: static;
-	clear: both;
+    position: static;
+    clear: both;
 }
+
 .olControlLayerSwitcher {
 
 }
@@ -507,8 +459,9 @@ right:2px! important;
 /* hide it till positioned in style.css */
 .olControlOverviewMapMaximizeButton {
 
-    visibility : hidden;
+    visibility: hidden;
 }
+
 #trackSelectorDiv {
 
     height: 100px;
@@ -517,48 +470,51 @@ right:2px! important;
 #loading_cover {
     /*visibility : hidden;*/
     width: 100%;
-    height:100%;
+    height: 100%;
     opacity: 1;
     background: white;
     position: absolute;
     top: 95px;
-    left: 0;/**/
+    left: 0; /**/
     z-index: 99999999;
 }
+
 #loader {
     display: inline;
-   position: relative;
+    position: relative;
     color: black;
     font-weight: bold;
     margin-left: 10px;
 }
+
 #loader img {
 
-   position: relative;
+    position: relative;
     /* left: 460px;*/
     top: 10px;
     width: 24px;
     height: 25px;
 }
 
-#sliderContainer, #styleSlider{
+#sliderContainer, #styleSlider {
     width: 85%;
 }
-.trackSort, #sliderContainer, #styleSlider{
-    float:left;
+
+.trackSort, #sliderContainer, #styleSlider {
+    float: left;
     margin: 3px;
     margin-right: 10px;
 }
 
-.stepcarousel{
-position: relative; /*leave this value alone*/
-border-color:#999999 ;
-border-style:solid;
-border-width:3px 8px 3px 3px;
-overflow: scroll; /*leave this value alone*/
-width: 99%; /*Width of Carousel Viewer itself*/
-height: 310px; /*Height should enough to fit largest content's height*/
-background-color: #999;
+.stepcarousel {
+    position: relative; /*leave this value alone*/
+    border-color: #999999;
+    border-style: solid;
+    border-width: 3px 8px 3px 3px;
+    overflow: scroll; /*leave this value alone*/
+    width: 99%; /*Width of Carousel Viewer itself*/
+    height: 310px; /*Height should enough to fit largest content's height*/
+    background-color: #999;
 }
 
 #myGallery {
@@ -566,86 +522,90 @@ background-color: #999;
     -moz-border-radius: 5px;
 }
 
-
-.stepcarousel .belt{
-position: absolute; /*leave this value alone*/
-left: 0;
-top: 0;
+.stepcarousel .belt {
+    position: absolute; /*leave this value alone*/
+    left: 0;
+    top: 0;
 }
 
-.stepcarousel .panel{
-float: left; /*leave this value alone*/
-overflow: hidden; /*clip content that go outside dimensions of holding panel DIV*/
-margin: 4px; /*margin around each panel*/
-width: 350px; /*Width of each panel holding each content. If removed, widths should be individually defined on each content DIV then. */
-color: white;
-padding: 4px;
+.stepcarousel .panel {
+    float: left; /*leave this value alone*/
+    overflow: hidden; /*clip content that go outside dimensions of holding panel DIV*/
+    margin: 4px; /*margin around each panel*/
+    width: 350px; /*Width of each panel holding each content. If removed, widths should be individually defined on each content DIV then. */
+    color: white;
+    padding: 4px;
 }
 
-.stepcarousel .panel img{
-width: 100%; /*Width of each panel holding each content. If removed, widths should be individually defined on each content DIV then. */
-/*cursor: pointer;*/
+.stepcarousel .panel img {
+    width: 100%; /*Width of each panel holding each content. If removed, widths should be individually defined on each content DIV then. */
+    /*cursor: pointer;*/
 }
-
-
 
 /* BUTTONS */
 .buttons {
-    clear:both;
+    clear: both;
 }
-.buttons a, .buttons button, select{
+
+.buttons a, .buttons button, select {
     /*display:block;*/
 
-    text-decoration:none;
-    color:#565656;
-    cursor:pointer;
-    -moz-border-radius:3px 3px 3px 3px;
+    text-decoration: none;
+    color: #565656;
+    cursor: pointer;
+    -moz-border-radius: 3px 3px 3px 3px;
     background-color: white;
     /*background:-moz-linear-gradient(center top , #ffffff, #f3f3f3) repeat scroll 0 0 inherit;*/
-    border-color:#CCCCCC #BBBBBB #A0A0A0;
-    border-left:1px solid #BBBBBB;
-    border-right:1px solid #BBBBBB;
-    border-style:solid;
-    border-width:1px;
-    color:#666;
-    margin:12px 8px ;
-    outline:medium none;
-    font-family:Helvetica,Arial,sans-serif;
+    border-color: #CCCCCC #BBBBBB #A0A0A0;
+    border-left: 1px solid #BBBBBB;
+    border-right: 1px solid #BBBBBB;
+    border-style: solid;
+    border-width: 1px;
+    color: #666;
+    margin: 12px 8px;
+    outline: medium none;
+    font-family: Helvetica, Arial, sans-serif;
     font-weight: bold;
-    padding:3px 8px;
-    text-align:center;
-    vertical-align:middle;
-    white-space:nowrap;
+    padding: 3px 8px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
 }
+
 select {
-    text-align:left;
+    text-align: left;
     font-weight: normal;
 }
 
 select#trackSelector {
     display: inline;
 }
-.buttons button.hover, select.hover{
-    background-color:#eeeeee;
+
+.buttons button.hover, select.hover {
+    background-color: #eeeeee;
 }
-.buttons button, select{
-    width:auto;
-    overflow:visible;
-    padding:4px 10px 3px 7px; /* IE6 */
+
+.buttons button, select {
+    width: auto;
+    overflow: visible;
+    padding: 4px 10px 3px 7px; /* IE6 */
 }
-.buttons button[type]{
-    padding:5px 10px 5px 7px; /* Firefox */
-    line-height:17px; /* Safari */
+
+.buttons button[type] {
+    padding: 5px 10px 5px 7px; /* Firefox */
+    line-height: 17px; /* Safari */
 }
-*:first-child+html button[type]{
-    padding:4px 10px 3px 7px; /* IE7 */
+
+*:first-child+html button[type] {
+    padding: 4px 10px 3px 7px; /* IE7 */
 }
-.buttons button img, .buttons a img{
-    margin:0 3px -3px 0 !important;
-    padding:0;
-    border:none;
-    width:16px;
-    height:16px;
+
+.buttons button img, .buttons a img {
+    margin: 0 3px -3px 0 !important;
+    padding: 0;
+    border: none;
+    width: 16px;
+    height: 16px;
 }
 
 

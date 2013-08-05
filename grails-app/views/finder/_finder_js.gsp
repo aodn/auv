@@ -2,15 +2,12 @@
 
             var buff = 10;
             var server = '${server}';
+            var serverContext = '${serverContext}';
             var layername_track = '${layernameTrack}';
             var layername_images = '${layernameImages}';
 
-              // get the server name to choose proxy latter
-             var this_serverName = '${serverName}';
-
             // *****  TODO get the bounds from geoserver
             var bounds = "" + (112.947 -buff) +","+ (-33.00 -buff)+","+(116.46 + buff)+","+ (0.874 + buff) ;
-
 
 
             var mapheight = '300';
@@ -20,10 +17,6 @@
             var offset = new OpenLayers.Pixel(-(size.w/2)+5, -(size.h-1));
             //var offset = new OpenLayers.Pixel(-(size.w), -size.h);
             var icon = new OpenLayers.Icon('images/auv-marker.png',size,offset);
-            //var slider = null; // slider object
-
-
-            //var style = 'AUV_tracks';
 
 
             jQuery(document).ready(function(){
@@ -106,25 +99,7 @@
                     }
 
                 });
-                // Allow left and right keys to control slider
-                /* !!!!!!!!!!!!!!!!!! TODO
-                jQuery(document.documentElement).keypress(function(e) {
-                    var code = (e.keyCode ? e.keyCode : e.which);
-                    var direction = null;
 
-                    // handle cursor keys
-                    if (code == 37) { // left key
-                        direction = 'prev';
-                    }
-                    else if (code == 39) { // right key
-                        direction = 'next';
-                    }
-
-                    if (direction != null && keyPressCheck() ) {
-                        jQuery('#slider')[direction]().click();
-                    }
-                });
-                */
 
 
                 resetStyleSelect(); // reset the style selector to default
@@ -149,11 +124,6 @@
                 jQuery('#mainbody').layout({
                   //applyDefaultStyles: true,
                   resizable: true,
-
-                  /*defaults: {
-                     center__minWidth:		400,
-                     initClosed:            false
-                  },*/
                   west: {
                     //applyDefaultStyles: true,
                     minSize: 410,
@@ -170,10 +140,6 @@
 
 
                 jQuery('.trackSort').hide();
-
-                //var bbox = map.getExtent().toBBOX();
-                //var res = setValuesForBBox(bbox,"depth");
-                //alert(res);
 
                 // hide the gallery. needs to exist for step carousel
                 jQuery('#mygallery, #stepcarouselcontrols').toggle(false);
