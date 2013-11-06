@@ -1,8 +1,9 @@
 <script>
 
             var buff = 10;
-            var server = '${server}';
-            var serverContext = '${serverContext}';
+            var wmsServer = '${server}';
+            var dataServerBaseUrl = "http://data.aodn.org.au/IMOS/public/AUV/";
+            var wmsServerContext = '${serverContext}';
             var layername_track = '${layernameTrack}';
             var layername_images = '${layernameImages}';
 
