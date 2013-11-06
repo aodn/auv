@@ -86,7 +86,7 @@ function mapinit(b,mapheight,mapwidth){
 	};
 
 	map = new OpenLayers.Map('map', options);
-    var serverWmsUrl = [server,serverContext,'wms'].join('/');
+    var serverWmsUrl = [wmsServer,wmsServerContext,'wms'].join('/');
 
                 
 	base = new OpenLayers.Layer.WMS(
@@ -344,7 +344,7 @@ function setValuesForBBox(bbox,variable){
 	+ encodeURIComponent("</gml:coordinates>"
 	+ "</gml:Box></ogc:BBOX></ogc:Filter>");
 
-	var url = server + "/" + serverContext + "/wfs?request=GetFeature&service=WFS&typeName=helpers:auv_images_vw&propertyName="+ variable
+	var url = wmsServer + "/" + wmsServerContext + "/wfs?request=GetFeature&service=WFS&typeName=helpers:auv_images_vw&propertyName="+ variable
 	+ "&filter=" +  filter
 	+ "&version=1.0.0&maxfeatures=1&sortby="+  variable  + "+a";
 
@@ -426,7 +426,7 @@ function populateTracks() {
 		var trackSelectorValues = [];
 		var html_content = "<div class=\"feature\" >\n";
 
-		var request_string =  server + '/' + serverContext + '/wfs?request=GetFeature&service=WFS&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0';
+		var request_string =  wmsServer + '/' + wmsServerContext + '/wfs?request=GetFeature&service=WFS&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0';
             
 
 		// get track feature info as XML   
@@ -483,8 +483,6 @@ function populateTracks() {
                 if (tmp[i]["distance"] != undefined ) {
                     html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
                 }
-                //document.write(newTitle  + "  " + tmp[i]["distance"] + "<BR>");
-
 
                 if (tmp[i]["dive_report"] != undefined ) {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\">Dive Report</a><br>";
@@ -525,7 +523,6 @@ function populateTracks() {
 
             // populate coresponding drop down box
             trackSelectorValues = sortTrackArray(trackSelectorValues);
-            //trackSelectorValues = trackSelectorValues.sort();
             var output = [];
             var campaign = "";
 
@@ -642,8 +639,7 @@ function setImageHTML(response){
             
 		jQuery('#mygallery').css("height","310px"); // sort out why i have to call this
 		jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
-            
-	// updateUserInfo("Click an image to view and create public notes about the image");
+
 	}
 	else{
 		updateUserInfo("No tracks or images found at your click point");
@@ -757,28 +753,21 @@ function trackSort(fk_auv_tracks,reLoad) {
 		}
 
 
-		//alert(imagesForTrack[0]["dive_code_name"]);
 		var rowcounter = 0;
 		var minimum_index = min_i;
 
 		for (;min_i < max_i; min_i++) {
 
 
-                
-			// TODO SORT OUT THIS FORMATING
 			var time = formatISO8601Date(imagesForTrack[min_i]["time"],false);
-			//var time = imagesForTrack[min_i]["time"];
-
 
 			html_content = html_content + "<div class=\"panel\"  id=\"auvpanel_" + rowcounter + "\" >";
 
 			var imageURL = "http://auv.aodn.org.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
 
-			var tiffImageURL = "https://data.aodn.org.au/IMOS/public/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + ".tif";
-                
-console.log(tiffImageURL);
+			var tiffImageURL = dataServerBaseUrl + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"]  + "/" + imagesForTrack[min_i]["image_filename"] + ".tif";
 
-			html_content = html_content + "<a href=\"#\" onclick=\"openPopup(\'" +  tiffImageURL + "\');return false;\" >\n";
+			html_content = html_content + "<a href=\"" +  tiffImageURL + "\" >\n";
 			html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
 			html_content = html_content + "</a>\n";
 
@@ -838,7 +827,7 @@ function getImageList(fk_auv_tracks) {
 
 	// get images for track
 	if (fk_auv_tracks != "") {
-		var xmlDoc = getXML(server + '/' + serverContext + '/wfs?request=GetFeature&service=WFS&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks );
+		var xmlDoc = getXML(wmsServer + '/' + wmsServerContext + '/wfs?request=GetFeature&service=WFS&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks );
 		imagesForTrack = getArrayFromXML(xmlDoc,fields_array,"auv_images_vw");
 	}
     
@@ -978,7 +967,7 @@ function getImageStyle(x){
 			sld:  sld
 		});
 		// set the getlegendGraphic image url
-		jQuery('#imagesGetLegendGraphic').attr("src",server + '/' + serverContext + '/wms?LAYER=' + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras);
+		jQuery('#imagesGetLegendGraphic').attr("src",wmsServer + '/' + wmsServerContext + '/wms?LAYER=' + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras);
 		currentStyle = variable;
 	}
 
@@ -1115,7 +1104,7 @@ function openPopup(tiffFolder)   {
 	//windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
 	windowObjectReference = window.open(tiffFolder , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
 	if (windowObjectReference == null) {
-		alert("Unable to open a seperate window for image annotation");
+		alert("Unable to open a separate window for image display");
 	}
 	else{
 		windowObjectReference.focus();
