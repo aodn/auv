@@ -24,6 +24,9 @@ body {
 #footer a {
     color: #999999;
 }
+img.logo {
+     padding: 6px;
+}
 
 #footer .left {
     margin-right: 20px;
