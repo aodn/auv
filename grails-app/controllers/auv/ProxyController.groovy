@@ -1,27 +1,24 @@
 //*************************************************//
 //  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under 
+//  The IMOS AUV Viewer is distributed under
 //  the terms of the GNU General Public License
 //*************************************************//
 
 
 package auv
 
-
-
 class ProxyController {
 
-    def index = {
+    def grailsApplication
 
+    def index = {
         if (params.url) {
 
-            //exclude use to certain hosts
-            def hostList = ['geoserver.imos.org.au',
-                    'geoserverdev.imos.org.au',
-                    'geoserver.aodn.org.au',
-                    'geoserver.emii.org.au',
-                    'geoserver2.emii.org.au',
-                    'imos2.ersa.edu.au']
+            // restrict use to certain hosts
+            def hostList = [
+                grailsApplication.config.geoserver.url.toURL().getHost()
+            ]
+
             def format
             def thetext = params.url.toURL()
 
@@ -37,19 +34,14 @@ class ProxyController {
                     format = "text/html"
                 }
                 render(text: thetext.text, contentType: format, encoding: "UTF-8")
-
             }
             else {
                 log.error("Proxy: The url " + thetext.text + "was not allowed")
                 render(text: "Host not allowed", contentType: "text/html", encoding: "UTF-8")
             }
-
-
         }
         else {
             render(text: "No URL supplied", contentType: "text/html", encoding: "UTF-8")
         }
-
     }
-
 }
