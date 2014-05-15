@@ -1,13 +1,23 @@
+<script>
+
 //*************************************************/
 //  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under 
+//  The IMOS AUV Viewer is distributed under
 //  the terms of the GNU General Public License
 /*************************************************/
 
+var wmsServerUrl = '${grailsApplication.config.geoserver.url}/wms';
+var wfsServerUrl = '${grailsApplication.config.geoserver.url}/wfs';
+var dataServerBaseUrl = '${grailsApplication.config.imageFileServer.url}';
 
+var layerNamespace = '${grailsApplication.config.geoserver.namespace}';
+var layerNameTracks = '${grailsApplication.config.geoserver.layerNames.tracks}';
+var layerNameImages = '${grailsApplication.config.geoserver.layerNames.images}';
+var fqLayerNameTracks = layerNamespace + ':${grailsApplication.config.geoserver.layerNames.tracks}';
+var fqLayerNameImages = layerNamespace + ':${grailsApplication.config.geoserver.layerNames.images}';
 
 var map;
-            
+
 var auvimages; //openlayer layer name
 // pink tile avoidance
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
@@ -32,18 +42,14 @@ var currentStyle = "default"; // keep the last style for the images layer
                 referer: (prod or dev geoserver)
 
 
- */ 
-function mapinit(b,mapheight,mapwidth){
-
-
-	OpenLayers.ProxyHost = "proxy?url="; //grails proxy
-	//OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
+ */
+function mapinit(b, mapheight, mapwidth) {
+	OpenLayers.ProxyHost = "proxy?url=";
 
 	if (OpenLayers.ProxyHost == "") {
 		alert("Proxy script is required and not configured. ");
 	}
 
-                
 	OpenLayers.ImgPath = "theme/dark/";
 
 
@@ -52,47 +58,43 @@ function mapinit(b,mapheight,mapwidth){
 	var overviewmap = new OpenLayers.Control.OverviewMap({
 		autoPan: true,
 		maximized: true,
-		minRatio: 4, 
+		minRatio: 4,
 		maxRatio: 16,
 		mapOptions:{
 			numZoomLevels: 5
 		}
 	});
-                
+
 	var bounds = new OpenLayers.Bounds.fromString( b );
 
 	var options = {
 		controls: [
-		new OpenLayers.Control.PanZoomBar({
-			zoomStopHeight: 5,
-			div: document.getElementById('controlPanZoom')
-		}),
-		//new OpenLayers.Control.PanZoomBar,
-		overviewmap,
-		//new OpenLayers.Control.LayerSwitcher(),
-		new OpenLayers.Control.ScaleLine({
-			div: document.getElementById('mapscale')
-		}),
-		new OpenLayers.Control.MousePosition({
-			div: document.getElementById('mapcoords'),
-			prefix: '<b>Lon:</b> ',
-			separator: ' <BR><b>Lat:</b> '
-		})
+            new OpenLayers.Control.PanZoomBar({
+                zoomStopHeight: 5,
+                div: document.getElementById('controlPanZoom')
+            }),
+            overviewmap,
+            new OpenLayers.Control.ScaleLine({
+                div: document.getElementById('mapscale')
+            }),
+            new OpenLayers.Control.MousePosition({
+                div: document.getElementById('mapcoords'),
+                prefix: '<b>Lon:</b> ',
+                separator: ' <BR><b>Lat:</b> '
+            })
 		],
-		//maxExtent: bounds,
 		numZoomLevels: 20,
 		projection: "EPSG:4326",
 		units: 'degrees'
 	};
 
 	map = new OpenLayers.Map('map', options);
-    var serverWmsUrl = [wmsServer,wmsServerContext,'wms'].join('/');
 
-                
-	base = new OpenLayers.Layer.WMS(
-		"simple", serverWmsUrl,
+	baseLayer = new OpenLayers.Layer.WMS(
+		'${grailsApplication.config.baseLayer.name}',
+        '${grailsApplication.config.baseLayer.url}',
 		{
-			layers: 'helpers:cstauscd_r',
+			layers: '${grailsApplication.config.baseLayer.name}',
 			styles: '',
 			srs: 'EPSG:4326',
 			format: format,
@@ -103,11 +105,13 @@ function mapinit(b,mapheight,mapwidth){
 			buffer: 0,
 			displayOutsideMaxExtent: true
 		}
-		);
-	auvtracks = new OpenLayers.Layer.WMS(
-		"helpers:auv_tracks",  serverWmsUrl,
+	);
+
+	auvTracksLayer = new OpenLayers.Layer.WMS(
+        fqLayerNameTracks,
+        wmsServerUrl,
 		{
-			layers: layername_track,
+			layers: fqLayerNameTracks,
 			styles: '',
 			srs: 'EPSG:4326',
 			format: format,
@@ -115,16 +119,18 @@ function mapinit(b,mapheight,mapwidth){
 			tiled: 'true'
 		},
 		{
-			isBaseLayer: false, 
+			isBaseLayer: false,
 			transitionEffect: 'resize',
 			buffer: 0,
 			displayOutsideMaxExtent: true
 		}
-		);
-	auvimages = new OpenLayers.Layer.WMS(
-		"helpers:auv_images_vw",  serverWmsUrl,
+	);
+
+	auvImagesLayer = new OpenLayers.Layer.WMS(
+        fqLayerNameImages,
+        wmsServerUrl,
 		{
-			layers: layername_images,
+			layers: fqLayerNameImages,
 			styles: '',
 			srs: 'EPSG:4326',
 			format: format,
@@ -132,52 +138,46 @@ function mapinit(b,mapheight,mapwidth){
 			tiled: 'true'
 		},
 		{
-			isBaseLayer: false, 
+			isBaseLayer: false,
 			transitionEffect: 'resize',
 			buffer: 0,
 			maxResolution: .000035, // important to limit geoserver stress
 			displayOutsideMaxExtent: true
 		}
-		);
+    );
 
-	//map.events.register("loadEnd", this, alert("yep"));
-	registerLayer(auvtracks);
-	registerLayer(auvimages);
+	registerLayer(auvTracksLayer);
+	registerLayer(auvImagesLayer);
 
-
-        
-	markers = new OpenLayers.Layer.Markers( "Markers" ); 
-    
+	markers = new OpenLayers.Layer.Markers("Markers");
 
 	// tracks must obscure auvimages
-	// map.addLayers([base,auvimages]);
-	map.addLayers([base,auvimages,auvtracks,markers]);
-                
+	map.addLayers([baseLayer, auvImagesLayer, auvTracksLayer, markers]);
 
-	// extra controls
+    // extra controls
 	map.addControl(new OpenLayers.Control.Navigation());
-                
+
 	overviewmap.maximizeControl(true);
-                
+
 	//map.zoomToMaxExtent();
 	map.setCenter(new OpenLayers.LonLat(135,-26), 3)
-                
 
 	map.events.register("zoomend", map, function()
 	{
 		updateUserInfo("");
 	});
+
 	// create a new event handler for single click query
 	clickEventHandler = new OpenLayers.Handler.Click({
 		'map': map
 	}, {
 		'click': function(e) {
-			getpointInfo(e);
+			getPointInfo(e);
 		}
 	});
 	clickEventHandler.activate();
 	clickEventHandler.fallThrough = false;
-                
+
 	// cursor mods
 	map.div.style.cursor="pointer";
 	jQuery("#navtoolbar div.olControlZoomBoxItemInactive ").click(function(){
@@ -188,14 +188,12 @@ function mapinit(b,mapheight,mapwidth){
 		map.div.style.cursor="pointer";
 		clickEventHandler.activate();
 	});
-
-
 }
+
 function registerLayer(layer) {
 	layer.events.register('loadstart', this, loadStart);
 	layer.events.register('loadend', this, loadEnd);
 }
-
 
 function loadStart() {
 	if (layersLoading == 0) {
@@ -217,8 +215,8 @@ function updateUserInfo(tailored_msg) {
 	if (tailored_msg != "") {
 		msg = tailored_msg;
 	}
-	else{
-		if (auvimages.inRange){
+	else {
+        if (auvImagesLayer.inRange) {
 			msg = "Click on the blue AUV track to see the nearest images";
 			jQuery('#styles').css("visibility","visible").show("slow");
 		}
@@ -227,20 +225,13 @@ function updateUserInfo(tailored_msg) {
 			jQuery('#styles').hide();
 		}
 	}
-        
-	//jQuery("#track_html h3, #thisTrackInfo ").text(msg).show();
+
 	jQuery("#thisTrackInfo").text(msg).show();
-
-
 }
 
-
-
 var layer = null;
-function getpointInfo(e) {
 
-    
-    
+function getPointInfo(e) {
 	var lonlat = map.getLonLatFromPixel(e.xy);
 	X = Math.round(lonlat.lon * 1000) / 1000;
 	Y = Math.round(lonlat.lat * 1000) / 1000;
@@ -250,15 +241,11 @@ function getpointInfo(e) {
 	showLoader("true");
 
 	for (key in wmsLayers) {
-
-
-
 		layer = map.getLayer(map.layers[key].id);
 		var layerName = layer.params.LAYERS;
 
 		var infoFormat = "text/html";
-        
-    
+
 		var url = false;
 		if (layer.params.VERSION == "1.1.1") {
 			url = layer.getFullRequestString({
@@ -293,28 +280,25 @@ function getpointInfo(e) {
 			});
 		}
 
-		if (url) { 
+		if (url) {
 
 			updateUserInfo('Searching ...');
-			if (layerName == layername_track) {  
+			if (layerName == fqLayerNameTracks) {
 				OpenLayers.loadURL(url, '', this, setTrackHTML, setError);
 			}
-			if (layerName == layername_images) {
+			if (layerName == fqLayerNameImages) {
 
-				if (auvimages.inRange){
+				if (auvImagesLayer.inRange){
 					OpenLayers.loadURL(url, '', this, setImageHTML, setError);
 				}
 				else {
 					updateUserInfo("");
-					showLoader(); 
+					showLoader();
 				}
 			}
-            
-		} 
-
+		}
 	}
 }
-
 
 function resetMap() {
 
@@ -326,15 +310,15 @@ function resetMap() {
 	jQuery('.trackSort').hide();
 	jQuery('#helpSection').show();
 	updateUserInfo("Click on a AUV Icon, or choose from the track list.");
-    
+
 }
-    
+
 //find out the min and max values of depth,temperature within the current map boundary
 function setValuesForBBox(bbox,variable){
 
 	var bb = bbox.split(',');
 	bbox = bb[0]+"," + bb[1] + "%20" + bb[2] + "," + bb[3];
-        
+
 	var datasetParent = "auv_images_vw";
 	var filter =  encodeURIComponent("<ogc:Filter xmlns:ogc=\"http://ogc.org\" xmlns:gml=\"http://www.opengis.net/gml\"><ogc:BBOX>"
 	+ "<ogc:PropertyName>geom</ogc:PropertyName>"
@@ -350,114 +334,87 @@ function setValuesForBBox(bbox,variable){
 
 
 	var xmlDoc = getXML(url);
-    //console.log()
-	//return array of min and max //getArrayFromXML(xmlDoc , [variable], datasetParent);
-        
 }
-    
-// return multidimentional array- numbered array of associative arrays
-function  getArrayFromXML(xmlDoc ,fields_array, parent) {
 
-            
+// return multidimentional array- numbered array of associative arrays
+function getArrayFromXML(xmlDoc, fields_array, parent) {
+
 	var parentCriteria;
-	if (parent == "auv_tracks") {
+	if (parent == fqLayerNameTracks) {
 		parentCriteria = {
-			"ie":"helpers:auv_tracks",
-			"schema": "helpers",
-			"tag":"auv_tracks"
+			"ie": fqLayerNameTracks,
+			"schema": layerNamespace,
+			"tag": layerNameTracks
 		};
 	}
-	else if (parent == "auv_images_vw") {
+	else if (parent == fqLayerNameImages) {
 		parentCriteria = {
-			"ie":"helpers:auv_images_vw",
-			"schema": "helpers",
-			"tag":"auv_images_vw"
+			"tag": layerNameImages
 		};
 	}
 	else {
 		return null;
-	// parentCriteria = {"ie":"gml:featureMember","schema": "http://www.opengis.net/gml","tag":"featureMember"};
 	}
-	var tmp = [];
-	var x = 0;
-	if (xmlDoc.namespaceURI !== null) {
-		// for IE
-		x = xmlDoc.getElementsByTagName( parentCriteria.ie );
-	}
-	else {
-		x = xmlDoc.getElementsByTagNameNS( parentCriteria.schema , parentCriteria.tag );
-	}             
-	// x is the total amount of tracks
-	for (var i=0; i<x.length; i++) {
 
-		var myArray = [];
+	var returnArray = [];
+	var matchedElements = xmlDoc.getElementsByTagName(parentCriteria.tag);
+
+    // Transform each matched element in to an associative array containing key/value pairs for each
+    // of its child elements.
+	for (var i = 0; i < matchedElements.length; i++) {
+		var childKeyValues = [];
 
 		// the xml does not always return the requested element, so the amount of childNodes varies
-		for (var y=0; y<x[i].childNodes.length; y++) {
-			// IE doent like empty values
-			if (x[i].childNodes[y].childNodes[0] ) {
-
-				var name = x[i].childNodes[y].nodeName.replace("helpers:","");
-				var val =x[i].childNodes[y].childNodes[0].nodeValue;
-				myArray[name]= val;
-
+		for (var y = 0; y < matchedElements[i].childNodes.length; y++) {
+			// IE doesn't like empty values
+			if (matchedElements[i].childNodes[y].childNodes[0]) {
+				var name = matchedElements[i].childNodes[y].nodeName.replace(layerNamespace + ':', "");
+				var val = matchedElements[i].childNodes[y].childNodes[0].nodeValue;
+				childKeyValues[name]= val;
 			}
-		//  jQuery("#tmp_html").append(name + "  <BR>");
 		}
-		tmp[i] = myArray;
 
+		returnArray[i] = childKeyValues;
 	}
-    if (tmp.length > 0 ) {
-        return tmp;
-    }
 
+    if (returnArray.length > 0 ) {
+        return returnArray;
+    }
 }
 
-            
+
 var x;
 function populateTracks() {
-        
+
 	// run once to get all tracks into an object
 	if (allTracksHTML == "" ) {
-           
+
 		var fields = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";
 		fields_array = fields.split(",");
 
 		var trackSelectorValues = [];
 		var html_content = "<div class=\"feature\" >\n";
 
-		var request_string =  wmsServer + '/' + wmsServerContext + '/wfs?request=GetFeature&service=WFS&typeName=' + layername_track + '&propertyName='+ fields + '&version=1.0.0';
-            
+		var request_string =  wfsServerUrl + '?request=GetFeature&service=WFS&typeName=' + fqLayerNameTracks + '&propertyName='+ fields + '&version=1.0.0';
 
-		// get track feature info as XML   
-            
+		// get track feature info as XML
 		var xmlDoc = getXML(request_string);
 
         x = xmlDoc;
-        var tmp = getArrayFromXML(xmlDoc,fields_array,"auv_tracks");
-
+        var tmp = getArrayFromXML(xmlDoc, fields_array, fqLayerNameTracks);
 
         if (tmp) {
 
             // now assemble the neccessaries for the simulated getfeatureinfo request
-            for (var i=0;i<tmp.length;i++) {
+            for (var i = 0; i < tmp.length; i++) {
 
-
-                /*var ids = tmp[i]["site_code"].split("_");
-                    var site = ucwords(ids[2]);
-                    //site =tmp[i]["site_code"];
-                    var dive = ids[3];
-                    var depth = ids[4];
-                     = site + " - Dive:"+dive+" Depth:"+depth;*/
                 var newTitle = ucwords(tmp[i]["dive_code_name"]);
 
                 var trackHTML_id = "allTracksHTML_" + i ;
 
 
                 var time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"],false);
-                //var time_coverage_start = tmp[i]["time_coverage_start"];
                 var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"],false);
-                //var time_coverage_end = tmp[i]["time_coverage_end"];
 
                 html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";
 
@@ -491,17 +448,14 @@ function populateTracks() {
                     html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";
                 }
 
-                //jQuery('#track_html').show();
-                //jQuery('#track_html h3').hide();
-
-
                 if (jQuery('#track_html .featurewhite').size() == 1) {
                     jQuery('.featurewhite').addClass('featurewhite_selected');
                     jQuery('.auvSiteDetails').show(1000);
                 }
 
                 if (tmp[i]["metadata_uuid"] != undefined ) {
-                    html_content = html_content + "<a title=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"http://imosmest.emii.org.au/geonetwork/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
+                    var mestUrl = '${grailsApplication.config.mest.url}';
+                    html_content = html_content + "<a title=\"" + mestUrl + "/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"" + mestUrl + "/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
                 }
 
                 html_content = html_content + "<a alt=\"Download from opendap \" class=\"h3\" target=\"_blank\" href=\"http://thredds.aodn.org.au/thredds/catalog/IMOS/AUV/" +tmp[i]["campaign_code"] + "/" +tmp[i]["site_code"] + "/hydro_netcdf/catalog.html\">Data on opendap</a> <br>";
@@ -515,10 +469,6 @@ function populateTracks() {
                     "trackLabel": newTitle,
                     "campaignCode": tmp[i]["campaign_code"]
                 });
-
-            //jQuery("#tmp_html").append(i + " " + newTitle + " " + " <BR>");
-
-
             }
 
             // populate coresponding drop down box
@@ -548,14 +498,10 @@ function populateTracks() {
         else {
             setError("There is a problem with the WMS server");
         }
-
-            
 	}
+
 	//populate but keep hidden
 	jQuery('#track_html').html(allTracksHTML).hide();
-        
-        
-        
 }
 
 // reponding to a track picked from the select dropdown
@@ -566,9 +512,7 @@ function allTracksSelector(css_id) {
 	jQuery(css_id + ' .getfeatureTitle').trigger('click');
 }
 
-
-
-function setTrackHTML(response){
+function setTrackHTML(response) {
 	var tmp_response = response.responseText;
 	var html_content = "";
 
@@ -583,51 +527,41 @@ function setTrackHTML(response){
 	jQuery('#track_html').html(html_content);
 
 	if (html_content != "") {
-		if (!auvimages.inRange){
-			updateUserInfo("Choose a track");                
+		if (!auvImagesLayer.inRange){
+			updateUserInfo("Choose a track");
 		}
 		resetTrackHTML();
-            
+
 	}
-	else{
+	else {
 		updateUserInfo("No tracks found at your click point.");
 	}
-
-        
 }
-    
+
 function resetTrackHTML() {
 
-	//populateTracks(); //cant reset here
 	jQuery('#track_html').show();
 	jQuery('#track_html h3').hide();
 
 	if (jQuery('#track_html .featurewhite').size() == 1) {
 		jQuery('.featurewhite').addClass('featurewhite_selected');
 		jQuery('.auvSiteDetails').show(1000);
-	}       
-       
-
-            
+	}
 }
 
-function setImageHTML(response){
-
-        
+function setImageHTML(response) {
 	var tmp_response = response.responseText;
 	var html_content = "";
 
 	if (tmp_response.match(/<\/body>/m)) {
-            
-            
 		html_content  = tmp_response.match(/(.|\s)*?<body[^>]*>((.|\s)*?)<\/body>(.|\s)*?/m);
 		if (html_content) {
 			//trimmed_content= html_content[2].replace(/(\n|\r|\s)/mg, ''); // replace all whitespace
 			html_content  = html_content[2].replace(/^\s+|\s+$/g, '');  // trim
 		}
 	}
-        
-	if (html_content != "") {     
+
+	if (html_content != "") {
 
 		jQuery('#mygallery').html(html_content);
 		jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
@@ -636,7 +570,7 @@ function setImageHTML(response){
 		jQuery('.trackSort').hide();
 		jQuery('#unsorted_status,  #sortbytrack').show();
 		jQuery('#helpSection, #sorted_status').toggle(false);
-            
+
 		jQuery('#mygallery').css("height","310px"); // sort out why i have to call this
 		jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
 
@@ -644,11 +578,11 @@ function setImageHTML(response){
 	else{
 		updateUserInfo("No tracks or images found at your click point");
 	}
-                     
+
 
 	showLoader(); // will be the slowest to load
 // jQuery.setTemplateLayout('css/map.css?', 'jq');
-        
+
 };
 
 function setError(response) {
@@ -656,12 +590,12 @@ function setError(response) {
 }
 
 function resetSlider() {
-	// check if the slider object has been created yet                
-        
-	jQuery( "#slider" ).slider( "option", "max", jQuery('#statusC').text() ); 
+	// check if the slider object has been created yet
+
+	jQuery( "#slider" ).slider( "option", "max", jQuery('#statusC').text() );
 	jQuery( "#slider" ).slider( "option", "value", jQuery('#statusA').text() );
 	jQuery('#slider').slider( "enable" );
-        
+
 }
 
 
@@ -711,54 +645,48 @@ function sortImagesAlongTrack(reLoad) {
 
 }
 
-function trackSort(fk_auv_tracks,reLoad) {
+function trackSort(fk_auv_tracks, reLoad) {
 
 	if (imagesForTrack.length > 0) {
-            
-		var min_i= 0;
-		var max_i= 0;
+
+		var min_i = 0;
+		var max_i = 0;
 		var html_content = "<div class=\"belt\">";
 		var image = jQuery('#this_image_filename').text();
 		var selected_image = 0;
 		var image_idx = findIndexByCol(image);
-            
-		// move selected image to the left
-		if (reLoad == "left") { 
 
+		// move selected image to the left
+		if (reLoad == "left") {
 			// calculate left first
-			min_i= Math.max( 0, image_idx - (imageBuffer*2 + imageBuffer)); 
+			min_i= Math.max( 0, image_idx - (imageBuffer*2 + imageBuffer));
 			max_i= Math.min(imagesForTrack.length, min_i + imageBuffer*2);
-		} 
+		}
 		// move selected image to the right
-		else if (reLoad == "right") { 
-                
+		else if (reLoad == "right") {
 			// calculate right first
 			max_i= Math.min(imagesForTrack.length, image_idx + (imageBuffer*2 + imageBuffer));
-			min_i= Math.max(0,max_i - imageBuffer*2); 
-                
-		} 
+			min_i= Math.max(0,max_i - imageBuffer*2);
+		}
 		else {
-			min_i= Math.max( 0, image_idx -  imageBuffer); 
+			min_i= Math.max( 0, image_idx -  imageBuffer);
 			max_i= Math.min(imagesForTrack.length, min_i + imageBuffer*2);
 		}
 
-            
-            
 		selected_image = Math.round((max_i- min_i)/2);
-		if (min_i== 0) {
+
+		if (min_i == 0) {
 			selected_image = 1;
 		}
-		if (max_i== imagesForTrack.length) {
+
+		if (max_i == imagesForTrack.length) {
 			selected_image = max_i - min_i;
 		}
-
 
 		var rowcounter = 0;
 		var minimum_index = min_i;
 
-		for (;min_i < max_i; min_i++) {
-
-
+		for (; min_i < max_i; min_i++) {
 			var time = formatISO8601Date(imagesForTrack[min_i]["time"],false);
 
 			html_content = html_content + "<div class=\"panel\"  id=\"auvpanel_" + rowcounter + "\" >";
@@ -785,25 +713,18 @@ function trackSort(fk_auv_tracks,reLoad) {
 			rowcounter++;
 		}
 		// end div class=belt
-		html_content = html_content + "</div>\n\n";                    
+		html_content = html_content + "</div>\n\n";
 
-            
-            
-		var str = "<b>Viewing images for this track:</b> "  + minimum_index+ " to " + max_i+ " of " + imagesForTrack.length;                    
-		jQuery('#sorted_status').html(str).show(); 
+		var str = "<b>Viewing images for this track:</b> "  + minimum_index+ " to " + max_i+ " of " + imagesForTrack.length;
+		jQuery('#sorted_status').html(str).show();
 
 		jQuery('#mygallery').html(html_content);
 		jQuery('div#mygallery').css("height","310");
 
 		jQuery('#mygallery, #stepcarouselcontrols', '#mygallery-paginate').toggle(true);
-
-
 		jQuery( '.trackSort').show(); // older - later links
 
-  
-            
 		loadGallery(selected_image);
-
 	}
 	else {
 		// probably a problem with all the fields or the button was visible when it shouldnt be
@@ -812,39 +733,32 @@ function trackSort(fk_auv_tracks,reLoad) {
 }
 
 function loadGallery(focusImageNumber) {
-
 	stepcarousel.loadcontent('mygallery');
 	stepcarousel.moveTo('mygallery',focusImageNumber);
 	resetSlider();
-
 }
 
-function getImageList(fk_auv_tracks) {  
+function getImageList(fk_auv_tracks) {
 
-	imagesForTrack = []; // reset       
+	imagesForTrack = []; // reset
 	fields = "image_filename,campaign_code,site_code,dive_code_name,time,depth,image_folder,longitude,latitude,sea_water_temperature,sea_water_salinity,chlorophyll_concentration_in_sea_water";
 	fields_array = fields.split(",");
 
 	// get images for track
 	if (fk_auv_tracks != "") {
-		var xmlDoc = getXML(wmsServer + '/' + wmsServerContext + '/wfs?request=GetFeature&service=WFS&typeName='+layername_images+'&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks );
-		imagesForTrack = getArrayFromXML(xmlDoc,fields_array,"auv_images_vw");
+		var xmlDoc = getXML(wfsServerUrl + '?request=GetFeature&service=WFS&typeName=' + fqLayerNameImages + '&propertyName='+ fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks='+ fk_auv_tracks);
+		imagesForTrack = getArrayFromXML(xmlDoc, fields_array, fqLayerNameImages);
 	}
-    
 }
 
 function showLoader(vis) {
-     
 	jQuery('#loader').css("opacity",0.8).show();
 	if (!(vis == "true" || vis == true)) {
 		jQuery('#loader').hide();
-	}       
+	}
 }
 
-    
 function showHideZoom(css_id,bounds) {
-
-       
 	css_id = "#" + css_id;
 
 	jQuery('#track_html').show();
@@ -857,18 +771,14 @@ function showHideZoom(css_id,bounds) {
 	}
 	else {
 		jQuery(css_id).show(450);
-        
+
 		zoomTo(bounds);
 		jQuery('.featurewhite').removeClass('featurewhite_selected')
 		jQuery(css_id).parent().addClass('featurewhite_selected');
 		jQuery(css_id).parent().show();
 		updateUserInfo("Click again on the track, (or zoom further) to see the nearest images");
-	//jQuery('#track_html h3,#thisTrackInfo').text(msg).show();
-	}            
-        
-
+	}
 }
-
 
 function openStyleSlider(param) {
 	var minVal = 0;
@@ -877,21 +787,18 @@ function openStyleSlider(param) {
 
 	if (param == "default") {
 		getImageStyle(param); //set it straight away as there are no options
-	// jQuery('#styleSliderContainer').hide(); // close the style options
 	}
 	else {
-            
-            
 		var bbox = map.getExtent().toBBOX();
 		if (param == "depth") {
-			// get the min and max depth            
+			// get the min and max depth
 			var res = setValuesForBBox(bbox,param);
 			console.log(res);
 			maxVal = 200;
 			jQuery('#styleReloadLink').text("Set Bathymetry Style");
 		}
-		if (param == "sea_water_temperature") {
 
+		if (param == "sea_water_temperature") {
             console.log(res);
 			maxVal = 35;
 			jQuery('#styleReloadLink').text("Set Temperature Style");
@@ -918,19 +825,16 @@ function openStyleSlider(param) {
 
 		});
 
-
 		jQuery('#minStyleVal').val(minVal);
 		jQuery('#maxStyleVal').val(maxVal);
 		jQuery('#styleSliderContainer').show(500);
 		jQuery('#sliderVariable').val(param);
 	}
-
-        
 }
 
 // sets the chosen style for the image layer
 function getImageStyle(x){
-        
+
 	var extras = "";
 	var parameters = "";
 	var valMin = jQuery('#styleSlider').slider( "values", 0 );
@@ -967,12 +871,12 @@ function getImageStyle(x){
 			sld:  sld
 		});
 		// set the getlegendGraphic image url
-		jQuery('#imagesGetLegendGraphic').attr("src",wmsServer + '/' + wmsServerContext + '/wms?LAYER=' + layername_images + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras);
+		jQuery('#imagesGetLegendGraphic').attr(
+            "src",
+            wmsServerUrl + '?LAYER=' + fqLayerNameImages + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras
+        );
 		currentStyle = variable;
 	}
-
-
-        
 }
 
 function setStyleSlider() {
@@ -990,7 +894,6 @@ function setStyleSlider() {
 		jQuery('#minStyleVal').val(0);
 		jQuery('#maxStyleVal').val(200);
 	}
-
 }
 
 // remove the default option for the image style selector
@@ -1009,11 +912,11 @@ function  resetStyleSelect() {
 
 }
 
-    
+
 function show(css_id) {
 	jQuery(css_id).show(450);
 }
-    
+
 /*function mergeNewParams(params){
         auvimages.mergeNewParams(params);
         //untiled.mergeNewParams(params);
@@ -1030,13 +933,13 @@ function zoomTo(bounds) {
 	}
 }
 
-    
+
 
 // find a matching val in nested array [cIdx] in imagesForTrack
 function findIndexByCol(val){
 
 	if (imagesForTrack.length > 0 ) {
-            
+
 		for (var i=0; i < imagesForTrack.length; i++) {
 			if (imagesForTrack[i]["image_filename"] === val) {
 				//alert(imagesForTrack[i]["image_filename"]+"===="+val);
@@ -1047,7 +950,7 @@ function findIndexByCol(val){
 	}
 	else {
 		alert("There are no images for this track");
-	}        
+	}
 	return false;
 
 }
@@ -1075,7 +978,7 @@ function URLEncode (clearString) {
 	var output = '';
 	var x = 0;
 	clearString = clearString.toString();
-    
+
 	var regex = /(^[a-zA-Z0-9_.]*)/;
 	while (x < clearString.length) {
 		var match = regex.exec(clearString.substr(x));
@@ -1092,43 +995,43 @@ function URLEncode (clearString) {
 			}
 			x++;
 		}
-	} 
+	}
 	return output;
 }
 
 var windowObjectReference;
 
- 
-function openPopup(tiffFolder)   {
+function openPopup(tiffFolder) {
+	windowObjectReference = window.open(
+        tiffFolder,
+        "auv_image",
+        "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no"
+    );
 
-	//windowObjectReference = window.open("notes?src=" + URLEncode(src) + "&tiff=" + URLEncode(tiffFolder) , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
-	windowObjectReference = window.open(tiffFolder , "auv_image", "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no");
 	if (windowObjectReference == null) {
 		alert("Unable to open a separate window for image display");
 	}
 	else{
 		windowObjectReference.focus();
 	}
-
 }
 
-
 function formatISO8601Date(dateString,localtime) {
-    
+
 	var d_names = new Array("Sun", "Mon", "Tues",
 		"Wed", "Thur", "Fri", "Sat");
-    
+
 	var m_names = new Array("Jan", "Feb", "Mar",
 		"Apr", "May", "Jun", "Jul", "Aug", "Sep",
 		"Oct", "Nov", "Dec");
-    
+
 	var a_p = "";
 	var d = new Date();
 	if (dateString == undefined){
 		return;
 	}
 	d.setISO8601(dateString,localtime);
-    
+
 	var curr_date = d.getDate();
 	var curr_year = d.getFullYear();
 	var curr_month = d.getMonth();
@@ -1136,7 +1039,7 @@ function formatISO8601Date(dateString,localtime) {
 	var curr_min = d.getMinutes();
 	var curr_sec = d.getMinutes();
 	var curr_hour = d.getHours();
-    
+
 	var sup = "";
 	if (curr_date == 1 || curr_date == 21 || curr_date ==31)  {
 		sup = "st";
@@ -1150,11 +1053,11 @@ function formatISO8601Date(dateString,localtime) {
 	else   {
 		sup = "th";
 	}
-    
-    
+
+
 	var date = (d_names[curr_day] + " " + curr_date + ""
 		+ sup + " " + m_names[curr_month] + " " + curr_year);
-    
+
 	if (curr_hour < 12)   {
 		a_p = "AM";
 	}
@@ -1167,26 +1070,26 @@ function formatISO8601Date(dateString,localtime) {
 	if (curr_hour > 12)   {
 		curr_hour = curr_hour - 12;
 	}
-    
+
 	curr_min = curr_min + "";
-    
+
 	if (curr_min.length == 1)      {
 		curr_min = "0" + curr_min;
 	}
-    
+
 	var time =  curr_hour + ":" + curr_min + ":" + curr_sec + "" + a_p;
 	return (date + " " + time);
-    
+
 }
 Date.prototype.setISO8601 = function (str,localtime) {
 	var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
 	"(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
 	"(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
 	var d = str.match(new RegExp(regexp));
-    
+
 	var offset = 0;
 	var date = new Date(d[1], 0, 1);
-    
+
 	if (d[3]) {
 		date.setMonth(d[3] - 1);
 	}
@@ -1215,7 +1118,7 @@ Date.prototype.setISO8601 = function (str,localtime) {
 	time = (Number(date) + (offset * 60 * 1000));
 	this.setTime(Number(time));
 };
-    
+
 
 function ucwords( str ) {
 	// Uppercase the first character of every word in a string
@@ -1242,17 +1145,8 @@ function sortTrackArray( arr ) {
 	}
 
 	arr.sort(compare);
-        
-	/* for (var i=0 ; i < arr.length; i++) {
-            //jQuery("#tmp_html").append(arr[i].campaignCode + " " + arr[i].trackId + "= " + arr[i].trackLabel + "  <BR>");
-        }*/
-        
-        
-	return arr;
 
+	return arr;
 }
 
-
-
-
-
+</script>

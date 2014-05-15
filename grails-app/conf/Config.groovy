@@ -1,14 +1,4 @@
-// locations to search for config files that get merged into the main config
-// config files can either be Java properties files or ConfigSlurper scripts
-
-// grails.config.locations = [ "classpath:${appName}-config.properties",
-//                             "classpath:${appName}-config.groovy",
-//                             "file:${userHome}/.grails/${appName}-config.properties",
-//                             "file:${userHome}/.grails/${appName}-config.groovy"]
-
-// if(System.properties["${appName}.config.location"]) {
-//    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
-// }
+import javax.naming.InitialContext
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
@@ -27,13 +17,11 @@ grails.mime.types = [ html: ['text/html','application/xhtml+xml'],
                       multipartForm: 'multipart/form-data'
                     ]
 
-// URL Mapping Cache Max Size, defaults to 5000
-//grails.urlmapping.cache.maxsize = 1000
-
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
+
 // enable Sitemesh preprocessing of GSP pages
 grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
@@ -59,28 +47,63 @@ environments {
     test {
         grails.serverURL = "http://localhost:8080/${appName}"
     }
+}
 
+geoserver {
+    context = 'geoserver'
+    url = "http://geoserver-123.aodn.org.au/geoserver"
+    namespace = 'imos'
+    layerNames {
+        tracks = 'auv_tracks'
+        images = 'auv_images_vw'
+    }
+}
+
+baseLayer {
+    url = 'http://geoserver-static.aodn.org.au/geoserver/baselayers/wms'
+    name = 'default_basemap_simple'
+}
+
+imageFileServer {
+    url = 'http://data.aodn.org.au/IMOS/public/AUV/'
+}
+
+mest {
+    url = 'http://imosmest.emii.org.au/geonetwork'
+}
+
+/**
+ * Instance specific customisation, clearly stolen from:
+ * http://phatness.com/2010/03/how-to-externalize-your-grails-configuration/
+ *
+ * To use set for a specific instance, either set the environment variable "INSTANCE_NAME", or add this in the grails
+ * commandline like so:
+ *
+ * grails -DINSTANCE_NAME=WA run-app
+ *
+ * Instance specific config files are located in $project_home/instances/
+ *
+ * Any configuration found in these instance specific file will OVERRIDE values set in Config.groovy and
+ * application.properties.
+ *
+ * NOTE: app.name and version is ignored in external application.properties
+ */
+if(!grails.config.locations || !(grails.config.locations instanceof List)) {
+    grails.config.locations = []
+}
+
+try {
+    configurationPath = new InitialContext().lookup('java:comp/env/aodn.configuration')
+    grails.config.locations << "file:${configurationPath}"
+
+    println "Loading external config from '$configurationPath'..."
+}
+catch (e) {
+    println "Not loading external config"
 }
 
 // log4j configuration
 log4j = {
-    // Example of changing the log pattern for the default console
-    // appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
-
-	appender new de.viaboxx.nagios.NagiosAppender(
-		name: 'nagiosAppender',
-		nagiosHost: 'status.emii.org.au',
-		nagiosPort: 5667,
-		nagiosEncryption: "TRIPLE_DES",
-		nagiosPassword: "broken cat batteries",
-		monitoredServiceName: "AUV_Log4J_Appender",
-		monitoredHostName: "imos-1.emii.org.au"
-	)
-
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
            'org.codehaus.groovy.grails.web.pages', //  GSP
            'org.codehaus.groovy.grails.web.sitemesh', //  layouts

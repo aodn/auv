@@ -1,6 +1,6 @@
 <!--*************************************************
   Copyright 2010 IMOS
-  The IMOS AUV Viewer is distributed under 
+  The IMOS AUV Viewer is distributed under
   the terms of the GNU General Public License
 *************************************************-->
 
@@ -18,14 +18,12 @@
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery.layout1.3.0.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jqDnR.js')}"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'jquery-ui-1.8.5.custom.min.js')}"></script>
-        <script type="text/javascript" src="${resource(dir:'js',file:'auv-functions.js')}" defer="defer"></script>
         <script type="text/javascript" src="${resource(dir:'js',file:'stepcarousel.js')}"></script>
 
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
 
+        <g:render template="auv_functions_js"></g:render>
         <g:render template="finder_js"></g:render>
-
-
     </head>
     <body>
 
@@ -54,10 +52,10 @@
 		  </div>
 
       <!--div id="mainbodyPadding" -->
-        
+
 
         <div id="mainbody"  >
-    
+
              <div id="logo"   class="ui-layout-north" >
             <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png"  height="70" width="403" alt="IMOS Logo" /></a>
             <div class="toplinks">
@@ -78,14 +76,14 @@
 
 
    </div>
-          
+
 
 
 
         <div id="mapcontainer" class="ui-layout-west">
-          
-           
-          
+
+
+
             <div id="mapWrapper">
                 <div id="map">
                     <div id="controlPanZoom" ></div>
@@ -101,12 +99,12 @@
                           <option value="depth" >Bathymetry</option>
                           <option value="sea_water_temperature" >Temperature</option>
                     </select-->
-                   
+
 
                 </div>
                 <div id="legendToggle">Legend</div>
-                
-                
+
+
 
 
             </div>
@@ -138,8 +136,8 @@
         <div id="imagecontainer" class="ui-layout-center" >
 
             <div id="helpSection" >
-              <h3>How to use this AUV image viewer</h3> 
-                    
+              <h3>How to use this AUV image viewer</h3>
+
                    <ol>
                         <li>Click on a AUV Icon, or choose from the track list.
                         <li> Choose a track and the map will zoom to it.
@@ -150,7 +148,7 @@
             </div>
             <div id="mygallery" class="stepcarousel">
 
-            
+
                 <div class="belt">
                     <div class="panel">
                         <img src="images/mapshadow.png" />
@@ -169,10 +167,10 @@
                             <img alt="loading..." src="images/loading.gif" >
                         </div>
                       <h3 id="thisTrackInfo">&nbsp;</h3>
-             
+
                 </div>
                 <div id="trackcontainer" class="ui-layout-west">
-                      
+
                       <div id="track_html"></div>
                   </div>
                 <div  class="ui-layout-center" >
@@ -184,7 +182,7 @@
 
 
                         <div class="trackSort"  ><a href="javascript:sortImagesAlongTrack('left')">Older&nbsp;</a></div>
-                        
+
                         <div id="sliderContainer" >
                             <div id="slider"></div>
                         </div>
@@ -201,7 +199,7 @@
                         </div>
 
                       <div class="buttons"  >
-                          
+
                           <button  href="#" onclick="sortImagesAlongTrack();return false;" id="sortbytrack" style="display:none" >Sort the Images along the<span> selected</span> track</button>
                       </div>
 
@@ -210,25 +208,25 @@
                   </div>
             </div>
 
-            
-          
+
+
 
         </div>
 
 
-        
+
 
 
 
 
 
 </div>
-	 
+
 
 
  <!--/div-->
 
-       
+
 
 </body>
 
