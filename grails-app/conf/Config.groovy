@@ -69,7 +69,7 @@ imageFileServer {
 }
 
 mest {
-    url = 'http://imosmest.emii.org.au/geonetwork'
+    url = 'http://imosmest.aodn.org.au/geonetwork'
 }
 
 /**
