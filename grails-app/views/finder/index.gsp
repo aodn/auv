@@ -115,7 +115,7 @@
 
             <div>
                 <img class="logo" alt="DIISTRE Logo" src="http://static.emii.org.au/images/logo/NCRIS_Initiative_stacked110.png"/>
-                <a href="http://www.utas.edu.au/" target="_blank"><img class="logo" alt="UTAS Logo" src="http://static.emii.org.au/images/logo/utas/UTAS_RGB-onwhite_Stacked_104w.png"/>
+                <a href="http://www.utas.edu.au/" target="_blank"><img class="logo" alt="UTAS Logo" src="images/Utas_vert.png"/>
                 </a>
                 <a class="external" title="Creative Commons License" href="http://creativecommons.org/licenses/by/3.0/au/" target="_blank"><img src="images/by.png" width="80">
                 </a>
