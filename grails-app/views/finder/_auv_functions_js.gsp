@@ -43,7 +43,7 @@
 
 
      */
-    function mapinit(b, mapheight, mapwidth) {
+    function mapinit() {
         OpenLayers.ProxyHost = "proxy?url=";
 
         if (OpenLayers.ProxyHost == "") {
@@ -65,7 +65,6 @@
             }
         });
 
-        var bounds = new OpenLayers.Bounds.fromString(b);
 
         var options = {
             controls: [
@@ -160,7 +159,7 @@
         overviewmap.maximizeControl(true);
 
         //map.zoomToMaxExtent();
-        map.setCenter(new OpenLayers.LonLat(135, -26), 3)
+        map.setCenter(new OpenLayers.LonLat(135, -26), 3);
 
         map.events.register("zoomend", map, function() {
             updateUserInfo("");
@@ -302,7 +301,7 @@
     function resetMap() {
 
         map.zoomTo(3);
-        map.setCenter(new OpenLayers.LonLat(135, -26), 3)
+        map.setCenter(new OpenLayers.LonLat(135, -26), 3);
         markers.clearMarkers();
         jQuery('.auvSiteDetails, #track_html,  #sortbytrack').hide();
         jQuery('#mygallery, #stepcarouselcontrols').hide();
@@ -318,7 +317,6 @@
         var bb = bbox.split(',');
         bbox = bb[0] + "," + bb[1] + "%20" + bb[2] + "," + bb[3];
 
-        var datasetParent = "auv_images_vw";
         var filter = encodeURIComponent("<ogc:Filter xmlns:ogc=\"http://ogc.org\" xmlns:gml=\"http://www.opengis.net/gml\"><ogc:BBOX>"
                 + "<ogc:PropertyName>geom</ogc:PropertyName>"
                 + "<gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml\">"
@@ -327,7 +325,7 @@
                 + encodeURIComponent("</gml:coordinates>"
                 + "</gml:Box></ogc:BBOX></ogc:Filter>");
 
-        var url = wmsServer + "/" + wmsServerContext + "/wfs?request=GetFeature&service=WFS&typeName=helpers:auv_images_vw&propertyName=" + variable
+        var url = wmsServer + "/" + wmsServerContext + "/wfs?request=GetFeature&service=WFS&typeName=" + fqLayerNameImages + "&propertyName=" + variable
                 + "&filter=" + filter
                 + "&version=1.0.0&maxfeatures=1&sortby=" + variable + "+a";
 
@@ -338,10 +336,11 @@
     // return multidimentional array- numbered array of associative arrays
     function getArrayFromXML(xmlDoc, fields_array, parent) {
 
+
         var parentCriteria;
         if (parent == fqLayerNameTracks) {
             parentCriteria = {
-                "ie": fqLayerNameTracks,
+                "ie": layerNameTracks,
                 "schema": layerNamespace,
                 "tag": layerNameTracks
             };
@@ -356,7 +355,7 @@
         }
 
         var returnArray = [];
-        var matchedElements = xmlDoc.getElementsByTagName(parentCriteria.tag);
+        var matchedElements = xmlDoc.getElementsByTagNameNS("*",parentCriteria.tag);
 
         // Transform each matched element in to an associative array containing key/value pairs for each
         // of its child elements.
@@ -381,8 +380,6 @@
         }
     }
 
-
-    var x;
     function populateTracks() {
 
         // run once to get all tracks into an object
@@ -423,10 +420,7 @@
                     html_content = html_content + "<h5>Start: " + time_coverage_start + "</h5>\n";
                     html_content = html_content + "<div style=\"display: none;\" class=\"auvSiteDetails\" id=\"" + tmp[i]["site_code"] + "\">\n";
 
-                    html_content = html_content + "
-                    <!-- hidden for use in AUV page -->
-                \n
-                    ";
+                    html_content = html_content + "&lt;!-- hidden for use in AUV page --&gt;\n";
 
                     html_content = html_content + "<h5>End: " + time_coverage_end + "</h5><br>\n";
 
@@ -589,7 +583,7 @@
     ;
 
     function setError(response) {
-        alert("The server is unavailable");
+        alert((response) ? response: "The server is unavailable");
     }
 
     function resetSlider() {
@@ -796,13 +790,11 @@
             if (param == "depth") {
                 // get the min and max depth
                 var res = setValuesForBBox(bbox, param);
-                console.log(res);
                 maxVal = 200;
                 jQuery('#styleReloadLink').text("Set Bathymetry Style");
             }
 
             if (param == "sea_water_temperature") {
-                console.log(res);
                 maxVal = 35;
                 jQuery('#styleReloadLink').text("Set Temperature Style");
             }
@@ -836,7 +828,7 @@
     }
 
     // sets the chosen style for the image layer
-    function getImageStyle(x) {
+    function getImageStyle(aString) {
 
         var extras = "";
         var parameters = "";
@@ -846,7 +838,7 @@
         var sld = "";
 
         // lets us back out of the intended style change
-        if (x == "close") {
+        if (aString == "close") {
             // jQuery(".defaultLabel").show(":contains('Image layer Style')");
             jQuery('#styleSliderContainer').hide();
             // change the style selection back to the last values
@@ -854,13 +846,13 @@
         }
         else {
 
-            if (x == "default") {
+            if (aString == "default") {
                 // calling the generator script with no parameters gives us a valid but empty sld
                 sld = "http://auv.aodn.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
                 //jQuery('#styleReloadLink').text("Set Style");
                 jQuery('#styleSliderContainer').hide();
                 //resetStyleSelect(); // set the style chooser to  default
-                currentStyle = x;
+                currentStyle = aString;
 
             }
             else {
@@ -873,11 +865,13 @@
             auvimages.mergeNewParams({
                 sld: sld
             });
+
             // set the getlegendGraphic image url
             jQuery('#imagesGetLegendGraphic').attr(
                     "src",
                     wmsServerUrl + '?LAYER=' + fqLayerNameImages + "&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" + extras
             );
+
             currentStyle = variable;
         }
     }

@@ -11,12 +11,13 @@ class FinderController {
 
     // Display the AUV main map
     def index = {
+
         if (params.lat != null && params.lon != null) {
             flash.zoom = true
             flash.lat = params.lat
-            flash.lon= params.lon
+            flash.lon = params.lon
         }
 
-        []
+        [geoserver: grailsApplication.config.geoserver]
     }
 }
