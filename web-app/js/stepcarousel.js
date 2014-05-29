@@ -4,7 +4,7 @@
 //** Current version 1.9 (July 28th, 10'): See http://www.dynamicdrive.com/dynamicindex4/stepcarouselchangelog.txt for details
 
 
-jQuery.noConflict()
+jQuery.noConflict();
 
 var stepcarousel={
 	ajaxloadingmsg: '<div style="margin: 1em; font-weight: bold"><img src="ajaxloadr.gif" style="vertical-align: middle" /> Fetching Content. Please wait...</div>', //customize HTML to show while fetching Ajax content
@@ -316,7 +316,9 @@ var stepcarousel={
 	},
 
 	resetsettings:function($, config){
-		config.$gallery.unbind()
+        if(config.$gallery) {
+            config.$gallery.unbind();
+        }
 		config.$belt.stop()
 		config.$panels.remove()
 		if (config.$leftnavbutton){
