@@ -828,7 +828,7 @@
     }
 
     // sets the chosen style for the image layer
-    function getImageStyle(aString) {
+    function getImageStyle(style) {
 
         var extras = "";
         var parameters = "";
@@ -838,7 +838,7 @@
         var sld = "";
 
         // lets us back out of the intended style change
-        if (aString == "close") {
+        if (style == "close") {
             // jQuery(".defaultLabel").show(":contains('Image layer Style')");
             jQuery('#styleSliderContainer').hide();
             // change the style selection back to the last values
@@ -846,13 +846,13 @@
         }
         else {
 
-            if (aString == "default") {
+            if (style == "default") {
                 // calling the generator script with no parameters gives us a valid but empty sld
                 sld = "http://auv.aodn.org.au/AUV/SLDgenerator/auv_images-sld-generator.php?";
                 //jQuery('#styleReloadLink').text("Set Style");
                 jQuery('#styleSliderContainer').hide();
                 //resetStyleSelect(); // set the style chooser to  default
-                currentStyle = aString;
+                currentStyle = style;
 
             }
             else {
