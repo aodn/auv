@@ -103,7 +103,7 @@
 
        // showLoader(false);
         //jQuery('#mainbody').css('visibility','visible').delay(8000).fadeIn(400);;
-        mapinit(bounds,mapheight,mapwidth);
+        mapinit();
 
         <g:if test="${flash.zoom}" >
 
