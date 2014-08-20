@@ -16,6 +16,8 @@
     var fqLayerNameTracks = layerNamespace + ':${grailsApplication.config.geoserver.layerNames.tracks}';
     var fqLayerNameImages = layerNamespace + ':${grailsApplication.config.geoserver.layerNames.images}';
 
+    var GALLERY_HEIGHT = 320;
+
     var map;
 
     var auvimages; //openlayer layer name
@@ -567,7 +569,7 @@
             jQuery('#unsorted_status,  #sortbytrack').show();
             jQuery('#helpSection, #sorted_status').toggle(false);
 
-            jQuery('#mygallery').css("height", "310px"); // sort out why i have to call this
+            jQuery('#mygallery').css("height", GALLERY_HEIGHT);
             jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
 
         }
@@ -696,7 +698,7 @@
                 html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
                 html_content = html_content + "</a>\n";
 
-                html_content = html_content + "<div class=\"panelinfo\">" + ucwords(imagesForTrack[min_i]["dive_code_name"]) + " " + time + " &nbsp; Depth:" + imagesForTrack[min_i]["depth"] + "<br>";
+                html_content = html_content + "<div class=\"panelinfo\">" + ucwords(imagesForTrack[min_i]["dive_code_name"]) + " " + time + " &nbsp; Depth:" + imagesForTrack[min_i]["depth"] + "";
                 html_content = html_content + "Temperature:" + imagesForTrack[min_i]["sea_water_temperature"] + "&deg;c / Salinity:" + imagesForTrack[min_i]["sea_water_salinity"] + " / Chlorophyll:" + imagesForTrack[min_i]["chlorophyll_concentration_in_sea_water"] + "</div>\n";
                 html_content = html_content + " <div id=\"auvpanelinf_" + rowcounter + "\" style=\"display:none\" >\n";
                 html_content = html_content + "   <div class=\"campaign_code\">" + imagesForTrack[min_i]["campaign_code"] + "</div>\n";
@@ -716,7 +718,7 @@
             jQuery('#sorted_status').html(str).show();
 
             jQuery('#mygallery').html(html_content);
-            jQuery('div#mygallery').css("height", "310");
+            jQuery('div#mygallery').css("height", GALLERY_HEIGHT);
 
             jQuery('#mygallery, #stepcarouselcontrols', '#mygallery-paginate').toggle(true);
             jQuery('.trackSort').show(); // older - later links

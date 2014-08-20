@@ -63,7 +63,7 @@
 <div id="mainbody">
 
     <div id="logo" class="ui-layout-north">
-        <a href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" height="70" width="403" alt="IMOS Logo"/>
+        <a class="noTextDecoration" href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" height="70" width="403" alt="IMOS Logo"/>
         </a>
         <div class="toplinks">
             <g:if test="${false}">

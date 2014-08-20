@@ -211,3 +211,7 @@ hr {
     text-decoration: underline;
 }
 
+.noTextDecoration {
+    text-decoration: none;
+}
+
