@@ -4,50 +4,77 @@
 /  the terms of the GNU General Public License
 *************************************************/
 
-
-
 html, body {
-    
-    
-/*font-family:"Lucida Sans Unicode","Lucida Grande",Verdana,Arial,Helvetica,sans-serif;*/
-font:12px "Helvetica Neue",Helvetica,Arial,sans-serif;
-   
-    margin: 0px; 
+
+    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
     color: #666;
-
 }
-
 
 table {
- font-size: 11px;
+    font-size: 11px;
 }
 
-h1{  font-size: 20px; font-weight: bold; padding-top:8px; white-space:nowrap; clear: both}
-h2 {  font-size: 16px; font-weight: bold; white-space:nowrap; clear: both}
-h3 {  font-size: 13px; font-weight: bold; margin-bottom:5px;margin-top:6px; white-space:nowrap; clear: both}
-h4 {  font-size: 12px;  margin: 3px 2px;}
-h5 { color:#333333; font-size: 11px;  margin: 0px 2px;}
-h6 { color:#333333; font-size: 11px;  margin: 0px 2px; display:inline;  }
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 8px;
+    white-space: nowrap;
+    clear: both
+}
 
+h2 {
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+    clear: both
+}
+
+h3 {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 6px;
+    white-space: nowrap;
+    clear: both
+}
+
+h4 {
+    font-size: 12px;
+    margin: 3px 2px;
+}
+
+h5 {
+    color: #333333;
+    font-size: 11px;
+    margin: 0 2px;
+}
+
+h6 {
+    color: #333333;
+    font-size: 11px;
+    margin: 0 2px;
+    display: inline;
+}
 
 a {
     color: #666;
-    
 }
-a img{
+
+a img {
     border: none;
 }
-      
 
-a:hover, .a_hover{
+a:hover, .a_hover {
     color: black;
 
 }
+
 a[rel="external"], a.external {
-white-space: nowrap;
-padding-right: 15px;
-background: url(../img/extlink.gif) no-repeat 100% 50%;
-zoom: 1;
+    white-space: nowrap;
+    padding-right: 15px;
+    background: url(../img/extlink.gif) no-repeat 100% 50%;
+    zoom: 1;
 }
 
 input, select, textarea, button {
@@ -61,109 +88,126 @@ input, select, textarea, button {
 .readonly {
     border: 0;
 }
+
 .clear {
     clear: both;
     height: 1px;
 }
+
 .spacer {
     margin: 25px 0;
 }
 
+.imagePopupSpacer {
+    margin: 25px;
+}
+
+.imagePopupFooter {
+    margin: 25px;
+    clear: both;
+}
+
 select {
-   padding: 2px 2px 2px 0;
+    padding: 2px 2px 2px 0;
 }
+
 textarea {
-	width: 340px;
-	height: 50px;
-	vertical-align: top;
+    width: 340px;
+    height: 50px;
+    vertical-align: top;
 }
+
 input:focus, select:focus, textarea:focus {
     border: 1px solid #b2d1ff;
 }
 
 table.featureInfo, table.featureInfo td, table.featureInfo th {
-        border:1px solid #ddd;
-        border-collapse:collapse;
-        margin:0;
-        padding:0;
-        font-size: 90%;
-        padding:.2em .1em;
-    }
-    table.featureInfo th {
-        padding:.2em .2em;
-        font-weight:bold;
-        background:#eee;
-    }
-    table.featureInfo td{
-        background:#fff;
-    }
-    table.featureInfo tr.odd td{
-        background:#eee;
-    }
-    table.featureInfo caption{
-        text-align:left;
-        font-size:100%;
-        font-weight:bold;
-        text-transform:uppercase;
-        padding:.2em .2em;
-    }
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    font-size: 90%;
+    padding: 0.2em 0.1em;
+}
 
+table.featureInfo th {
+    padding: .2em .2em;
+    font-weight: bold;
+    background: #eee;
+}
 
+table.featureInfo td {
+    background: #fff;
+}
+
+table.featureInfo tr.odd td {
+    background: #eee;
+}
+
+table.featureInfo caption {
+    text-align: left;
+    font-size: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: .2em .2em;
+}
 
 .extlink {
-    margin-left: 2px;   
+    margin-left: 2px;
 }
+
 .left {
     float: left;
 }
+
 .right {
     float: right;
-    clear:both;
+    clear: both;
 }
+
 hr {
-    width: 80%;     
-    color:#7391ad;
-    background: #fff url(../img/borderLine.gif) no-repeat center bottom;
+    width: 80%;
+    color: #7391ad;
     margin: 8px auto;
     height: 1px;
-    border: 0 none; 
+    border: 0 none;
 }
 
 .small {
     font-size: small;
 }
+
 .error {
-    
     color: #f71bbc;
     font-weight: bold;
 }
 
-
 .toplinks {
-	background-color: #3399CC;
-
-
-	color: white;
-	float:right;
-	position: absolute;
+    background-color: #3399CC;
+    color: white;
+    float: right;
+    position: absolute;
     top: 4px;
-	right: 20px;
-	padding: 10px 25px;
-	border-radius: 12px; 
-	-moz-border-radius: 12px; 
-	-webkit-border-radius: 12px; 
--webkit-box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
--moz-box-shadow:    3px 3px 5px rgba(50, 50, 50, 0.3);
-box-shadow:         3px 3px 5px rgba(50, 50, 50, 0.3);
+    right: 20px;
+    padding: 10px 25px;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -webkit-box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
+    -moz-box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
+    box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
 }
-.toplinks a{
-	color: white;
-	font-size: 12px;
-	font-weight: bold;
-	margin: 0px 6px;
+
+.toplinks a {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 6px;
     text-decoration: none;
 }
-.toplinks a:hover{
-	color: white;
+
+.toplinks a:hover {
+    color: white;
     text-decoration: underline;
 }
+

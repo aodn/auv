@@ -583,7 +583,7 @@
     ;
 
     function setError(response) {
-        alert((response) ? response: "The server is unavailable");
+        //alert((response) ? response: "The server is unavailable");
     }
 
     function resetSlider() {
@@ -997,11 +997,14 @@
 
     var windowObjectReference;
 
-    function openPopup(tiffFolder) {
+    function openPopup(jpgUrl,tiffUrl) {
+
+        var url = ["imagePopup?jpg=",encodeURIComponent(jpgUrl),"&tiff=",encodeURIComponent(tiffUrl)].join("");
+
         windowObjectReference = window.open(
-                tiffFolder,
+                url,
                 "auv_image",
-                "width=600px, height=700px, location=no,scrollbars=yes,resizable=no,directories=no,status=no"
+                "width=650px, height=500px, location=no,scrollbars=yes,resizable=no,directories=no,status=no"
         );
 
         if (windowObjectReference == null) {
