@@ -19,11 +19,11 @@
     <img src="${params.jpg}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
 </div>
 
+<g:if test="${params.tiff}" >
 <div class="imagePopupFooter" >
     <a href="${params.tiff}" title=""${params.tiff}" >TIFF link</a>
 </div>
-
-
+</g:if>
 
 </body>
 </html>
