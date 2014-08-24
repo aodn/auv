@@ -90,10 +90,6 @@ img.logo {
 #map {
     margin-left: auto;
     margin-right: auto;
-    border: 1px solid #999999;
-    border-top: 1px solid #cccccc;
-    border-left: 1px solid #999999;
-    -moz-box-shadow: 5px 5px 5px #ccc;
 }
 
 #controlWrapper {
@@ -517,6 +513,10 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     width: 99%; /*Width of Carousel Viewer itself*/
     height: 310px; /*Height should enough to fit largest content's height*/
     background-color: #999;
+}
+.stepcarousel, #map {
+    border-radius: 4px;
+    box-shadow: 3px 3px 4px #cccccc;
 }
 
 #myGallery {

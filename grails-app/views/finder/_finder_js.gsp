@@ -6,7 +6,7 @@
     var bounds = "" + (112.947 -buff) +","+ (-33.00 -buff)+","+(116.46 + buff)+","+ (0.874 + buff) ;
 
 
-    var mapheight = '300';
+    var mapheight = '323';
     var mapwidth = '400';
     var tmptarget = "";
     var size = new OpenLayers.Size(30,24);
