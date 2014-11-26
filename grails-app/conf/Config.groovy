@@ -54,7 +54,7 @@ geoserver {
     url = "http://geoserver-123.aodn.org.au/geoserver"
     namespace = 'imos'
     layerNames {
-        tracks = 'auv_tracks'
+        tracks = 'auv_tracks_vw'
         images = 'auv_images_vw'
     }
 }
