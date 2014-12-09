@@ -440,10 +440,11 @@
                     }
 
                     if (tmp[i]["dive_report"] != undefined) {
-                        html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\">Dive Report</a><br>";
+
+                        html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\" target=\"_blank\">Dive Report</a><br>";
                     }
                     if (tmp[i]["dive_notes"] != undefined) {
-                        html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\">Dive Notes</a><br>";
+                        html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\" target=\"_blank\">Dive Notes</a><br>";
                     }
 
                     if (jQuery('#track_html .featurewhite').size() == 1) {
