@@ -114,17 +114,15 @@
             <div>
                 <img class="logo" alt="DIISTRE Logo" target="_blank" src="https://static.emii.org.au/images/logo/NCRIS_Initiative_stacked110.png" />
                 <a href="http://www.utas.edu.au/" target="_blank" ><img  class="logo" alt="UTAS Logo" src="https://static.emii.org.au/images/logo/utas/UTAS_MONO-onwhite_Stacked_104w.png" /></a>
-                <a class="external" title="Creative Commons License" href="http://creativecommons.org/licenses/by/3.0/au/" target="_blank"><img src="images/by.png" width="80"></a>
             </div>
-            <p>This site is licensed under a <a title="Creative Commons License" href="http://creativecommons.org/licenses/by/3.0/au/" target="_blank">Creative Commons Attribution 3.0 Australia License</a> &nbsp;
 
-            <BR/>
-
-            <a href="http://www.imos.org.au" title="Integrated Marine Observing System">IMOS</a> is a national collaborative research infrastructure, supported by Australian Government.  It is led by <a href="http://www.utas.edu.au/">University of Tasmania</a> in partnership with the Australian marine & climate science community.<BR/>You accept all risks and responsibility for losses, damages, costs and other consequences resulting directly or indirectly from using this site and any information or material available from it.<BR/>If you have any concerns about the veracity of the data, please make enquiries via <a href="mailto:info@emii.org.au">info@emii.org.au</a> to be directed to the data custodian.<br/>IMOS data is made freely available under the <a href="http://imos.org.au/fileadmin/user_upload/shared/IMOS%20General/documents/internal/IMOS_Policy_documents/Policy-Acknowledgement_of_use_of_IMOS_data_11Jun09.pdf" title="conditions of use">Conditions of Use.</a><br/>
-            Created by <a href="http://imos.org.au/emii.html" title="eMarine Information Infrastructure">eMII</a> &nbsp;
-            <a href="http://www.imos.org.au" title="Integrated Marine Observing System">&copy; IMOS Australia</a>  &nbsp;
-            Comments on this site? Contact us at <a href="mailto:info@emii.org.au">info@emii.org.au</a></p>
-            <BR/>
+            <p>IMOS is a national collaborative research infrastructure, supported by Australian Government. It is led by University of Tasmania in partnership with the Australian marine &amp; climate science community.
+            </p>
+            <p>
+                <a href=" http://help.aodn.org.au/help/?q=node/81" target="_blank" title="Data usage acknowledgement">Acknowledgement</a>
+                <b>|</b>
+                <a href=" http://help.aodn.org.au/help/?q=node/80" target="_blank" title="Disclaimer information">Disclaimer</a>
+            </p>
 
         </div>
 
