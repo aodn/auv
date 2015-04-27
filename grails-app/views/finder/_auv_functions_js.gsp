@@ -530,10 +530,10 @@
                 updateUserInfo("Choose a track");
             }
             resetTrackHTML();
-
         }
         else {
-            updateUserInfo("No tracks found at your click point.");
+            // todo response is not always reliable?
+            updateUserInfo("");
         }
     }
 
@@ -583,7 +583,7 @@
 // jQuery.setTemplateLayout('css/map.css?', 'jq');
 
     }
-    ;
+
 
     function setError(response) {
         //alert((response) ? response: "The server is unavailable");
@@ -612,8 +612,6 @@
             if (!answer) {
                 showLoader();
             }
-
-
         }
         if (answer) {
             updateUserInfo("Sorting images for the track of the selected image. Please be patient...");
@@ -637,8 +635,6 @@
                 // probably a problem with all the fields or the button was visible when it shouldnt be
                 alert("Javascript error: There is no selected image to sort around.");
             }
-
-            updateUserInfo("Done. You can add a note to any image of interest...");
 
             showLoader();
         }
