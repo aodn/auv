@@ -43,34 +43,35 @@ environments {
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
+
+        geoserver {
+            context = 'geoserver'
+            url = "http://geoserver-123.aodn.org.au/geoserver"
+            namespace = 'imos'
+            layerNames {
+                tracks = 'auv_tracks_vw'
+                images = 'auv_images_vw'
+            }
+        }
+
+        baseLayer {
+            url = 'http://geoserver-static.aodn.org.au/geoserver/baselayers/wms'
+            name = 'default_basemap_simple'
+        }
+
+        imageFileServer {
+            url = 'http://data.aodn.org.au/IMOS/public/AUV/'
+        }
+
+        mest {
+            url = 'http://imosmest.aodn.org.au/geonetwork'
+        }
     }
     test {
         grails.serverURL = "http://localhost:8080/${appName}"
     }
 }
 
-geoserver {
-    context = 'geoserver'
-    url = "http://geoserver-123.aodn.org.au/geoserver"
-    namespace = 'imos'
-    layerNames {
-        tracks = 'auv_tracks'
-        images = 'auv_images_vw'
-    }
-}
-
-baseLayer {
-    url = 'http://geoserver-static.aodn.org.au/geoserver/baselayers/wms'
-    name = 'default_basemap_simple'
-}
-
-imageFileServer {
-    url = 'http://data.aodn.org.au/IMOS/public/AUV/'
-}
-
-mest {
-    url = 'http://imosmest.aodn.org.au/geonetwork'
-}
 
 /**
  * Instance specific customisation, clearly stolen from:
