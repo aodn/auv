@@ -12,13 +12,10 @@ body {
 }
 
 #footer {
-    font-size: 11px;
-    font-family: Arial, Helvetica, sans-serif;
     padding: 10px 10px 25px 0px;
     color: #999999;
     padding: 16px;
     margin-right: 6px;
-
 }
 
 #footer a {
@@ -234,7 +231,7 @@ span.ol {
 
     /*background: url('images/olbackground.png') no-repeat;*/
     background-color: #3c668d;
-    -moz-border-radius: 15 ! important;
+    -moz-border-radius: 15px ! important;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -257,7 +254,7 @@ a.ygtvlabel:hover {
 }
 
 div.olControlScaleLineBottom {
-    margin-top: -1;
+    margin-top: -1px;
 }
 
 div.olControlScaleLineTop, div.olControlScaleLineBottom {
