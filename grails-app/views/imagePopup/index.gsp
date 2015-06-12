@@ -16,7 +16,7 @@
 <body>
 
 <div class="imagePopupSpacer" >
-    <img src="${params.jpg}" alt="${message(code:'spinner.alt',default:'Loading...')}" />
+    <img src="${params.jpg}" alt="jpeg" />
 </div>
 
 <g:if test="${params.tiff}" >

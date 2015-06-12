@@ -1,7 +1,7 @@
 <script>
 
     //*************************************************/
-    //  Copyright 2010 IMOS
+    //  Copyright 2015 IMOS
     //  The IMOS AUV Viewer is distributed under
     //  the terms of the GNU General Public License
     /*************************************************/
@@ -15,8 +15,6 @@
     var layerNameImages = '${grailsApplication.config.geoserver.layerNames.images}';
     var fqLayerNameTracks = layerNamespace + ':${grailsApplication.config.geoserver.layerNames.tracks}';
     var fqLayerNameImages = layerNamespace + ':${grailsApplication.config.geoserver.layerNames.images}';
-
-    var GALLERY_HEIGHT = 320;
 
     var map;
 
@@ -33,18 +31,11 @@
 
     var timeoutID = "";
     var markers = ""; // Openlayers marker layer
-    var imageBuffer = 20; // amount of images to retreive either side of current image
+    var imageBuffer = 50; // amount of images to retreive either side of current image
     var layersLoading = 0; //
 
     var currentStyle = "default"; // keep the last style for the images layer
 
-
-    /*
-     pass in: bounding box
-     referer: (prod or dev geoserver)
-
-
-     */
     function mapinit() {
         OpenLayers.ProxyHost = "proxy?url=";
 
@@ -53,7 +44,6 @@
         }
 
         OpenLayers.ImgPath = "theme/dark/";
-
 
         // MAP INIT
         format = 'image/png';
@@ -66,7 +56,6 @@
                 numZoomLevels: 5
             }
         });
-
 
         var options = {
             controls: [
@@ -84,7 +73,7 @@
                     separator: ' <BR><b>Lat:</b> '
                 })
             ],
-            numZoomLevels: 20,
+            numZoomLevels: 22,
             projection: "EPSG:4326",
             units: 'degrees'
         };
@@ -103,7 +92,7 @@
                 },
                 {
                     isBaseLayer: true,
-                    buffer: 0,
+                    buffer: 1,
                     displayOutsideMaxExtent: true
                 }
         );
@@ -122,7 +111,7 @@
                 {
                     isBaseLayer: false,
                     transitionEffect: 'resize',
-                    buffer: 0,
+                    buffer: 1,
                     displayOutsideMaxExtent: true
                 }
         );
@@ -141,7 +130,7 @@
                 {
                     isBaseLayer: false,
                     transitionEffect: 'resize',
-                    buffer: 0,
+                    buffer: 1,
                     maxResolution: .000035, // important to limit geoserver stress
                     displayOutsideMaxExtent: true
                 }
@@ -159,11 +148,9 @@
         map.addControl(new OpenLayers.Control.Navigation());
 
         overviewmap.maximizeControl(true);
-
-        //map.zoomToMaxExtent();
         map.setCenter(new OpenLayers.LonLat(135, -26), 3);
 
-        map.events.register("zoomend", map, function() {
+        map.events.register("zoomend", map, function () {
             updateUserInfo("");
         });
 
@@ -171,7 +158,7 @@
         clickEventHandler = new OpenLayers.Handler.Click({
             'map': map
         }, {
-            'click': function(e) {
+            'click': function (e) {
                 getPointInfo(e);
             }
         });
@@ -180,11 +167,11 @@
 
         // cursor mods
         map.div.style.cursor = "pointer";
-        jQuery("#navtoolbar div.olControlZoomBoxItemInactive ").click(function() {
+        jQuery("#navtoolbar div.olControlZoomBoxItemInactive ").click(function () {
             map.div.style.cursor = "crosshair";
             clickEventHandler.deactivate();
         });
-        jQuery("#navtoolbar div.olControlNavigationItemActive ").click(function() {
+        jQuery("#navtoolbar div.olControlNavigationItemActive ").click(function () {
             map.div.style.cursor = "pointer";
             clickEventHandler.activate();
         });
@@ -217,7 +204,7 @@
         }
         else {
             if (auvImagesLayer.inRange) {
-                msg = "Click on the blue AUV track to see the nearest images";
+                msg = "Click on the AUV track to see the nearest images";
                 jQuery('#styles').css("visibility", "visible").show("slow");
             }
             else {
@@ -232,84 +219,76 @@
     var layer = null;
 
     function getPointInfo(e) {
-        var lonlat = map.getLonLatFromPixel(e.xy);
-        X = Math.round(lonlat.lon * 1000) / 1000;
-        Y = Math.round(lonlat.lat * 1000) / 1000;
-
-        var wmsLayers = map.getLayersByClass("OpenLayers.Layer.WMS");
 
         showLoader("true");
 
-        for (key in wmsLayers) {
+        var wmsLayers = map.getLayersByClass("OpenLayers.Layer.WMS");
+        for (var key in wmsLayers) {
+
             layer = map.getLayer(map.layers[key].id);
             var layerName = layer.params.LAYERS;
 
             var infoFormat = "text/html";
 
-            var url = false;
+            var params = {
+                REQUEST: "GetFeatureInfo",
+                EXCEPTIONS: "application/vnd.ogc.se_xml",
+                BBOX: layer.getExtent().toBBOX(),
+                INFO_FORMAT: infoFormat,
+                QUERY_LAYERS: layerName,
+                FEATURE_COUNT: (imageBuffer * 2),
+                SRS: 'EPSG:4326',
+                WIDTH: layer.map.size.w,
+                HEIGHT: layer.map.size.h
+            };
+
             if (layer.params.VERSION == "1.1.1") {
-                url = layer.getFullRequestString({
-                    REQUEST: "GetFeatureInfo",
-                    EXCEPTIONS: "application/vnd.ogc.se_xml",
-                    BBOX: layer.getExtent().toBBOX(),
-                    X: e.xy.x,
-                    Y: e.xy.y,
-                    INFO_FORMAT: infoFormat,
-                    QUERY_LAYERS: layerName,
-                    FEATURE_COUNT: (imageBuffer * 2),
-                    BUFFER: layer.getFeatureInfoBuffer,
-                    SRS: 'EPSG:4326',
-                    WIDTH: layer.map.size.w,
-                    HEIGHT: layer.map.size.h
-                });
+                params.X = e.xy.x;
+                params.Y = e.xy.y;
             }
             else if (layer.params.VERSION == "1.3.0") {
-                url = layer.getFullRequestString({
-                    REQUEST: "GetFeatureInfo",
-                    EXCEPTIONS: "application/vnd.ogc.se_xml",
-                    BBOX: layer.getExtent().toBBOX(),
-                    I: e.xy.x,
-                    J: e.xy.y,
-                    INFO_FORMAT: 'text/xml',
-                    QUERY_LAYERS: layerName,
-                    //Styles: '',
-                    CRS: 'EPSG:4326',
-                    BUFFER: layer.getFeatureInfoBuffer,
-                    WIDTH: layer.map.size.w,
-                    HEIGHT: layer.map.size.h
-                });
+                params.I = e.xy.x;
+                params.J = e.xy.y;
             }
 
-            if (url) {
+            var url = layer.getFullRequestString(params);
 
-                updateUserInfo('Searching ...');
-                if (layerName == fqLayerNameTracks) {
-                    OpenLayers.loadURL(url, '', this, setTrackHTML, setError);
+            updateUserInfo('Searching ...');
+
+            if (layerName == fqLayerNameTracks) {
+                OpenLayers.loadURL(url, '', this, setTrackHTML, setError);
+            }
+            else if (layerName == fqLayerNameImages) {
+
+                if (auvImagesLayer.inRange) {
+                    OpenLayers.loadURL(url, '', this, setImageHTML, setError);
                 }
-                if (layerName == fqLayerNameImages) {
-
-                    if (auvImagesLayer.inRange) {
-                        OpenLayers.loadURL(url, '', this, setImageHTML, setError);
-                    }
-                    else {
-                        updateUserInfo("");
-                        showLoader();
-                    }
+                else {
+                    updateUserInfo("");
+                    showLoader();
                 }
             }
         }
     }
 
+    function setError(e) {
+        console.log(e);
+    }
+
     function resetMap() {
 
+        hideAllTrackHTML();
+        setSiteCodeCql();
         map.zoomTo(3);
         map.setCenter(new OpenLayers.LonLat(135, -26), 3);
         markers.clearMarkers();
-        jQuery('.auvSiteDetails, #track_html,  #sortbytrack').hide();
+        jQuery('.auvSiteDetails, #sortbytrack').hide();
         jQuery('#mygallery, #stepcarouselcontrols').hide();
-        jQuery('.trackSort').hide();
         jQuery('#helpSection').show();
-        updateUserInfo("Click on a AUV Icon, or choose from the track list.");
+        jQuery('#trackSelector option:first-child').attr("selected", "selected");
+        jQuery('#trackSelector')[0].selectedIndex = 0;
+
+        updateUserInfo(" ");
 
     }
 
@@ -325,7 +304,7 @@
                 + "<gml:coordinates>")
                 + bbox
                 + encodeURIComponent("</gml:coordinates>"
-                + "</gml:Box></ogc:BBOX></ogc:Filter>");
+                        + "</gml:Box></ogc:BBOX></ogc:Filter>");
 
         var url = wmsServer + "/" + wmsServerContext + "/wfs?request=GetFeature&service=WFS&typeName=" + fqLayerNameImages + "&propertyName=" + variable
                 + "&filter=" + filter
@@ -357,7 +336,7 @@
         }
 
         var returnArray = [];
-        var matchedElements = xmlDoc.getElementsByTagNameNS("*",parentCriteria.tag);
+        var matchedElements = xmlDoc.getElementsByTagNameNS("*", parentCriteria.tag);
 
         // Transform each matched element in to an associative array containing key/value pairs for each
         // of its child elements.
@@ -383,8 +362,7 @@
     }
 
     function populateTracks() {
-
-        // run once to get all tracks into an object
+        // run once to get all tracks into an DOM object
         if (allTracksHTML == "") {
 
             var fields = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";
@@ -415,25 +393,18 @@
                     var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"], false);
 
                     html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";
-
                     html_content = html_content + "<h4 class=\"getfeatureTitle\">" + newTitle + "</h4>\n";
                     html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureCode\">" + tmp[i]["site_code"] + "</p>\n";
                     html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureExtent\">" + tmp[i]["geospatial_lon_min"] + "," + tmp[i]["geospatial_lat_min"] + "," + tmp[i]["geospatial_lon_max"] + "," + tmp[i]["geospatial_lat_max"] + "</p>\n";
                     html_content = html_content + "<h5>Start: " + time_coverage_start + "</h5>\n";
                     html_content = html_content + "<div style=\"display: none;\" class=\"auvSiteDetails\" id=\"" + tmp[i]["site_code"] + "\">\n";
-
-                    html_content = html_content + "&lt;!-- hidden for use in AUV page --&gt;\n";
-
                     html_content = html_content + "<h5>End: " + time_coverage_end + "</h5><br>\n";
-
-
                     html_content = html_content + "<table cellspacing=\"0\" cellpadding=\"0\">\n";
                     html_content = html_content + "<tbody>";
                     html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_max"] + "<b>N</b></td><td></td></tr>\n";
                     html_content = html_content + "<tr><td>" + tmp[i]["geospatial_lon_min"] + "<b>W</b></td><td></td><td>" + tmp[i]["geospatial_lon_max"] + "<b>E</b></td></tr>\n";
                     html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
                     html_content = html_content + "</tbody></table>\n";
-
                     html_content = html_content + "<b>Depth:</b> " + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
                     if (tmp[i]["distance"] != undefined) {
                         html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
@@ -497,68 +468,55 @@
             else {
                 setError("There is a problem with the WMS server");
             }
+
+            //populate but keep hidden
+            // todo this should just be a JS object
+            jQuery('#track_html').html(allTracksHTML);
+            hideAllTrackHTML();
         }
-
-        //populate but keep hidden
-        jQuery('#track_html').html(allTracksHTML).hide();
-    }
-
-    // reponding to a track picked from the select dropdown
-    // all the tracks must be reload into the track_html div
-    function allTracksSelector(css_id) {
-        populateTracks();
-        resetTrackHTML();
-        jQuery(css_id + ' .getfeatureTitle').trigger('click');
     }
 
     function setTrackHTML(response) {
-        var tmp_response = response.responseText;
-        var html_content = "";
+        var responseFound = false;
+        var responseText = getTrimBodyContent(response.responseText);
 
-        if (tmp_response.match(/<\/body>/m)) {
-
-            html_content = tmp_response.match(/(.|\s)*?<body[^>]*>((.|\s)*?)<\/body>(.|\s)*?/m);
-            if (html_content) {
-                //trimmed_content= html_content[2].replace(/(\n|\r|\s)/mg, ''); // replace all whitespace
-                html_content = html_content[2].replace(/^\s+|\s+$/g, '');  // trim
-            }
+        if (responseText != "") {
+            hideAllTrackHTML();
+            jQuery(responseText).find('p.getfeatureCode').each(function () {
+                responseFound = true;
+                var site_code = jQuery(this).text();
+                jQuery("#" + site_code).parent().show(450);
+            });
         }
-        jQuery('#track_html').html(html_content);
 
-        if (html_content != "") {
+        if (responseFound) {
             if (!auvImagesLayer.inRange) {
                 updateUserInfo("Choose a track");
             }
-            resetTrackHTML();
         }
         else {
-            // todo response is not always reliable?
             updateUserInfo("");
         }
     }
 
-    function resetTrackHTML() {
+    function hideAllTrackHTML() {
+        jQuery('#track_html').children().hide();
+    }
 
-        jQuery('#track_html').show();
-        jQuery('#track_html h3').hide();
-
-        if (jQuery('#track_html .featurewhite').size() == 1) {
-            jQuery('.featurewhite').addClass('featurewhite_selected');
-            jQuery('.auvSiteDetails').show(1000);
+    function getTrimBodyContent(htmlChunk) {
+        var ret = "";
+        if (htmlChunk.match(/<\/body>/m)) {
+            var html_content = htmlChunk.match(/(.|\s)*?<body[^>]*>((.|\s)*?)<\/body>(.|\s)*?/m);
+            if (html_content) {
+                ret = html_content[2].replace(/^\s+|\s+$/g, '');  // trim
+            }
         }
+        return ret;
     }
 
     function setImageHTML(response) {
         var tmp_response = response.responseText;
-        var html_content = "";
-
-        if (tmp_response.match(/<\/body>/m)) {
-            html_content = tmp_response.match(/(.|\s)*?<body[^>]*>((.|\s)*?)<\/body>(.|\s)*?/m);
-            if (html_content) {
-                //trimmed_content= html_content[2].replace(/(\n|\r|\s)/mg, ''); // replace all whitespace
-                html_content = html_content[2].replace(/^\s+|\s+$/g, '');  // trim
-            }
-        }
+        var html_content = getTrimBodyContent(tmp_response);
 
         if (html_content != "") {
 
@@ -566,11 +524,9 @@
             jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
 
             loadGallery(Math.round(jQuery('#mygallery .panel').size() / 2));
-            jQuery('.trackSort').hide();
             jQuery('#unsorted_status,  #sortbytrack').show();
             jQuery('#helpSection, #sorted_status').toggle(false);
 
-            jQuery('#mygallery').css("height", GALLERY_HEIGHT);
             jQuery('#mygallery, #stepcarouselcontrols').toggle(true);
 
         }
@@ -578,160 +534,19 @@
             updateUserInfo("No tracks or images found at your click point");
         }
 
-
-        showLoader(); // will be the slowest to load
-// jQuery.setTemplateLayout('css/map.css?', 'jq');
-
+        showLoader();
     }
 
-
-    function setError(response) {
-        //alert((response) ? response: "The server is unavailable");
-    }
-
-    function resetSlider() {
-        // check if the slider object has been created yet
-
+    function enableSlider() {
         jQuery("#slider").slider("option", "max", jQuery('#statusC').text());
         jQuery("#slider").slider("option", "value", jQuery('#statusA').text());
         jQuery('#slider').slider("enable");
-
-    }
-
-
-    function sortImagesAlongTrack(reLoad) {
-
-        var answer = false;
-        showLoader(true);
-
-        if (reLoad != undefined) {
-            answer = true;
-        }
-        else {
-            answer = confirm("There are many images to sort. This may take a while, OK?");
-            if (!answer) {
-                showLoader();
-            }
-        }
-        if (answer) {
-            updateUserInfo("Sorting images for the track of the selected image. Please be patient...");
-            // disable the slider
-            jQuery('#slider').slider("disable");
-            jQuery('#sortbytrack, #unsorted_status').toggle(false);
-            jQuery('.trackSort').hide();
-            jQuery('#sorted_status').html("<br>").show(); // tmp content to keep spacing
-
-            var fk_auv_tracks = jQuery('#this_fk_auv_tracks').text();
-            if (fk_auv_tracks != "") {
-
-                if (reLoad == undefined) {
-                    getImageList(fk_auv_tracks);
-                }
-                // write the HTML
-                trackSort(fk_auv_tracks, reLoad);
-
-            }
-            else {
-                // probably a problem with all the fields or the button was visible when it shouldnt be
-                alert("Javascript error: There is no selected image to sort around.");
-            }
-
-            showLoader();
-        }
-
-    }
-
-    function trackSort(fk_auv_tracks, reLoad) {
-
-        if (imagesForTrack.length > 0) {
-
-            var min_i = 0;
-            var max_i = 0;
-            var html_content = "<div class=\"belt\">";
-            var image = jQuery('#this_image_filename').text();
-            var selected_image = 0;
-            var image_idx = findIndexByCol(image);
-
-            // move selected image to the left
-            if (reLoad == "left") {
-                // calculate left first
-                min_i = Math.max(0, image_idx - (imageBuffer * 2 + imageBuffer));
-                max_i = Math.min(imagesForTrack.length, min_i + imageBuffer * 2);
-            }
-            // move selected image to the right
-            else if (reLoad == "right") {
-                // calculate right first
-                max_i = Math.min(imagesForTrack.length, image_idx + (imageBuffer * 2 + imageBuffer));
-                min_i = Math.max(0, max_i - imageBuffer * 2);
-            }
-            else {
-                min_i = Math.max(0, image_idx - imageBuffer);
-                max_i = Math.min(imagesForTrack.length, min_i + imageBuffer * 2);
-            }
-
-            selected_image = Math.round((max_i - min_i) / 2);
-
-            if (min_i == 0) {
-                selected_image = 1;
-            }
-
-            if (max_i == imagesForTrack.length) {
-                selected_image = max_i - min_i;
-            }
-
-            var rowcounter = 0;
-            var minimum_index = min_i;
-
-            for (; min_i < max_i; min_i++) {
-                var time = formatISO8601Date(imagesForTrack[min_i]["time"], false);
-
-                html_content = html_content + "<div class=\"panel\"  id=\"auvpanel_" + rowcounter + "\" >";
-
-                var imageURL = "http://auv.aodn.org.au/AUV/" + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/i2jpg/" + imagesForTrack[min_i]["image_filename"] + ".jpg";
-
-                var tiffImageURL = dataServerBaseUrl + imagesForTrack[min_i]["campaign_code"] + "/" + imagesForTrack[min_i]["site_code"] + "/" + imagesForTrack[min_i]["image_folder"] + "/" + imagesForTrack[min_i]["image_filename"] + ".tif";
-
-                html_content = html_content + "<a href=\"" + tiffImageURL + "\" >\n";
-                html_content = html_content + "<img src=\"" + imageURL + "\" />\n";
-                html_content = html_content + "</a>\n";
-
-                html_content = html_content + "<div class=\"panelinfo\">" + ucwords(imagesForTrack[min_i]["dive_code_name"]) + " " + time + " &nbsp; Depth:" + imagesForTrack[min_i]["depth"] + "";
-                html_content = html_content + "Temperature:" + imagesForTrack[min_i]["sea_water_temperature"] + "&deg;c / Salinity:" + imagesForTrack[min_i]["sea_water_salinity"] + " / Chlorophyll:" + imagesForTrack[min_i]["chlorophyll_concentration_in_sea_water"] + "</div>\n";
-                html_content = html_content + " <div id=\"auvpanelinf_" + rowcounter + "\" style=\"display:none\" >\n";
-                html_content = html_content + "   <div class=\"campaign_code\">" + imagesForTrack[min_i]["campaign_code"] + "</div>\n";
-                html_content = html_content + "   <div class=\"site_code\">" + imagesForTrack[min_i]["site_code"] + "</div>\n";
-                html_content = html_content + "   <div class=\"fk_auv_tracks\">" + fk_auv_tracks + "</div>\n";
-                html_content = html_content + "   <div class=\"image_filename\">" + imagesForTrack[min_i]["image_filename"] + "</div>\n";
-                html_content = html_content + "   <div class=\"lon\">" + imagesForTrack[min_i]["longitude"] + "</div>\n";
-                html_content = html_content + "   <div class=\"lat\">" + imagesForTrack[min_i]["latitude"] + "</div>\n";
-                html_content = html_content + " </div>\n";
-                html_content = html_content + "</div>\n";
-                rowcounter++;
-            }
-            // end div class=belt
-            html_content = html_content + "</div>\n\n";
-
-            var str = "<b>Viewing images for this track:</b> " + minimum_index + " to " + max_i + " of " + imagesForTrack.length;
-            jQuery('#sorted_status').html(str).show();
-
-            jQuery('#mygallery').html(html_content);
-            jQuery('div#mygallery').css("height", GALLERY_HEIGHT);
-
-            jQuery('#mygallery, #stepcarouselcontrols', '#mygallery-paginate').toggle(true);
-            jQuery('.trackSort').show(); // older - later links
-
-            loadGallery(selected_image);
-        }
-        else {
-            // probably a problem with all the fields or the button was visible when it shouldnt be
-            alert("Javascript error: There was a problem discovering images along this track.");
-        }
     }
 
     function loadGallery(focusImageNumber) {
         stepcarousel.loadcontent('mygallery');
         stepcarousel.moveTo('mygallery', focusImageNumber);
-        resetSlider();
+        enableSlider();
     }
 
     function getImageList(fk_auv_tracks) {
@@ -754,12 +569,17 @@
         }
     }
 
-    function showHideZoom(css_id, bounds) {
-        css_id = "#" + css_id;
+    // responding to a track picked from the select dropdown
+    function allTracksSelector(css_id) {
+        jQuery(css_id + ' .getfeatureTitle').trigger('click');
+    }
 
-        jQuery('#track_html').show();
-        jQuery('.auvSiteDetails, #track_html .featurewhite').hide();
+    function showSiteCode(site_code, bounds) {
+        setSiteCodeCql(site_code);
 
+        jQuery('.auvSiteDetails .featurewhite').hide();
+
+        var css_id = "#" + site_code;
         if (jQuery(css_id).is(':visible')) {
             jQuery(css_id).hide(50);
             map.zoomTo(3);
@@ -767,12 +587,31 @@
         }
         else {
             jQuery(css_id).show(450);
-
             zoomTo(bounds);
-            jQuery('.featurewhite').removeClass('featurewhite_selected')
+            jQuery('.featurewhite').removeClass('featurewhite_selected');
             jQuery(css_id).parent().addClass('featurewhite_selected');
             jQuery(css_id).parent().show();
             updateUserInfo("Click again on the track, (or zoom further) to see the nearest images");
+        }
+    }
+
+    function setSiteCodeCql(site_code) {
+
+        var wmsLayers = map.getLayersByClass("OpenLayers.Layer.WMS");
+        for (var key in wmsLayers) {
+            var layer = map.getLayer(map.layers[key].id);
+            var layerName = layer.params.LAYERS;
+            if (layerName == fqLayerNameTracks || layerName == fqLayerNameImages) {
+                if (site_code) {
+                    layer.mergeNewParams({
+                        CQL_FILTER: "site_code like '" + site_code + "'"
+                    });
+                }
+                else {
+                    delete layer.params.CQL_FILTER;
+                    layer.redraw();
+                }
+            }
         }
     }
 
@@ -806,14 +645,14 @@
                 //step: 20,
                 values: [minVal, maxVal],
                 range: 'min',
-                change: function(event, ui) {
+                change: function (event, ui) {
                     setStyleSlider();
                     event.stopPropagation();
                 },
-                slide: function(event, ui) {
+                slide: function (event, ui) {
                     event.stopPropagation(); //stop jquery drag
                 },
-                start: function(event, ui) {
+                start: function (event, ui) {
                     event.stopPropagation(); //stop jquery drag
                 }
 
@@ -899,7 +738,6 @@
 
     }
 
-
     function resetStyleSelect() {
 
         // force reset on page load of the style select in Firefox
@@ -908,16 +746,9 @@
 
     }
 
-
     function show(css_id) {
         jQuery(css_id).show(450);
     }
-
-    /*function mergeNewParams(params){
-     auvimages.mergeNewParams(params);
-     //untiled.mergeNewParams(params);
-     }
-     */
 
     function zoomTo(bounds) {
         map.zoomToExtent(new OpenLayers.Bounds.fromString(bounds));
@@ -996,9 +827,9 @@
 
     var windowObjectReference;
 
-    function openPopup(jpgUrl,tiffUrl) {
+    function openPopup(jpgUrl, tiffUrl) {
 
-        var url = ["imagePopup?jpg=",encodeURIComponent(jpgUrl),"&tiff=",encodeURIComponent(tiffUrl)].join("");
+        var url = ["imagePopup?jpg=", encodeURIComponent(jpgUrl), "&tiff=", encodeURIComponent(tiffUrl)].join("");
 
         windowObjectReference = window.open(
                 url,
@@ -1054,7 +885,7 @@
 
 
         var date = (d_names[curr_day] + " " + curr_date + ""
-                + sup + " " + m_names[curr_month] + " " + curr_year);
+        + sup + " " + m_names[curr_month] + " " + curr_year);
 
         if (curr_hour < 12) {
             a_p = "AM";
@@ -1079,7 +910,7 @@
         return (date + " " + time);
 
     }
-    Date.prototype.setISO8601 = function(str, localtime) {
+    Date.prototype.setISO8601 = function (str, localtime) {
         var regexp = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
                 "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
                 "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
@@ -1120,7 +951,7 @@
 
     function ucwords(str) {
         // Uppercase the first character of every word in a string
-        return (str + '').replace(/^(.)|\s(.)/g, function($1) {
+        return (str + '').replace(/^(.)|\s(.)/g, function ($1) {
             return $1.toUpperCase();
         });
     }
