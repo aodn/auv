@@ -1,5 +1,5 @@
 /*************************************************
-/  Copyright 2010 IMOS
+/  Copyright 2015 IMOS
 / The IMOS AUV Viewer is distributed under 
 /  the terms of the GNU General Public License
 *************************************************/
@@ -9,6 +9,7 @@ body {
     min-width: 950px;
     min-height: 600px;
     overflow: hidden ! important;
+    background-color: #e1e1e1;
 }
 
 #footer {
@@ -18,41 +19,78 @@ body {
     margin-right: 6px;
 }
 
+#footer .footerLogos {
+    background-color: white;
+    border-radius: 4px;
+}
+
 #footer a {
     color: #999999;
 }
+
 img.logo {
-     padding: 6px;
+    padding: 6px;
 }
 
 #footer .left {
     margin-right: 20px;
 }
 
-#mainbodyPadding {
-    margin: 15px;
-    height: 100%;
-}
-
 #mainbody {
     height: 100%;
     overflow: auto !  important;
-    padding: 15px;
+    padding-bottom: 15px;
 
 }
 
-#logo img {
-    /*position: absolute;*/
-    margin-right: 30px;
+.auvHeader {
+    margin: 0 0 30px 0;
+    padding: 20px 10px;
+    background-color: #D4D6D7;
+    background: #d4d6d7;
+    background: -moz-radial-gradient(center, ellipse cover, #d4d6d7 0%, #c4c4c4 100%);
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#d4d6d7), color-stop(100%,#c4c4c4));
+    background: -webkit-radial-gradient(center, ellipse cover, #d4d6d7 0%,#c4c4c4 100%);
+    background: -o-radial-gradient(center, ellipse cover, #d4d6d7 0%,#c4c4c4 100%);
+    background: -ms-radial-gradient(center, ellipse cover, #d4d6d7 0%,#c4c4c4 100%);
+    background: radial-gradient(ellipse at center, #d4d6d7 0%,#c4c4c4 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d4d6d7', endColorstr='#c4c4c4',GradientType=1 );
 }
 
-#logo {
-    padding-bottom: 20px;
-    overflow: hidden ! important;
+div#logo,
+div.title * {
+    display: inline;
+    margin-left: 10px;
 }
 
-#logo h1 {
-    display: inline
+div.title
+{
+    left: 460px;
+    position: absolute;
+    top: 50px;
+}
+div.title h1 {
+font-family: 'Lobster', cursive;
+}
+
+.toplinks {
+    float: right;
+}
+
+.toplinks a {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 0 6px;
+    text-decoration: none;
+}
+
+.toplinks a:hover {
+    color: black;
+    text-decoration: underline;
+}
+
+.noTextDecoration {
+    text-decoration: none;
 }
 
 .align-right {
@@ -61,15 +99,7 @@ img.logo {
 }
 
 #imagecontainer {
-    padding: 20px;
-    padding-top: 0px;
-    margin: 5px;
-    margin-left: 0px;
-
-}
-
-#mapcontainer {
-    padding: 0px ! important;
+    padding: 10px 20px;
 
 }
 
@@ -84,9 +114,8 @@ img.logo {
     height: 250px;
 }
 
-#map {
-    margin-left: auto;
-    margin-right: auto;
+#helpSection, #galleryControls {
+    padding: 20px 40px;
 }
 
 #controlWrapper {
@@ -141,15 +170,6 @@ img.logo {
     padding: 5px;
     width: 100%;
     background-color: #fafafa;
-}
-
-.featurewhite {
-    padding-top: 5px;
-}
-
-.featurewhite_selected {
-    background-color: white;
-
 }
 
 .panelinfo {
@@ -210,26 +230,7 @@ p.important {
     cursor: default;
 }
 
-#sortbytrack {
-
-    text-decoration: none;
-}
-
-#sortbytrack h3 {
-    background-color: #3399CC;
-    padding: 3px;
-    color: white;
-}
-
-#sortbytrack:hover h3 {
-    background-color: #ccc;
-    padding: 3px;
-    color: grey;
-}
-
 span.ol {
-
-    /*background: url('images/olbackground.png') no-repeat;*/
     background-color: #3c668d;
     -moz-border-radius: 15px ! important;
     color: white;
@@ -237,7 +238,6 @@ span.ol {
     font-weight: bold;
     margin: 6px;
     padding: 2px 8px;
-
 }
 
 /* Overview Map wigit */
@@ -268,8 +268,6 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
 .olControlEditingToolbar div {
     float: left;
 }
-
-
 
 .olControlZoomBoxItemActive {
     background-position: -600px 0pt;
@@ -345,7 +343,7 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     background-position: -2200px 0;
 }
 
-#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 img {
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 img {
     display: none;
 }
 
@@ -355,7 +353,7 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     top: 85px !important;
 }
 
-#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 {
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9 {
     left: 0px;
     z-index: 99;
     background-repeat: no-repeat;
@@ -367,7 +365,7 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     padding: 3px;
 }
 
-#controlPanZoom  #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9:hover {
+#controlPanZoom #OpenLayers\002E Control\002E PanZoomBar_6_OpenLayers\002E Map_9:hover {
     background-position: -2400px 0;
 }
 
@@ -458,8 +456,7 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
 }
 
 #trackSelectorDiv {
-
-    height: 100px;
+    padding-top: 10px;
 }
 
 #loading_cover {
@@ -469,7 +466,6 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     opacity: 1;
     background: white;
     position: absolute;
-    top: 95px;
     left: 0; /**/
     z-index: 99999999;
 }
@@ -495,30 +491,32 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     width: 85%;
 }
 
-.trackSort, #sliderContainer, #styleSlider {
+#sliderContainer, #styleSlider {
     float: left;
     margin: 3px;
     margin-right: 10px;
 }
 
-.stepcarousel {
-    position: relative; /*leave this value alone*/
-    border-color: #999999;
-    border-style: solid;
-    border-width: 3px 8px 3px 3px;
-    overflow: scroll; /*leave this value alone*/
-    width: 99%; /*Width of Carousel Viewer itself*/
-    height: 310px; /*Height should enough to fit largest content's height*/
-    background-color: #999;
+#mapWrapper {
+    margin: 10px;
 }
-.stepcarousel, #map {
+
+.stepcarousel,
+#mapWrapper {
+    background-color: white;
+    border-color: white;
+    border-style: solid;
+    border-width: 6px;
     border-radius: 4px;
     box-shadow: 3px 3px 4px #cccccc;
 }
 
-#myGallery {
-    height: 310px; /*Height should enough to fit largest content's height*/
-    -moz-border-radius: 5px;
+.stepcarousel {
+    position: relative; /*leave this value alone*/
+    overflow: scroll; /*leave this value alone*/
+    width: 99%; /*Width of Carousel Viewer itself*/
+    height: 320px; /*Height should enough to fit largest content's height*/
+    background-color: #999;
 }
 
 .stepcarousel .belt {
@@ -546,31 +544,6 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
     clear: both;
 }
 
-.buttons a, .buttons button, select {
-    /*display:block;*/
-
-    text-decoration: none;
-    color: #565656;
-    cursor: pointer;
-    -moz-border-radius: 3px 3px 3px 3px;
-    background-color: white;
-    /*background:-moz-linear-gradient(center top , #ffffff, #f3f3f3) repeat scroll 0 0 inherit;*/
-    border-color: #CCCCCC #BBBBBB #A0A0A0;
-    border-left: 1px solid #BBBBBB;
-    border-right: 1px solid #BBBBBB;
-    border-style: solid;
-    border-width: 1px;
-    color: #666;
-    margin: 12px 8px;
-    outline: medium none;
-    font-family: Helvetica, Arial, sans-serif;
-    font-weight: bold;
-    padding: 3px 8px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
 select {
     text-align: left;
     font-weight: normal;
@@ -595,7 +568,7 @@ select#trackSelector {
     line-height: 17px; /* Safari */
 }
 
-*:first-child+html button[type] {
+*:first-child + html button[type] {
     padding: 4px 10px 3px 7px; /* IE7 */
 }
 

@@ -21,24 +21,31 @@
     <script type="text/javascript" src="${resource(dir: 'js', file: 'stepcarousel.js')}"></script>
 
     <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"/>
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 
     <g:render template="auv_functions_js"></g:render>
     <g:render template="finder_js"></g:render>
+
 </head>
 
 <body>
 
 <div id="loading_cover"></div>
 
+<div id="selectedTrackInfo" style="display:none"></div>
 
 <div id="legend" class="jqDnR jqDrag" style="display:none">
+
     <img id="legendClose" alt="Close popup" class="right closeIcon" src="images/close.png"/>
 
     <h3>Track:</h3>
-    <img src="${geoserver.url}/wms?LAYER=${geoserver.layerNames.tracks}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${geoserver.layerNames.tracks}"/>
+    <img src="${geoserver.url}/wms?LAYER=${geoserver.layerNames.tracks}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png"
+         alt="Legend for ${geoserver.layerNames.tracks}"/>
 
     <h3>Images:</h3>
-    <img id="imagesGetLegendGraphic" src="${geoserver.url}/wms?LAYER=${geoserver.layerNames.tracks}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png" alt="Legend for ${geoserver.layerNames.images}"/>
+    <img id="imagesGetLegendGraphic"
+         src="${geoserver.url}/wms?LAYER=${geoserver.layerNames.tracks}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png"
+         alt="Legend for ${geoserver.layerNames.images}"/>
 </div>
 
 <div id="styleSliderContainer" class="jqDnR jqDrag" style="display:none">
@@ -62,23 +69,27 @@
 
 <div id="mainbody">
 
-    <div id="logo" class="ui-layout-north">
-        <a class="noTextDecoration" href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png" height="70" width="403" alt="IMOS Logo"/>
-        </a>
+    <div class="ui-layout-north auvHeader">
         <div class="toplinks">
-            <g:if test="${false}">
-                <g:if test="${session.username}">
-                    <g:link controller="login" action="logout">logout</g:link> ${session.username}</g:if>
-                <g:else>
-                    <a href="login" title="Login and view your stored searches and maps" class="leftmenu_ahref ">Login</a>
-                </g:else>
-            </g:if>
 
-            <a target="_blank" href="http://www.emii.org.au" title="e-Marine Information Infrastructure" class="leftmenu_ahref ">eMII Home</a>
-            <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System" class="leftmenu_ahref ">IMOS Home</a>
+            <a target="_blank" href="http://www.emii.org.au" title="e-Marine Information Infrastructure"
+               class="leftmenu_ahref ">eMII Home</a>
+            <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System"
+               class="leftmenu_ahref ">IMOS Home</a>
         </div>
 
-        <h1>Autonomous Underwater Vehicle Images Viewer</h1>
+        <div id="logo">
+            <a class="noTextDecoration" href="http://imos.org.au/auv.html"><img src="images/IMOS_AUV_logo.png"
+                                                                                height="60"
+                                                                                alt="IMOS Logo"/>
+            </a>
+        </div>
+
+        <div class="title">
+            <h1>Autonomous Underwater Vehicle</h1>
+
+            <h3>Images Viewer</h3>
+        </div>
 
     </div>
 
@@ -111,17 +122,23 @@
 
         <div id="footer" class="ui-layout-soouth">
 
-            <div>
-                <img class="logo" alt="DIISTRE Logo" target="_blank" src="https://static.emii.org.au/images/logo/NCRIS_Initiative_stacked110.png" />
-                <a href="http://www.utas.edu.au/" target="_blank" ><img  class="logo" alt="UTAS Logo" src="https://static.emii.org.au/images/logo/utas/UTAS_MONO-onwhite_Stacked_104w.png" /></a>
+            <div class="footerLogos">
+                <img class="logo" alt="DIISTRE Logo" target="_blank"
+                     src="https://static.emii.org.au/images/logo/NCRIS_Initiative_stacked110.png"/>
+                <a href="http://www.utas.edu.au/" target="_blank"><img class="logo" alt="UTAS Logo"
+                                                                       src="https://static.emii.org.au/images/logo/utas/UTAS_MONO-onwhite_Stacked_104w.png"/>
+                </a>
             </div>
 
             <p>IMOS is a national collaborative research infrastructure, supported by Australian Government. It is led by University of Tasmania in partnership with the Australian marine &amp; climate science community.
             </p>
+
             <p>
-                <a href=" http://help.aodn.org.au/help/?q=node/81" target="_blank" title="Data usage acknowledgement">Acknowledgement</a>
+                <a href=" http://help.aodn.org.au/help/?q=node/81" target="_blank"
+                   title="Data usage acknowledgement">Acknowledgement</a>
                 <b>|</b>
-                <a href=" http://help.aodn.org.au/help/?q=node/80" target="_blank" title="Disclaimer information">Disclaimer</a>
+                <a href=" http://help.aodn.org.au/help/?q=node/80" target="_blank"
+                   title="Disclaimer information">Disclaimer</a>
             </p>
 
         </div>
@@ -175,42 +192,18 @@
             <div class="ui-layout-center">
                 <div id="stepcarouselcontrols">
                     <p id="unsorted_status">
-                        <b>Current Viewing Images:</b> <span id="statusA"></span> to <span id="statusB"></span><b>of:</b> <span id="statusC"></span> <b>near your click point</b>
+                        <b>Current Viewing Images:</b> <span id="statusA"></span> to <span
+                            id="statusB"></span><b>of:</b> <span id="statusC"></span> <b>near your click point</b>
                     </p>
-
-                    <p id="sorted_status"></p>
-
-
-                    <div class="trackSort"><a href="javascript:sortImagesAlongTrack('left')">Older&nbsp;</a></div>
 
                     <div id="sliderContainer">
                         <div id="slider"></div>
                     </div>
 
-                    <div class="trackSort"><a href="javascript:sortImagesAlongTrack('right')">&nbsp;Later</a></div>
-
-
-                    <div id="stepcarouselreorder"></div>
-
-                    <div class="buttons">
-
-                        <button href="#" onclick="sortImagesAlongTrack();
-                        return false;" id="sortbytrack" style="display:none">Sort the Images along the<span>selected</span> track
-                        </button>
-                    </div>
-
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
-
-
-
-<!--/div-->
-
 </body>
-
 </html>

@@ -6,9 +6,10 @@
 
 html, body {
 
-    font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 12px;
     margin: 0;
-    color: #666;
+    color: #778489;
 }
 
 table {
@@ -16,49 +17,25 @@ table {
 }
 
 h1 {
-    font-size: 20px;
-    font-weight: bold;
-    padding-top: 8px;
     white-space: nowrap;
-    clear: both
 }
 
 h2 {
-    font-size: 16px;
-    font-weight: bold;
     white-space: nowrap;
-    clear: both
 }
 
-h3 {
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: 6px;
-    white-space: nowrap;
-    clear: both
-}
-
-h4 {
-    font-size: 12px;
-    margin: 3px 2px;
-}
-
-h5 {
-    color: #333333;
-    font-size: 11px;
+h4, h5 {
     margin: 0 2px;
 }
 
 h6 {
-    color: #333333;
     font-size: 11px;
     margin: 0 2px;
     display: inline;
 }
 
 a {
-    color: #666;
+    color: inherit;
 }
 
 a img {
@@ -77,18 +54,6 @@ a[rel="external"], a.external {
     zoom: 1;
 }
 
-input, select, textarea, button {
-    background-color: #fcfcfc;
-    border: 1px solid #ccc;
-    font: 11px verdana, arial, helvetica, sans-serif;
-    margin: 2px 0;
-    padding: 2px 4px;
-}
-
-.readonly {
-    border: 0;
-}
-
 .clear {
     clear: both;
     height: 1px;
@@ -105,10 +70,6 @@ input, select, textarea, button {
 .imagePopupFooter {
     margin: 25px;
     clear: both;
-}
-
-select {
-    padding: 2px 2px 2px 0;
 }
 
 textarea {
@@ -182,36 +143,5 @@ hr {
     font-weight: bold;
 }
 
-.toplinks {
-    background-color: #3399CC;
-    color: white;
-    float: right;
-    position: absolute;
-    top: 4px;
-    right: 20px;
-    padding: 10px 25px;
-    border-radius: 12px;
-    -moz-border-radius: 12px;
-    -webkit-border-radius: 12px;
-    -webkit-box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
-    -moz-box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
-    box-shadow: 3px 3px 5px rgba(50, 50, 50, 0.3);
-}
 
-.toplinks a {
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    margin: 0 6px;
-    text-decoration: none;
-}
-
-.toplinks a:hover {
-    color: white;
-    text-decoration: underline;
-}
-
-.noTextDecoration {
-    text-decoration: none;
-}
 
