@@ -289,12 +289,10 @@
         jQuery('#trackSelector')[0].selectedIndex = 0;
 
         updateUserInfo(" ");
-
     }
 
     //find out the min and max values of depth,temperature within the current map boundary
     function setValuesForBBox(bbox, variable) {
-
         var bb = bbox.split(',');
         bbox = bb[0] + "," + bb[1] + "%20" + bb[2] + "," + bb[3];
 
@@ -311,13 +309,13 @@
                 + "&version=1.0.0&maxfeatures=1&sortby=" + variable + "+a";
 
 
-        var xmlDoc = getXML(url);
+        getXML(url, function(doc) {
+            var xmlDoc = doc;
+        });
     }
 
     // return multidimentional array- numbered array of associative arrays
     function getArrayFromXML(xmlDoc, fields_array, parent) {
-
-
         var parentCriteria;
         if (parent == fqLayerNameTracks) {
             parentCriteria = {
@@ -361,119 +359,121 @@
         }
     }
 
+    var fields = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";
+
     function populateTracks() {
         // run once to get all tracks into an DOM object
         if (allTracksHTML == "") {
-
-            var fields = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";
-            fields_array = fields.split(",");
-
-            var trackSelectorValues = [];
-            var html_content = "<div class=\"feature\" >\n";
-
             var request_string = wfsServerUrl + '?request=GetFeature&service=WFS&typeName=' + fqLayerNameTracks + '&propertyName=' + fields + '&version=1.0.0';
 
             // get track feature info as XML
-            var xmlDoc = getXML(request_string);
-
-            x = xmlDoc;
-            var tmp = getArrayFromXML(xmlDoc, fields_array, fqLayerNameTracks);
-
-            if (tmp) {
-
-                // now assemble the neccessaries for the simulated getfeatureinfo request
-                for (var i = 0; i < tmp.length; i++) {
-
-                    var newTitle = ucwords(tmp[i]["dive_code_name"]);
-
-                    var trackHTML_id = "allTracksHTML_" + i;
-
-
-                    var time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"], false);
-                    var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"], false);
-
-                    html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";
-                    html_content = html_content + "<h4 class=\"getfeatureTitle\">" + newTitle + "</h4>\n";
-                    html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureCode\">" + tmp[i]["site_code"] + "</p>\n";
-                    html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureExtent\">" + tmp[i]["geospatial_lon_min"] + "," + tmp[i]["geospatial_lat_min"] + "," + tmp[i]["geospatial_lon_max"] + "," + tmp[i]["geospatial_lat_max"] + "</p>\n";
-                    html_content = html_content + "<h5>Start: " + time_coverage_start + "</h5>\n";
-                    html_content = html_content + "<div style=\"display: none;\" class=\"auvSiteDetails\" id=\"" + tmp[i]["site_code"] + "\">\n";
-                    html_content = html_content + "<h5>End: " + time_coverage_end + "</h5><br>\n";
-                    html_content = html_content + "<table cellspacing=\"0\" cellpadding=\"0\">\n";
-                    html_content = html_content + "<tbody>";
-                    html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_max"] + "<b>N</b></td><td></td></tr>\n";
-                    html_content = html_content + "<tr><td>" + tmp[i]["geospatial_lon_min"] + "<b>W</b></td><td></td><td>" + tmp[i]["geospatial_lon_max"] + "<b>E</b></td></tr>\n";
-                    html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
-                    html_content = html_content + "</tbody></table>\n";
-                    html_content = html_content + "<b>Depth:</b> " + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
-                    if (tmp[i]["distance"] != undefined) {
-                        html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
-                    }
-
-                    if (tmp[i]["dive_report"] != undefined) {
-
-                        html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\" target=\"_blank\">Dive Report</a><br>";
-                    }
-                    if (tmp[i]["dive_notes"] != undefined) {
-                        html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\" target=\"_blank\">Dive Notes</a><br>";
-                    }
-
-                    if (jQuery('#track_html .featurewhite').size() == 1) {
-                        jQuery('.featurewhite').addClass('featurewhite_selected');
-                        jQuery('.auvSiteDetails').show(1000);
-                    }
-
-                    if (tmp[i]["metadata_uuid"] != undefined) {
-                        var mestUrl = '${grailsApplication.config.mest.url}';
-                        html_content = html_content + "<a title=\"" + mestUrl + "/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"" + mestUrl + "/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
-                    }
-
-                    html_content = html_content + "<a alt=\"Download from opendap \" class=\"h3\" target=\"_blank\" href=\"http://thredds.aodn.org.au/thredds/catalog/IMOS/AUV/" + tmp[i]["campaign_code"] + "/" + tmp[i]["site_code"] + "/hydro_netcdf/catalog.html\">Data on opendap</a> <br>";
-                    html_content = html_content + "<a alt=\"Download from the datafabric\" class=\"h3\" target=\"_blank\" href=\"http://data.aodn.org.au/IMOS/public/AUV/" + tmp[i]["campaign_code"] + "/" + tmp[i]["site_code"] + "\" rel=\"external\">Link to data folder</a> <br>";
-                    html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"" + tmp[i]["kml"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";
-                    html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";
-
-
-                    trackSelectorValues.push({
-                        "trackId": trackHTML_id,
-                        "trackLabel": newTitle,
-                        "campaignCode": tmp[i]["campaign_code"]
-                    });
-                }
-
-                // populate coresponding drop down box
-                trackSelectorValues = sortTrackArray(trackSelectorValues);
-                var output = [];
-                var campaign = "";
-
-                for (var i = 0; i < trackSelectorValues.length; i++) {
-
-                    // write options grouped by campaign code
-                    var x = trackSelectorValues[i].campaignCode;
-                    if (campaign != x) {
-                        if (i != 0) {
-                            // close last option
-                            output.push('</optgroup>\n');
-                        }
-                        output.push('<optgroup label=\"' + x + '\">\n');
-                        campaign = x;
-                    }
-                    output.push('<option value="' + trackSelectorValues[i].trackId + '">' + trackSelectorValues[i].trackLabel + '</option>\n');
-                }
-                output.push('</optgroup>\n');
-                jQuery('#trackSelector').append(output.join(''));
-
-                allTracksHTML = html_content;
-            }
-            else {
-                setError("There is a problem with the WMS server");
-            }
-
-            //populate but keep hidden
-            // todo this should just be a JS object
-            jQuery('#track_html').html(allTracksHTML);
-            hideAllTrackHTML();
+            getXML(request_string, populateTracksFromXml);
         }
+    }
+
+    function populateTracksFromXml(xmlDoc) {
+        var fields_array = fields.split(",");
+
+        var trackSelectorValues = [];
+        var html_content = "<div class=\"feature\" >\n";
+
+        x = xmlDoc;
+        var tmp = getArrayFromXML(xmlDoc, fields_array, fqLayerNameTracks);
+
+        if (tmp) {
+
+            // now assemble the neccessaries for the simulated getfeatureinfo request
+            for (var i = 0; i < tmp.length; i++) {
+
+                var newTitle = ucwords(tmp[i]["dive_code_name"]);
+
+                var trackHTML_id = "allTracksHTML_" + i;
+
+
+                var time_coverage_start = formatISO8601Date(tmp[i]["time_coverage_start"], false);
+                var time_coverage_end = formatISO8601Date(tmp[i]["time_coverage_end"], false);
+
+                html_content = html_content + "<div class=\"featurewhite\" id=\"" + trackHTML_id + "\" >\n";
+                html_content = html_content + "<h4 class=\"getfeatureTitle\">" + newTitle + "</h4>\n";
+                html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureCode\">" + tmp[i]["site_code"] + "</p>\n";
+                html_content = html_content + "<p style=\"display: none;\" class=\"getfeatureExtent\">" + tmp[i]["geospatial_lon_min"] + "," + tmp[i]["geospatial_lat_min"] + "," + tmp[i]["geospatial_lon_max"] + "," + tmp[i]["geospatial_lat_max"] + "</p>\n";
+                html_content = html_content + "<h5>Start: " + time_coverage_start + "</h5>\n";
+                html_content = html_content + "<div style=\"display: none;\" class=\"auvSiteDetails\" id=\"" + tmp[i]["site_code"] + "\">\n";
+                html_content = html_content + "<h5>End: " + time_coverage_end + "</h5><br>\n";
+                html_content = html_content + "<table cellspacing=\"0\" cellpadding=\"0\">\n";
+                html_content = html_content + "<tbody>";
+                html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_max"] + "<b>N</b></td><td></td></tr>\n";
+                html_content = html_content + "<tr><td>" + tmp[i]["geospatial_lon_min"] + "<b>W</b></td><td></td><td>" + tmp[i]["geospatial_lon_max"] + "<b>E</b></td></tr>\n";
+                html_content = html_content + "<tr><td></td><td>" + tmp[i]["geospatial_lat_min"] + "<b>S</b></td><td></td></tr>\n";
+                html_content = html_content + "</tbody></table>\n";
+                html_content = html_content + "<b>Depth:</b> " + tmp[i]["geospatial_vertical_min"] + "m -&gt;  " + tmp[i]["geospatial_vertical_max"] + "m<br>\n";
+                if (tmp[i]["distance"] != undefined) {
+                    html_content = html_content + "<b>Distance:</b> " + tmp[i]["distance"] + "m<br>\n";
+                }
+
+                if (tmp[i]["dive_report"] != undefined) {
+
+                    html_content = html_content + "<a href=\"" + tmp[i]["dive_report"] + "\" target=\"_blank\">Dive Report</a><br>";
+                }
+                if (tmp[i]["dive_notes"] != undefined) {
+                    html_content = html_content + "<a href=\"" + tmp[i]["dive_notes"] + "\" target=\"_blank\">Dive Notes</a><br>";
+                }
+
+                if (jQuery('#track_html .featurewhite').size() == 1) {
+                    jQuery('.featurewhite').addClass('featurewhite_selected');
+                    jQuery('.auvSiteDetails').show(1000);
+                }
+
+                if (tmp[i]["metadata_uuid"] != undefined) {
+                    var mestUrl = '${grailsApplication.config.mest.url}';
+                    html_content = html_content + "<a title=\"" + mestUrl + "/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\" class=\"h3\" rel=\"external\" target=\"_blank\" href=\"" + mestUrl + "/srv/en/metadata.show?uuid=" + tmp[i]["metadata_uuid"] + "\">Link to the IMOS metadata record</a><br>";
+                }
+
+                html_content = html_content + "<a alt=\"Download from opendap \" class=\"h3\" target=\"_blank\" href=\"http://thredds.aodn.org.au/thredds/catalog/IMOS/AUV/" + tmp[i]["campaign_code"] + "/" + tmp[i]["site_code"] + "/hydro_netcdf/catalog.html\">Data on opendap</a> <br>";
+                html_content = html_content + "<a alt=\"Download from the datafabric\" class=\"h3\" target=\"_blank\" href=\"http://data.aodn.org.au/IMOS/public/AUV/" + tmp[i]["campaign_code"] + "/" + tmp[i]["site_code"] + "\" rel=\"external\">Link to data folder</a> <br>";
+                html_content = html_content + "<a alt=\"Download KML\" class=\"h3\" target=\"_blank\" href=\"" + tmp[i]["kml"] + "\" rel=\"external\">Download for Google Earth (KML)</a> \n";
+                html_content = html_content + "<BR>\n</div>\n</div>\n</div>\n\n";
+
+
+                trackSelectorValues.push({
+                    "trackId": trackHTML_id,
+                    "trackLabel": newTitle,
+                    "campaignCode": tmp[i]["campaign_code"]
+                });
+            }
+
+            // populate coresponding drop down box
+            trackSelectorValues = sortTrackArray(trackSelectorValues);
+            var output = [];
+            var campaign = "";
+
+            for (var i = 0; i < trackSelectorValues.length; i++) {
+
+                // write options grouped by campaign code
+                var x = trackSelectorValues[i].campaignCode;
+                if (campaign != x) {
+                    if (i != 0) {
+                        // close last option
+                        output.push('</optgroup>\n');
+                    }
+                    output.push('<optgroup label=\"' + x + '\">\n');
+                    campaign = x;
+                }
+                output.push('<option value="' + trackSelectorValues[i].trackId + '">' + trackSelectorValues[i].trackLabel + '</option>\n');
+            }
+            output.push('</optgroup>\n');
+            jQuery('#trackSelector').append(output.join(''));
+
+            allTracksHTML = html_content;
+        }
+        else {
+            setError("There is a problem with the WMS server");
+        }
+
+        //populate but keep hidden
+        // todo this should just be a JS object
+        jQuery('#track_html').html(allTracksHTML);
+        hideAllTrackHTML();
     }
 
     function setTrackHTML(response) {
@@ -557,8 +557,9 @@
 
         // get images for track
         if (fk_auv_tracks != "") {
-            var xmlDoc = getXML(wfsServerUrl + '?request=GetFeature&service=WFS&typeName=' + fqLayerNameImages + '&propertyName=' + fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks=' + fk_auv_tracks);
-            imagesForTrack = getArrayFromXML(xmlDoc, fields_array, fqLayerNameImages);
+            getXML(wfsServerUrl + '?request=GetFeature&service=WFS&typeName=' + fqLayerNameImages + '&propertyName=' + fields + '&version=1.0.0&CQL_FILTER=fk_auv_tracks=' + fk_auv_tracks, function(xmlDoc) {
+                imagesForTrack = getArrayFromXML(xmlDoc, fields_array, fqLayerNameImages);
+            });
         }
     }
 
@@ -735,15 +736,12 @@
     function removeDefaultOption() {
         //jQuery(".defaultLabel").hide(":contains('Image layer Style')");
         jQuery(".defaultLabel").hide();
-
     }
 
     function resetStyleSelect() {
-
         // force reset on page load of the style select in Firefox
         var field = jQuery('#imageFormatSelector');
         field.val(jQuery('option:first', field).val());
-
     }
 
     function show(css_id) {
@@ -759,7 +757,6 @@
             map.zoomTo(16);
         }
     }
-
 
     // find a matching val in nested array [cIdx] in imagesForTrack
     function findIndexByCol(val) {
@@ -781,23 +778,14 @@
 
     }
 
-    function getXML(request_string) {
+    function getXML(request_string, success_callback) {
+        var theurl = URLEncode(request_string);
+        var proxyUrl = OpenLayers.ProxyHost + theurl + "&format=xml";
 
-        if (window.XMLHttpRequest) {
-            xhttp = new XMLHttpRequest();
-        }
-        else {
-            xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        try {
-            var theurl = URLEncode(request_string);
-            xhttp.open("GET", OpenLayers.ProxyHost + theurl + "&format=xml", false);
-            xhttp.send();
-            return xhttp.responseXML;
-        }
-        catch (e) {
-            return false;
-        }
+        jQuery.ajax({
+            url: proxyUrl,
+            success: success_callback
+        });
     }
 
     function URLEncode(clearString) {
@@ -947,7 +935,6 @@
         time = (Number(date) + (offset * 60 * 1000));
         this.setTime(Number(time));
     };
-
 
     function ucwords(str) {
         // Uppercase the first character of every word in a string
