@@ -21,7 +21,7 @@
     <script type="text/javascript" src="${resource(dir: 'js', file: 'stepcarousel.js')}"></script>
 
     <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"/>
-    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 
     <g:render template="auv_functions_js"></g:render>
     <g:render template="finder_js"></g:render>
