@@ -375,7 +375,7 @@
         var fields_array = fields.split(",");
 
         var trackSelectorValues = [];
-        var html_content = "<div class=\"feature\" >\n";
+        var html_content = '';
 
         x = xmlDoc;
         var tmp = getArrayFromXML(xmlDoc, fields_array, fqLayerNameTracks);
