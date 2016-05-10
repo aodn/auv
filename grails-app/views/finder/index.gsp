@@ -89,7 +89,7 @@
         <div class="title">
             <h1>Autonomous Underwater Vehicle</h1>
 
-            <h3>Images Viewer</h3>
+            <h2>Images Viewer</h2>
         </div>
 
     </div>
@@ -147,58 +147,59 @@
     </div>
 
 
-    <div id="imagecontainer" class="ui-layout-center">
+    <div  class="ui-layout-center">
+        <div id="imagecontainer" >
 
-        <div id="helpSection">
-            <h3>How to use this AUV image viewer</h3>
+            <div id="helpSection">
+                <h1>How to use this AUV image viewer</h1>
 
-            <ol>
-                <li>Click on a AUV Icon, or choose from the track list.
-                <li>Choose a track and the map will zoom to it.
-                <li>Click on a track to view the closest images to the click origin.
-            </ol>
-        </div>
+                <ol>
+                    <li>Click on a AUV Icon, or choose from the track list.
+                    <li>Choose a track and the map will zoom to it.
+                    <li>Click on a track to view the closest images and meta information about the site closest to the click origin.
+                </ol>
+            </div>
 
-        <div id="mygallery" class="stepcarousel">
+            <div id="mygallery" class="stepcarousel">
 
-            <div class="belt">
-                <div class="panel">
-                    <img src="images/mapshadow.png"/>
+                <div class="belt">
+                    <div class="panel">
+                        <img src="images/mapshadow.png"/>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="galleryControls" style="height:360px">
-            <div id="trackSelectorDiv" class="ui-layout-north buttons">
-                <select name="trackSelector" id="trackSelector">
-                    <option id="default" value="default">... Choose a AUV Track...</option>
-                </select>
-                <button onclick="resetMap()" id="resetmap">RESET MAP</button>
+            <div id="galleryControls" style="height:360px">
+                <div id="trackSelectorDiv" class="ui-layout-north buttons">
+                    <select name="trackSelector" id="trackSelector" onChange="allTracksSelector(this.options[this.selectedIndex].value)" >
+                        <option id="default" value="default">... Choose a AUV Track...</option>
+                    </select>
+                    <button onclick="resetMap()" id="resetmap">RESET</button>
 
-                <div id="loader">Loading...
-                    <img alt="loading..." src="images/loading.gif">
-                </div>
-
-                <h3 id="thisTrackInfo">&nbsp;</h3>
-
-            </div>
-
-            <div id="trackcontainer" class="ui-layout-west">
-
-                <div id="track_html"></div>
-            </div>
-
-            <div class="ui-layout-center">
-                <div id="stepcarouselcontrols">
-                    <p id="unsorted_status">
-                        <b>Current Viewing Images:</b> <span id="statusA"></span> to <span
-                            id="statusB"></span><b>of:</b> <span id="statusC"></span> <b>near your click point</b>
-                    </p>
-
-                    <div id="sliderContainer">
-                        <div id="slider"></div>
+                    <div id="loader">Loading...
+                        <img alt="loading..." src="images/loading.gif">
                     </div>
 
+                    <h3 id="trackInfoHeader">&nbsp;</h3>
+
+                </div>
+
+                <div id="trackInfoContainer" class="ui-layout-west">
+                    <div id="trackInfo"></div>
+                </div>
+
+                <div class="ui-layout-center">
+                    <div id="stepcarouselcontrols">
+                        <p id="unsorted_status">
+                            <b>Current Viewing Images:</b> <span id="statusA"></span> to <span
+                                id="statusB"></span><b>of:</b> <span id="statusC"></span> <b>near your click point</b>
+                        </p>
+
+                        <div id="sliderContainer">
+                            <div id="slider"></div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
