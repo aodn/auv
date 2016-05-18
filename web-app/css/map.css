@@ -63,14 +63,16 @@ div.title * {
     margin-left: 10px;
 }
 
-div.title
-{
+div.title {
+    font-family: "Oswald",sans-serif;
     left: 460px;
     position: absolute;
-    top: 50px;
+    top: 40px;
+    font-size: 20px;
 }
 div.title h1 {
-font-family: 'Lobster', cursive;
+    font-size: 32px;
+    color: #607178;
 }
 
 .toplinks {

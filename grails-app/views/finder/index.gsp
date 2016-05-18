@@ -21,7 +21,7 @@
     <script type="text/javascript" src="${resource(dir: 'js', file: 'stepcarousel.js')}"></script>
 
     <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon"/>
-    <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 
     <g:render template="auv_functions_js"></g:render>
     <g:render template="finder_js"></g:render>
@@ -71,7 +71,8 @@
 
     <div class="ui-layout-north auvHeader">
         <div class="toplinks">
-
+            <a href="https://help.aodn.org.au/aodn-data-tools/auv-images-viewer/" target="_blank"
+               title="Help">Help</a>
             <a target="_blank" href="http://imos.org.au/aodn.html" title="Australian Ocean Data Network (AODN)"
                class="leftmenu_ahref ">AODN Home</a>
             <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System"
