@@ -72,8 +72,8 @@
     <div class="ui-layout-north auvHeader">
         <div class="toplinks">
 
-            <a target="_blank" href="http://www.emii.org.au" title="e-Marine Information Infrastructure"
-               class="leftmenu_ahref ">eMII Home</a>
+            <a target="_blank" href="http://imos.org.au/aodn.html" title="Australian Ocean Data Network (AODN)"
+               class="leftmenu_ahref ">AODN Home</a>
             <a target="_blank" href="http://www.imos.org.au" title="Integrated Marine Observing System"
                class="leftmenu_ahref ">IMOS Home</a>
         </div>
@@ -134,10 +134,10 @@
             </p>
 
             <p>
-                <a href=" http://help.aodn.org.au/help/?q=node/81" target="_blank"
+                <a href="https://help.aodn.org.au/user-guide-introduction/aodn-portal/data-use-acknowledgement/" target="_blank"
                    title="Data usage acknowledgement">Acknowledgement</a>
                 <b>|</b>
-                <a href=" http://help.aodn.org.au/help/?q=node/80" target="_blank"
+                <a href="https://help.aodn.org.au/user-guide-introduction/aodn-portal/disclaimer/" target="_blank"
                    title="Disclaimer information">Disclaimer</a>
             </p>
 
@@ -155,8 +155,6 @@
                 <li>Click on a AUV Icon, or choose from the track list.
                 <li>Choose a track and the map will zoom to it.
                 <li>Click on a track to view the closest images to the click origin.
-                <li>Optionally sort images along the track for the currently highlighted image.
-                <li>Click on any image to view or add notes about the image contents.
             </ol>
         </div>
 
