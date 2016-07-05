@@ -39,14 +39,14 @@ grails.spring.bean.packages = []
 // set per-environment serverURL stem for creating absolute links
 environments {
     production {
-        grails.serverURL = "http://auv.aodn.org.au/${appName}"
+        grails.serverURL = "https://auv.aodn.org.au/${appName}"
     }
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
 
         geoserver {
             context = 'geoserver'
-            url = "http://geoserver-123.aodn.org.au/geoserver"
+            url = "https://geoserver-123.aodn.org.au/geoserver"
             namespace = 'imos'
             layerNames {
                 tracks = 'auv_tracks_vw'
@@ -55,16 +55,12 @@ environments {
         }
 
         baseLayer {
-            url = 'http://geoserver-static.aodn.org.au/geoserver/baselayers/wms'
+            url = 'https://geoserver-static.aodn.org.au/geoserver/baselayers/wms'
             name = 'default_basemap_simple'
         }
 
-        imageFileServer {
-            url = 'http://data.aodn.org.au/IMOS/public/AUV/'
-        }
-
         mest {
-            url = 'http://imosmest.aodn.org.au/geonetwork'
+            url = 'https://catalogue-imos.aodn.org.au/geonetwork'
         }
     }
     test {

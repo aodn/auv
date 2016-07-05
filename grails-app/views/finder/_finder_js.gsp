@@ -1,11 +1,11 @@
 <script>
 
-    // *****  TODO get the bounds from geoserver
+    // *****  TODO get the mapBounds from geoserver
     var buff = 10;
-    var bounds = "" + (112.947 - buff) + "," + (-33.00 - buff) + "," + (116.46 + buff) + "," + (0.874 + buff);
+    var mapBounds = "" + (112.947 - buff) + "," + (-33.00 - buff) + "," + (116.46 + buff) + "," + (0.874 + buff);
 
-    var mapheight = '320';
-    var mapwidth = '400';
+    var mapheight = '280';
+    var mapwidth = '360';
     var size = new OpenLayers.Size(30, 24);
     var offset = new OpenLayers.Pixel(-(size.w / 2) + 5, -(size.h - 1));
     var icon = new OpenLayers.Icon('images/auv-marker.png', size, offset);
@@ -50,20 +50,9 @@
             jQuery(this).removeClass('hover');
         });
 
-
-        // when user selects track from dropdown
-        jQuery('#trackSelector').change(function () {
-            if (jQuery(this).val() != "default") {
-                resetStyleSelect(); // reset the style selector to default
-                allTracksSelector("#" + jQuery(this).val());
-            }
-        });
-
+        // clicking on tracks loaded from sites on map
         jQuery('.getfeatureTitle').live('click', function () {
-            hideAllTrackHTML();
-            var site_code = jQuery(this).siblings('.getfeatureCode').text();
-            var extent = jQuery(this).siblings('.getfeatureExtent').text();
-            showSiteCode(site_code, extent);
+            selectSiteCode(jQuery(this).siblings('.getfeatureCode').text());
         });
 
         // slider to change images
@@ -80,22 +69,18 @@
         });
 
         resetStyleSelect(); // reset the style selector to default
-
         mapinit();
 
         <g:if test="${flash.zoom}" >
         map.setCenter(new OpenLayers.LonLat(${flash.lon}, ${flash.lat}), 16);
         </g:if>
 
-
-        // populate the track dropdown select and create hidden track info
+        // populate the track dropdown select
         populateTracks();
 
         // then set layout with the map initialised
         jQuery('#mainbody').layout({
-            //applyDefaultStyles: true,
             west: {
-                //applyDefaultStyles: true,
                 minSize: 410
             }
         });
@@ -107,8 +92,8 @@
             }
         });
 
-        // hide the gallery. needs to exist for step carousel
-        jQuery('#mygallery, #stepcarouselcontrols').toggle(false);
+        // hide the gallery
+        toggleGalleryItems(false);
 
         // hide the cover over the ugly load
         jQuery('#loading_cover').fadeOut(1000);

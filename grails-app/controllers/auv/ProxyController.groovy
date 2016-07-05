@@ -1,9 +1,3 @@
-//*************************************************//
-//  Copyright 2010 IMOS
-//  The IMOS AUV Viewer is distributed under
-//  the terms of the GNU General Public License
-//*************************************************//
-
 
 package auv
 
@@ -20,7 +14,7 @@ class ProxyController {
             ]
 
             def format
-            def thetext = params.url.toURL()
+            def thetext = params.url.replaceAll(/\'/,'%27').toURL()
 
             // get the domain name from the supplied uri
             def hostName = params.url.toURL().getHost()
@@ -33,10 +27,12 @@ class ProxyController {
                 } else {
                     format = "text/html"
                 }
-                render(text: thetext.text, contentType: format, encoding: "UTF-8")
+
+                def returnText = thetext.text
+                render(text: returnText, contentType: format, encoding: "UTF-8")
             }
             else {
-                log.error("Proxy: The url " + thetext.text + "was not allowed")
+                log.info("Proxy: The url " + params.url + "was not allowed")
                 render(text: "Host not allowed", contentType: "text/html", encoding: "UTF-8")
             }
         }

@@ -38,23 +38,14 @@ img.logo {
 
 #mainbody {
     height: 100%;
-    overflow: auto !  important;
+    overflow-y: auto !  important;
     padding-bottom: 15px;
-
 }
 
 .auvHeader {
     margin: 0 0 30px 0;
     padding: 20px 10px;
-    background-color: #D4D6D7;
-    background: #d4d6d7;
-    background: -moz-radial-gradient(center, ellipse cover, #d4d6d7 0%, #c4c4c4 100%);
-    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#d4d6d7), color-stop(100%,#c4c4c4));
-    background: -webkit-radial-gradient(center, ellipse cover, #d4d6d7 0%,#c4c4c4 100%);
-    background: -o-radial-gradient(center, ellipse cover, #d4d6d7 0%,#c4c4c4 100%);
-    background: -ms-radial-gradient(center, ellipse cover, #d4d6d7 0%,#c4c4c4 100%);
-    background: radial-gradient(ellipse at center, #d4d6d7 0%,#c4c4c4 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d4d6d7', endColorstr='#c4c4c4',GradientType=1 );
+    background-color: #C9CBCC;
 }
 
 div#logo,
@@ -64,14 +55,18 @@ div.title * {
 }
 
 div.title {
-    font-family: "Oswald",sans-serif;
     left: 460px;
     position: absolute;
     top: 40px;
-    font-size: 20px;
 }
+
+h1, h2, h3, h4 {
+    font-family: "Oswald",sans-serif;
+}
+
 div.title h1 {
     font-size: 32px;
+    font-family: "Oswald",sans-serif;
     color: #607178;
 }
 
@@ -105,15 +100,20 @@ div.title h1 {
 
 }
 
-#trackcontainer {
+#trackInfoContainer {
     padding-right: 5px;
-    padding: 5px;
-    margin: 5px;
+    margin-right: 5px;
 }
 
-#track_html {
-    overflow: auto;
-    height: 250px;
+#trackInfo {
+    margin: 25px 0 ;
+}
+
+#trackInfo H3 {
+    display: none;
+}
+#trackInfo .getfeatureTitle {
+    text-transform: capitalize;
 }
 
 #helpSection, #galleryControls {
@@ -150,7 +150,7 @@ div.title h1 {
 }
 
 #mapscale div {
-    padding: 0px;
+    padding: 0;
     font-size: 9px;
 }
 
@@ -168,7 +168,7 @@ div.title h1 {
 }
 
 .nofeature {
-    margin: 2px 0px 5px 0px;
+    margin: 2px 0 5px 0;
     padding: 5px;
     width: 100%;
     background-color: #fafafa;
