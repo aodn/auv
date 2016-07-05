@@ -22,8 +22,6 @@
     var imagesForTrack = [];
     var availableTracks = [];
 
-    var currentTrackInfo = "";
-
     var timeoutID = "";
     var markers = ""; // Openlayers marker layer
     var imageBuffer = 50; // amount of images to retreive either side of current image
@@ -284,7 +282,6 @@
 
         imagesForTrack = [];
         availableTracks = [];
-        currentTrackInfo = "";
         setSiteCodeCql();
         map.zoomTo(3);
         map.setCenter(new OpenLayers.LonLat(135, -26), 3);
