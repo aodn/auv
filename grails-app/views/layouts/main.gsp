@@ -11,6 +11,7 @@
         <title><g:layoutTitle default="AUV" /></title>
         <link rel="stylesheet" href="${resource(dir:'css',file:'base.css')}" />
         <link rel="shortcut icon" href="${resource(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
+        <g:render template="/google_analytics"></g:render>
 
         <g:layoutHead />
         
