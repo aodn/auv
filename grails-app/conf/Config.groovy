@@ -44,6 +44,9 @@ environments {
     development {
         grails.serverURL = "http://localhost:8080/${appName}"
 
+        // Google Analytics
+        googleAnalytics.trackingId = null
+
         geoserver {
             context = 'geoserver'
             url = "https://geoserver-123.aodn.org.au/geoserver"
