@@ -102,6 +102,16 @@ catch (e) {
     println "Not loading external config"
 }
 
+// If configurationPath unset, fall back to default path
+defaultConfigPath =  "/etc/aodn-config/auv.groovy"
+defaultConfigExists = new File(defaultConfigPath).exists()
+if (!configurationPath && defaultConfigExists) {
+    grails.config.locations << "file:${defaultConfigPath}"
+    println "Loading external config from '$defaultConfigPath'..."
+} else {
+    println "Not loading external config from '$defaultConfigPath'..."
+}
+
 // log4j configuration
 log4j = {
     error  'org.codehaus.groovy.grails.web.servlet',  //  controllers
