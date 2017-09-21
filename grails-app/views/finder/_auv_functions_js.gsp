@@ -352,6 +352,10 @@
                 if (matchedElements[i].childNodes[y].childNodes[0]) {
                     var name = matchedElements[i].childNodes[y].nodeName.replace(layerNamespace + ':', "");
                     var val = matchedElements[i].childNodes[y].childNodes[0].nodeValue;
+
+                    if ( name == "start_track") {
+                        val = matchedElements[i].childNodes[y].childNodes[0].childNodes[0].childNodes[0].nodeValue;
+                    }
                     childKeyValues[name] = val;
                 }
             }
@@ -363,7 +367,7 @@
         }
     }
 
-    var fieldsForTracks = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end";
+    var fieldsForTracks = "facility_code,campaign_code,site_code,dive_code_name,dive_report,dive_notes,distance,abstract,platform_code,pattern,kml,metadata_uuid,geospatial_lat_min,geospatial_lon_min,geospatial_lat_max,geospatial_lon_max,geospatial_vertical_min,geospatial_vertical_max,time_coverage_start,time_coverage_end,start_track";
 
     function populateTracks() {
         // run once to get all tracks into an DOM object
@@ -388,14 +392,14 @@
                 var timeStart = formatISO8601Date(tmp[i]["time_coverage_start"], false);
                 var timeEnd = formatISO8601Date(tmp[i]["time_coverage_end"], false);
                 var boundsString = tmp[i]["geospatial_lon_min"] + "," + tmp[i]["geospatial_lat_min"] + "," + tmp[i]["geospatial_lon_max"] + "," + tmp[i]["geospatial_lat_max"];
-
                 availableTracks.push({
                     "siteCode": tmp[i]["site_code"],
                     "siteTitle": ucwords(tmp[i]["dive_code_name"]),
                     "campaignCode": tmp[i]["campaign_code"],
                     "boundsString": boundsString,
                     "timeStart": timeStart,
-                    "timeEnd": timeEnd
+                    "timeEnd": timeEnd,
+                    "lonlatString" : tmp[i]["start_track"]
                 });
             }
 
@@ -539,7 +543,7 @@
         updateUserInfo();
         updateTrackInfo("");
         setSiteCodeCql(site.siteCode);
-        zoomTo(site.boundsString);
+        zoomTo(site.lonlatString);
     }
 
     function setSiteCodeCql(siteCode) {
@@ -694,14 +698,8 @@
         jQuery(css_id).show(450);
     }
 
-    function zoomTo(boundsString) {
-        map.zoomToExtent(new OpenLayers.Bounds.fromString(boundsString));
-
-        var zoomLevel = map.getZoomForExtent(new OpenLayers.Bounds.fromString(boundsString));
-        // ensure map zoomed in far enough to see track
-        if (zoomLevel < 17) {
-            map.zoomTo(17);
-        }
+    function zoomTo(lonlatString) {
+        map.setCenter(new OpenLayers.LonLat.fromString(lonlatString), 18);
     }
 
     // find a matching val in nested array [cIdx] in imagesForTrack
