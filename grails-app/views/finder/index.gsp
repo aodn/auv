@@ -44,7 +44,7 @@
 
     <h3>Images:</h3>
     <img id="imagesGetLegendGraphic"
-         src="${geoserver.url}/wms?LAYER=${geoserver.layerNames.tracks}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png"
+         src="${geoserver.url}/wms?LAYER=${geoserver.layerNames.images}&LEGEND_OPTIONS=forceLabels:on&REQUEST=GetLegendGraphic&FORMAT=image/png"
          alt="Legend for ${geoserver.layerNames.images}"/>
 </div>
 
