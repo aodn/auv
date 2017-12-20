@@ -125,9 +125,9 @@
 
             <div class="footerLogos">
                 <img class="logo" alt="DIISTRE Logo" target="_blank"
-                     src="https://static.emii.org.au/images/logo/NCRIS_Initiative_stacked110.png"/>
-                <a href="http://www.utas.edu.au/" target="_blank"><img class="logo" alt="UTAS Logo"
-                                                                       src="https://static.emii.org.au/images/logo/utas/UTAS_MONO-onwhite_Stacked_104w.png"/>
+                     src="https://static.emii.org.au/images/logo/NCRIS_2017_110.png"/>
+                <a href="http://www.utas.edu.au/" target="_blank">
+                    <img class="logo" alt="UTAS Logo" src="https://static.emii.org.au/images/logo/UTAS_2017_110.png"/>
                 </a>
             </div>
 
