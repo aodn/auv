@@ -1,6 +1,7 @@
-@artifact.package@class @artifact.name@ {
+@artifact.package@import grails.transaction.Transactional
 
-    static transactional = true
+@Transactional
+class @artifact.name@ {
 
     def serviceMethod() {
 
