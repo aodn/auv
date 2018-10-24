@@ -301,13 +301,13 @@
         var bb = bbox.split(',');
         bbox = bb[0] + "," + bb[1] + "%20" + bb[2] + "," + bb[3];
 
-        var filter = encodeURIComponent("<ogc:Filter xmlns:ogc=\"http://ogc.org\" xmlns:gml=\"http://www.opengis.net/gml\"><ogc:BBOX>"
-                + "<ogc:PropertyName>geom</ogc:PropertyName>"
-                + "<gml:Box srsName=\"http://www.opengis.net/gml/srs/epsg.xml\">"
-                + "<gml:coordinates>")
+        var filter = encodeURIComponent('<ogc:Filter xmlns:ogc="http://ogc.org" xmlns:gml="http://www.opengis.net/gml"><ogc:BBOX>'
+                + '<ogc:PropertyName>geom</ogc:PropertyName>'
+                + '<gml:Box srsName="http://www.opengis.net/gml/srs/epsg.xml">'
+                + '<gml:coordinates>')
                 + bbox
-                + encodeURIComponent("</gml:coordinates>"
-                        + "</gml:Box></ogc:BBOX></ogc:Filter>");
+                + encodeURIComponent('</gml:coordinates>'
+                        + '</gml:Box></ogc:BBOX></ogc:Filter>');
 
         var url = wmsServer + "/" + wmsServerContext + "/wfs?request=GetFeature&service=WFS&typeName=" + fqLayerNameImages + "&propertyName=" + variable
                 + "&filter=" + filter
