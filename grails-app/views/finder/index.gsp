@@ -94,7 +94,7 @@
 
     </div>
 
-    <div id="mapcontainer" class="ui-layout-west">
+    <div id="mapContainer" class="ui-layout-west">
 
         <div id="mapWrapper">
             <div id="map">
@@ -121,7 +121,7 @@
 
         </div>
 
-        <div id="footer" class="ui-layout-soouth">
+        <div id="footer" class="ui-layout-south">
 
             <div class="footerLogos">
                 <img class="logo" alt="DIISTRE Logo" target="_blank"
@@ -204,6 +204,7 @@
             </div>
         </div>
     </div>
+
 </div>
 </body>
 </html>

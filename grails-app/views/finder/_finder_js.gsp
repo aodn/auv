@@ -4,7 +4,7 @@
     var buff = 10;
     var mapBounds = "" + (112.947 - buff) + "," + (-33.00 - buff) + "," + (116.46 + buff) + "," + (0.874 + buff);
 
-    var mapheight = '280';
+    var mapheight = '320';
     var mapwidth = '360';
     var size = new OpenLayers.Size(30, 24);
     var offset = new OpenLayers.Pixel(-(size.w / 2) + 5, -(size.h - 1));
@@ -81,7 +81,11 @@
         // then set layout with the map initialised
         jQuery('#mainbody').layout({
             west: {
-                minSize: 410
+                minSize: 410,
+                spacing_open: 6
+            },
+            north: {
+                size: 120
             }
         });
 

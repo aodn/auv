@@ -15,13 +15,10 @@ body {
 #footer {
     padding: 10px 10px 25px 0px;
     color: #999999;
-    padding: 16px;
+    padding: 37px;
     margin-right: 6px;
 }
 
-#footer {
-    border-radius: 4px;
-}
 
 #footer a {
     color: #999999;
@@ -38,7 +35,6 @@ img.logo {
 #mainbody {
     height: 100%;
     overflow-y: auto !  important;
-    padding-bottom: 15px;
 }
 
 .auvHeader {
@@ -50,6 +46,11 @@ img.logo {
 div#logo,
 div.title * {
     display: inline;
+}
+
+div#logo,
+div.title  {
+    float: left;
     margin-left: 10px;
 }
 
@@ -122,7 +123,7 @@ div.title h1 {
 #controlWrapper {
     height: 50px;
     margin-top: 5px;
-    margin-left: 10px;
+    margin-left: 40px;
 }
 
 #controlWrapper, #legendToggle, #mapcoords, #mapscale {
@@ -499,7 +500,8 @@ div.olControlScaleLineTop, div.olControlScaleLineBottom {
 }
 
 #mapWrapper {
-    margin: 10px;
+    margin-top: 10px;
+    margin-left: 40px;
 }
 
 .stepcarousel,
