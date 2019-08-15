@@ -1,38 +1,28 @@
 pipeline {
-    agent { label 'master' }
-
+    agent none
     stages {
-        stage('clean') {
-            steps {
-                sh 'git clean -fdx'
-            }
-        }
-        stage('set_version') {
-            steps {
-                sh 'bumpversion patch'
-            }
-        }
-        stage('release') {
-            when { branch 'master' }
-            steps {
-                withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh '''
-                        export VERSION=$(bump2version --list --allow-dirty release | grep new_version= | sed -r s,"^.*=",,)
-                        git push origin master
-                        git push origin refs/tags/v$VERSION
-                    '''
-                }
-            }
-        }
         stage('container') {
             agent {
                 dockerfile {
                     args '-v ${HOME}/.m2:/home/builder/.m2 -v ${HOME}/.grails:/home/builder/.grails'
                     additionalBuildArgs '--build-arg BUILDER_UID=${JENKINS_UID:-9999}'
-                    reuseNode true
                 }
             }
             stages {
+                stage('set_version') {
+                    when { not { branch "master" } }
+                    steps {
+                        sh './bumpversion.sh build'
+                    }
+                }
+                stage('release') {
+                    when { branch 'master' }
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                            sh './bumpversion.sh release'
+                        }
+                    }
+                }
                 stage('grails_clean') {
                     steps {
                         sh 'grails -DARTIFACT_BUILD_NUMBER=${BUILD_NUMBER} -Dgrails.work.dir=${WORKSPACE}//target clean --non-interactive --plain-output'
