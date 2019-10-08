@@ -10,14 +10,14 @@ pipeline {
             }
             stages {
                 stage('set_version') {
-                    when { not { branch "master" } }
+                    when { not { branch "angus_test" } }
                     steps {
                         sh 'echo ${GIT_COMMITTER_NAME}'
                         sh './bumpversion.sh build'
                     }
                 }
                 stage('release') {
-                    when { branch 'master' }
+                    when { branch 'angus_test' }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'github-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh './bumpversion.sh release'
