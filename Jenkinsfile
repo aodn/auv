@@ -9,7 +9,7 @@ pipeline {
                 }
             }
             environment {
-                GIT_ASKPASS=/var/lib/jenkins/git_askpass_envvar.sh
+                GIT_ASKPASS='/var/lib/jenkins/git_askpass_envvar.sh'
             }
             stages {
                 stage('set_version') {
