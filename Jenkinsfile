@@ -8,9 +8,6 @@ pipeline {
                     additionalBuildArgs '--build-arg BUILDER_UID=$(id -u)'
                 }
             }
-            environment {
-                GIT_ASKPASS='/var/lib/jenkins/git_askpass_envvar.sh'
-            }
             stages {
                 stage('set_version') {
                     when { not { branch "angus_test" } }
@@ -22,6 +19,7 @@ pipeline {
                 stage('release') {
                     when { branch 'angus_test' }
                     steps {
+                        sh 'git config --local credential.helper "!p() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; p"'
                         withCredentials([usernamePassword(credentialsId: 'github-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh './bumpversion.sh release'
                         }
