@@ -8,6 +8,9 @@ pipeline {
                     additionalBuildArgs '--build-arg BUILDER_UID=$(id -u)'
                 }
             }
+            environment {
+                GIT_ASKPASS=/var/lib/jenkins/git_askpass_envvar.sh
+            }
             stages {
                 stage('set_version') {
                     when { not { branch "angus_test" } }
