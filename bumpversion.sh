@@ -2,7 +2,7 @@
 
 set -eux
 
-RELEASE_BRANCH=master
+RELEASE_BRANCH=angus_test
 
 bumpversion_build() {
   bump2version patch
