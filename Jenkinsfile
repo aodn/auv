@@ -18,6 +18,7 @@ pipeline {
                 stage('release') {
                     when { branch 'master' }
                     steps {
+			sh 'echo ${env.GIT_COMMITTER_NAME}'
                         withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh './bumpversion.sh release'
                         }
