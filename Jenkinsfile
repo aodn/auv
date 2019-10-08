@@ -12,13 +12,13 @@ pipeline {
                 stage('set_version') {
                     when { not { branch "master" } }
                     steps {
+                        sh 'echo ${env.GIT_COMMITTER_NAME}'
                         sh './bumpversion.sh build'
                     }
                 }
                 stage('release') {
                     when { branch 'master' }
                     steps {
-			sh 'echo ${env.GIT_COMMITTER_NAME}'
                         withCredentials([usernamePassword(credentialsId: env.CREDENTIALS_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh './bumpversion.sh release'
                         }
