@@ -12,7 +12,7 @@ pipeline {
                 stage('set_version') {
                     when { not { branch "master" } }
                     steps {
-                        sh 'echo ${env.GIT_COMMITTER_NAME}'
+                        sh 'echo ${GIT_COMMITTER_NAME}'
                         sh './bumpversion.sh build'
                     }
                 }
