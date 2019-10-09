@@ -10,9 +10,9 @@ bumpversion_build() {
 
 bumpversion_release() {
   bump2version patch
-  VERSION=$(bump2version --list --tag --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
   git config --global user.name "bumpversion-ci"
   git config --global user.email "a.mckeown@utas.edu.au"
+  VERSION=$(bump2version --list --tag --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
   git push origin $RELEASE_BRANCH
   git push origin tag $VERSION
 
