@@ -9,7 +9,6 @@ bumpversion_build() {
 }
 
 bumpversion_release() {
-]
   bump2version patch
   git config user.name "aodn-ci-build"
   git config user.email "a.mckeown@utas.edu.au"
