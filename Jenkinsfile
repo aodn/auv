@@ -20,7 +20,13 @@ pipeline {
                     when { branch 'angus_test' }
                     steps {
                         withCredentials([usernamePassword(credentialsId: 'github-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            sh './bumpversion.sh release'
+                            sh ('''
+                                echo $GIT_USERNAME
+                                echo $GIT_PASSWORD
+                                git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
+                                ./bumpversion.sh release'
+                                ''')
+
                         }
                     }
                 }
