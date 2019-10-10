@@ -9,16 +9,17 @@ bumpversion_build() {
 }
 
 bumpversion_release() {
-  git merge origin/angus_test
-  git checkout angus_test
+]
   bump2version patch
   git config user.name "aodn-ci-build"
   git config user.email "a.mckeown@utas.edu.au"
   git config --list
   VERSION=$(bump2version --list --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
   
-  git tag $VERSION
-  git push origin --tags
+  git fetch origin
+  git reset --hard origin/$RELEASE_BRANCH
+  git tag -a -f -m 'Jenkins: create tag $VERSION' $VERSION
+  git push origin tag $VERSION
 
 }
 
