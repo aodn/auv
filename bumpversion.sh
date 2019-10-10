@@ -2,7 +2,7 @@
 
 set -eux
 
-RELEASE_BRANCH=angus_test
+RELEASE_BRANCH=remotes/origin/angus_test
 
 bumpversion_build() {
   bump2version patch
