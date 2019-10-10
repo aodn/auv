@@ -15,7 +15,7 @@ bumpversion_release() {
   git config --list
   VERSION=$(bump2version --list --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
   git tag $VERSION
-  git push origin $RELEASE_BRANCH --tags
+  git push origin --tags
 
 }
 
