@@ -9,7 +9,8 @@ bumpversion_build() {
 }
 
 bumpversion_release() {
-  git checkout origin/angus_test
+  git merge origin/angus_test
+  git checkout angus_test
   bump2version patch
   git config user.name "aodn-ci-build"
   git config user.email "a.mckeown@utas.edu.au"
