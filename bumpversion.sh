@@ -13,7 +13,8 @@ bumpversion_release() {
   git config user.name "aodn-ci-build"
   git config user.email "a.mckeown@utas.edu.au"
   git config --list
-  VERSION=$(bump2version --list --tag --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
+  VERSION=$(bump2version --list --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
+  git tag $VERSION
   git push origin $RELEASE_BRANCH --tags
 
 }
