@@ -14,8 +14,7 @@ bumpversion_release() {
   git config user.email "a.mckeown@utas.edu.au"
   git config --list
   VERSION=$(bump2version --list --tag --commit --allow-dirty release | grep -oP '^new_version=\K.*$')
-  git push origin $RELEASE_BRANCH
-  git push origin tag $VERSION
+  git push origin $RELEASE_BRANCH --tags
 
 }
 
