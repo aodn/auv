@@ -22,7 +22,7 @@ RUN wget -q https://bootstrap.pypa.io/get-pip.py \
     && rm -rf get-pip.py
 
 RUN pip install \
-    bump2version==0.5.10
+    bump2version==0.5.11
 
 WORKDIR /usr/lib/jvm
 RUN wget https://github.com/grails/grails-core/releases/download/v$GRAILS_VERSION/grails-$GRAILS_VERSION.zip && \
