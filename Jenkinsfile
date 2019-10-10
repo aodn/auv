@@ -24,7 +24,7 @@ pipeline {
                                 echo $GIT_USERNAME
                                 echo $GIT_PASSWORD
                                 git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
-                                ./bumpversion.sh release'
+                                ./bumpversion.sh release
                                 ''')
 
                         }
