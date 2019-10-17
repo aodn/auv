@@ -10,19 +10,16 @@ pipeline {
             }
             stages {
                 stage('set_version') {
-                    when { not { branch "master" } }
+                    when { not { branch 'master' } }
                     steps {
                         sh './bumpversion.sh build'
                     }
                 }
-                stage('release') {
+                stage('set_version_release') {
                     when { branch 'master' }
                     steps {
-                        withCredentials([usernamePassword(credentialsId: 'github-ci', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                            sh ('''
-                                git config --local credential.helper "!f() { echo username=\\$GIT_USERNAME; echo password=\\$GIT_PASSWORD; }; f"
-                                ./bumpversion.sh release
-                                ''')
+                        withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIALS_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                            sh './bumpversion.sh release'
                         }
                     }
                 }
@@ -40,7 +37,6 @@ pipeline {
                     steps {
                         sh 'grails -DARTIFACT_BUILD_NUMBER=${BUILD_NUMBER} -Dgrails.work.dir=${WORKSPACE}//target prod war --non-interactive --plain-output'
                     }
-
                 }
             }
             post {
